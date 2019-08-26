@@ -1,5 +1,6 @@
 #include <AK/ELF/ELFLoader.h>
 #include <AK/ELF/exec_elf.h>
+#include <AK/FileSystemPath.h>
 #include <AK/StdLibExtras.h>
 #include <AK/StringBuilder.h>
 #include <AK/Time.h>
@@ -260,7 +261,7 @@ Process* Process::fork(RegisterDump& regs)
 
     for (auto& region : m_regions) {
 #ifdef FORK_DEBUG
-        dbgprintf("fork: cloning Region{%p} \"%s\" L%x\n", region.ptr(), region->name().characters(), region->vaddr().get());
+        dbgprintf("fork: cloning Region{%p} \"%s\" V%08x\n", region.ptr(), region->name().characters(), region->vaddr().get());
 #endif
         auto cloned_region = region.clone();
         child->m_regions.append(move(cloned_region));
@@ -357,12 +358,6 @@ int Process::do_exec(String path, Vector<String> arguments, Vector<String> envir
     auto vmo = InodeVMObject::create_with_inode(*description->inode());
     RefPtr<Region> region = allocate_region_with_vmo(VirtualAddress(), metadata.size, vmo, 0, description->absolute_path(), PROT_READ);
     ASSERT(region);
-
-    if (this != &current->process()) {
-        // FIXME: Don't force-load the entire executable at once, let the on-demand pager take care of it.
-        bool success = region->page_in();
-        ASSERT(success);
-    }
 
     OwnPtr<ELFLoader> loader;
     {
@@ -671,13 +666,13 @@ void Process::dump_regions()
     kprintf("BEGIN       END         SIZE        ACCESS  NAME\n");
     for (auto& region : m_regions) {
         kprintf("%08x -- %08x    %08x    %c%c%c     %s\n",
-            region.vaddr().get(),
-            region.vaddr().offset(region.size() - 1).get(),
-            region.size(),
-            region.is_readable() ? 'R' : ' ',
-            region.is_writable() ? 'W' : ' ',
-            region.is_executable() ? 'X' : ' ',
-            region.name().characters());
+                region.vaddr().get(),
+                region.vaddr().offset(region.size() - 1).get(),
+                region.size(),
+                region.is_readable() ? 'R' : ' ',
+                region.is_writable() ? 'W' : ' ',
+                region.is_executable() ? 'X' : ' ',
+                region.name().characters());
     }
 }
 
@@ -1806,6 +1801,35 @@ int Process::sys$mkdir(const char* pathname, mode_t mode)
     return VFS::the().mkdir(StringView(pathname, pathname_length), mode & ~umask(), current_directory());
 }
 
+int Process::sys$realpath(const char* pathname, char* buffer, size_t size)
+{
+    if (!validate_read_str(pathname))
+        return -EFAULT;
+
+    size_t pathname_length = strlen(pathname);
+    if (pathname_length == 0)
+        return -EINVAL;
+    if (pathname_length >= size)
+        return -ENAMETOOLONG;
+    if (!validate_write(buffer, size))
+        return -EFAULT;
+
+    auto custody_or_error = VFS::the().resolve_path(pathname, current_directory());
+    if (custody_or_error.is_error())
+        return custody_or_error.error();
+    auto& custody = custody_or_error.value();
+
+    // FIXME: Once resolve_path is fixed to deal with .. and . , remove the use of FileSystemPath::canonical_path.
+    FileSystemPath canonical_path(custody->absolute_path());
+    if (!canonical_path.is_valid()) {
+        printf("FileSystemPath failed to canonicalize '%s'\n", custody->absolute_path());
+        return 1;
+    }
+
+    strncpy(buffer, canonical_path.string().characters(), size);
+    return 0;
+};
+
 clock_t Process::sys$times(tms* times)
 {
     if (!validate_write_typed(times))
@@ -1886,8 +1910,12 @@ int Process::sys$select(const Syscall::SC_select_params* params)
             }
         }
     };
-    mark_fds(params->readfds, rfds, [](auto& description) { return description.can_read(); });
-    mark_fds(params->writefds, wfds, [](auto& description) { return description.can_write(); });
+    mark_fds(params->readfds, rfds, [](auto& description) {
+        return description.can_read();
+    });
+    mark_fds(params->writefds, wfds, [](auto& description) {
+        return description.can_write();
+    });
     // FIXME: We should also mark params->exceptfds as appropriate.
 
     return marked_fd_count;

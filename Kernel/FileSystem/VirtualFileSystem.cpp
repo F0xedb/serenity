@@ -100,8 +100,8 @@ bool VFS::mount_root(NonnullRefPtr<FS>&& file_system)
     m_root_inode = move(root_inode);
 
     kprintf("VFS: mounted root on %s{%p}\n",
-        m_root_inode->fs().class_name(),
-        &m_root_inode->fs());
+            m_root_inode->fs().class_name(),
+            &m_root_inode->fs());
 
     m_mounts.append(move(mount));
     return true;
@@ -637,6 +637,9 @@ Custody& VFS::root_custody()
 
 KResultOr<NonnullRefPtr<Custody>> VFS::resolve_path(StringView path, Custody& base, RefPtr<Custody>* parent_custody, int options)
 {
+    // FIXME: resolve_path currently doesn't deal with .. and . . If path is ../. and base is /home/anon, it returns
+    //        /home/anon/../. instead of /home .
+
     if (path.is_empty())
         return KResult(-EINVAL);
 
@@ -711,11 +714,11 @@ KResultOr<NonnullRefPtr<Custody>> VFS::resolve_path(StringView path, Custody& ba
 
             // FIXME: We should limit the recursion here and return -ELOOP if it goes to deep.
             auto symlink_target = resolve_path(
-                StringView(symlink_contents.pointer(),
-                    symlink_contents.size()),
-                current_parent,
-                parent_custody,
-                options);
+                                      StringView(symlink_contents.pointer(),
+                                                 symlink_contents.size()),
+                                      current_parent,
+                                      parent_custody,
+                                      options);
 
             if (symlink_target.is_error())
                 return symlink_target;

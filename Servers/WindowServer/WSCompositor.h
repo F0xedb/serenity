@@ -30,7 +30,9 @@ public:
     void set_resolution(int desired_width, int desired_height);
 
     bool set_wallpaper(const String& path, Function<void(bool)>&& callback);
-    String wallpaper_path() const { return m_wallpaper_path; }
+    String wallpaper_path() const {
+        return m_wallpaper_path;
+    }
 
     void invalidate_cursor();
     Rect current_cursor_rect() const;
@@ -43,7 +45,6 @@ private:
     void draw_cursor();
     void draw_geometry_label();
     void draw_menubar();
-    void finish_setting_wallpaper(const String& path, NonnullRefPtr<GraphicsBitmap>&&);
 
     unsigned m_compose_count { 0 };
     unsigned m_flush_count { 0 };

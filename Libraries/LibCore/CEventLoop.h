@@ -7,7 +7,7 @@
 #include <AK/WeakPtr.h>
 #include <LibCore/CEvent.h>
 #include <LibCore/CLocalServer.h>
-#include <LibCore/CLock.h>
+#include <LibThread/Lock.h>
 #include <sys/select.h>
 #include <sys/time.h>
 #include <time.h>
@@ -36,7 +36,9 @@ public:
     static CEventLoop& main();
     static CEventLoop& current();
 
-    bool was_exit_requested() const { return m_exit_requested; }
+    bool was_exit_requested() const {
+        return m_exit_requested;
+    }
 
     static int register_timer(CObject&, int milliseconds, bool should_reload);
     static bool unregister_timer(int timer_id);
@@ -69,7 +71,7 @@ private:
 
     static int s_wake_pipe_fds[2];
 
-    CLock m_lock;
+    LibThread::Lock m_lock;
 
     struct EventLoopTimer {
         int timer_id { 0 };

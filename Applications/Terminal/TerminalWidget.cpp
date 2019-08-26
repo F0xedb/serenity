@@ -37,8 +37,8 @@ TerminalWidget::TerminalWidget(int ptm_fd, RefPtr<CConfigFile> config)
 
     dbgprintf("Terminal: Load config file from %s\n", m_config->file_name().characters());
     m_cursor_blink_timer.set_interval(m_config->read_num_entry("Text",
-        "CursorBlinkInterval",
-        500));
+                                      "CursorBlinkInterval",
+                                      500));
     m_cursor_blink_timer.on_timeout = [this] {
         m_cursor_blink_state = !m_cursor_blink_state;
         update_cursor();
@@ -177,7 +177,7 @@ void TerminalWidget::keydown_event(GKeyEvent& event)
         auto min_selection_row = min(m_selection_start.row(), m_selection_end.row());
         auto max_selection_row = max(m_selection_start.row(), m_selection_end.row());
 
-        if (future_cursor_column <= max(m_selection_start.column(), m_selection_end.column()) && m_terminal.cursor_row() >= min_selection_row && m_terminal.cursor_row() <= max_selection_row) {
+        if (future_cursor_column <= last_selection_column_on_row(m_terminal.cursor_row()) && m_terminal.cursor_row() >= min_selection_row && m_terminal.cursor_row() <= max_selection_row) {
             m_selection_end = {};
             update();
         }
@@ -228,7 +228,7 @@ void TerminalWidget::paint_event(GPaintEvent& event)
         for (u16 column = 0; column < m_terminal.columns(); ++column) {
             char ch = line.characters[column];
             bool should_reverse_fill_for_cursor_or_selection = (m_cursor_blink_state && m_in_active_window && row == row_with_cursor && column == m_terminal.cursor_column())
-                || selection_contains({ row, column });
+                    || selection_contains({ row, column });
             auto& attribute = line.attributes[column];
             auto character_rect = glyph_rect(row, column);
             if (!has_only_one_background_color || should_reverse_fill_for_cursor_or_selection) {
@@ -464,8 +464,8 @@ String TerminalWidget::selected_text() const
     auto end = normalized_selection_end();
 
     for (int row = start.row(); row <= end.row(); ++row) {
-        int first_column = row == start.row() ? start.column() : 0;
-        int last_column = row == end.row() ? end.column() : m_terminal.columns() - 1;
+        int first_column = first_selection_column_on_row(row);
+        int last_column = last_selection_column_on_row(row);
         for (int column = first_column; column <= last_column; ++column) {
             auto& line = m_terminal.line(row);
             if (line.attributes[column].is_untouched()) {
@@ -480,6 +480,16 @@ String TerminalWidget::selected_text() const
     }
 
     return builder.to_string();
+}
+
+int TerminalWidget::first_selection_column_on_row(int row) const
+{
+    return row == normalized_selection_start().row() ? normalized_selection_start().column() : 0;
+}
+
+int TerminalWidget::last_selection_column_on_row(int row) const
+{
+    return row == normalized_selection_end().row() ? normalized_selection_end().column() : m_terminal.columns() - 1;
 }
 
 void TerminalWidget::terminal_history_changed()

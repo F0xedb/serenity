@@ -3,6 +3,7 @@
 #include <AK/Function.h>
 #include <AK/HashMap.h>
 #include <AK/NonnullOwnPtrVector.h>
+#include <AK/NonnullRefPtrVector.h>
 #include <LibDraw/TextAlignment.h>
 #include <LibGUI/GScrollableWidget.h>
 
@@ -360,6 +361,7 @@ private:
     RefPtr<GAction> m_paste_action;
     RefPtr<GAction> m_delete_action;
     CElapsedTimer m_triple_click_timer;
+    NonnullRefPtrVector<GAction> m_custom_context_menu_actions;
 };
 
 inline const LogStream& operator<<(const LogStream& stream, const GTextPosition& value)

@@ -32,7 +32,9 @@ int seal_shared_buffer(int shared_buffer_id);
 int get_shared_buffer_size(int shared_buffer_id);
 int set_process_icon(int icon_id);
 int read_tsc(unsigned* lsw, unsigned* msw);
-inline int getpagesize() { return 4096; }
+inline int getpagesize() {
+    return 4096;
+}
 pid_t fork();
 int execv(const char* path, char* const argv[]);
 int execve(const char* filename, char* const argv[], char* const envp[]);
@@ -103,6 +105,7 @@ int halt();
 int reboot();
 int mount(const char* device, const char* mountpoint, const char* fstype);
 int umount(const char* mountpoint);
+char* realpath(const char* pathname, char* buffer);
 
 enum {
     _PC_NAME_MAX,

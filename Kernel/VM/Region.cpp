@@ -46,26 +46,6 @@ Region::~Region()
     MM.unregister_region(*this);
 }
 
-bool Region::page_in()
-{
-    ASSERT(m_page_directory);
-    ASSERT(vmo().is_inode());
-#ifdef MM_DEBUG
-    dbgprintf("MM: page_in %u pages\n", page_count());
-#endif
-    for (size_t i = 0; i < page_count(); ++i) {
-        auto& vmo_page = vmo().physical_pages()[first_page_index() + i];
-        if (vmo_page.is_null()) {
-            bool success = MM.page_in_from_inode(*this, i);
-            if (!success)
-                return false;
-            continue;
-        }
-        MM.remap_region_page(*this, i);
-    }
-    return true;
-}
-
 NonnullRefPtr<Region> Region::clone()
 {
     ASSERT(current);
@@ -75,22 +55,22 @@ NonnullRefPtr<Region> Region::clone()
 
     if (m_shared || (is_readable() && !is_writable())) {
 #ifdef MM_DEBUG
-        dbgprintf("%s<%u> Region::clone(): sharing %s (L%x)\n",
-            current->process().name().characters(),
-            current->pid(),
-            m_name.characters(),
-            vaddr().get());
+        dbgprintf("%s<%u> Region::clone(): sharing %s (V%p)\n",
+                  current->process().name().characters(),
+                  current->pid(),
+                  m_name.characters(),
+                  vaddr().get());
 #endif
         // Create a new region backed by the same VMObject.
         return Region::create_user_accessible(m_range, m_vmo, m_offset_in_vmo, m_name, m_access);
     }
 
 #ifdef MM_DEBUG
-    dbgprintf("%s<%u> Region::clone(): cowing %s (L%x)\n",
-        current->process().name().characters(),
-        current->pid(),
-        m_name.characters(),
-        vaddr().get());
+    dbgprintf("%s<%u> Region::clone(): cowing %s (V%p)\n",
+              current->process().name().characters(),
+              current->pid(),
+              m_name.characters(),
+              vaddr().get());
 #endif
     // Set up a COW region. The parent (this) region becomes COW as well!
     m_cow_map.fill(true);
@@ -102,7 +82,7 @@ int Region::commit()
 {
     InterruptDisabler disabler;
 #ifdef MM_DEBUG
-    dbgprintf("MM: commit %u pages in Region %p (VMO=%p) at L%x\n", vmo().page_count(), this, &vmo(), vaddr().get());
+    dbgprintf("MM: commit %u pages in Region %p (VMO=%p) at V%p\n", vmo().page_count(), this, &vmo(), vaddr().get());
 #endif
     for (size_t i = first_page_index(); i <= last_page_index(); ++i) {
         if (!vmo().physical_pages()[i].is_null())

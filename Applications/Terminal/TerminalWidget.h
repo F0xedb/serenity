@@ -26,11 +26,19 @@ public:
     void apply_size_increments_to_window(GWindow&);
 
     void set_opacity(u8);
-    float opacity() { return m_opacity; };
-    bool should_beep() { return m_should_beep; }
-    void set_should_beep(bool sb) { m_should_beep = sb; };
+    float opacity() {
+        return m_opacity;
+    };
+    bool should_beep() {
+        return m_should_beep;
+    }
+    void set_should_beep(bool sb) {
+        m_should_beep = sb;
+    };
 
-    RefPtr<CConfigFile> config() const { return m_config; }
+    RefPtr<CConfigFile> config() const {
+        return m_config;
+    }
 
     bool has_selection() const;
     bool selection_contains(const VT::Position&) const;
@@ -66,6 +74,8 @@ private:
     void invalidate_cursor();
 
     Size compute_base_size() const;
+    int first_selection_column_on_row(int row) const;
+    int last_selection_column_on_row(int row) const;
 
     VT::Terminal m_terminal;
 
