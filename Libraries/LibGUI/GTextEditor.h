@@ -245,8 +245,6 @@ public:
         return *m_delete_action;
     }
 
-    void add_custom_context_menu_action(GAction&);
-
 private:
     virtual void paint_event(GPaintEvent&) override;
     virtual void mousedown_event(GMouseEvent&) override;
