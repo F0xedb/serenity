@@ -37,8 +37,8 @@ TerminalWidget::TerminalWidget(int ptm_fd, RefPtr<CConfigFile> config)
 
     dbgprintf("Terminal: Load config file from %s\n", m_config->file_name().characters());
     m_cursor_blink_timer.set_interval(m_config->read_num_entry("Text",
-        "CursorBlinkInterval",
-        500));
+                                      "CursorBlinkInterval",
+                                      500));
     m_cursor_blink_timer.on_timeout = [this] {
         m_cursor_blink_state = !m_cursor_blink_state;
         update_cursor();
@@ -228,7 +228,7 @@ void TerminalWidget::paint_event(GPaintEvent& event)
         for (u16 column = 0; column < m_terminal.columns(); ++column) {
             char ch = line.characters[column];
             bool should_reverse_fill_for_cursor_or_selection = (m_cursor_blink_state && m_in_active_window && row == row_with_cursor && column == m_terminal.cursor_column())
-                || selection_contains({ row, column });
+                    || selection_contains({ row, column });
             auto& attribute = line.attributes[column];
             auto character_rect = glyph_rect(row, column);
             if (!has_only_one_background_color || should_reverse_fill_for_cursor_or_selection) {
