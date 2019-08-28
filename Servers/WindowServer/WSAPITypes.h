@@ -317,6 +317,12 @@ inline Size::Size(const WSAPI_Size& s)
     : Size(s.width, s.height)
 {
 }
-inline Rect::operator WSAPI_Rect() const { return { m_location, m_size }; }
-inline Point::operator WSAPI_Point() const { return { m_x, m_y }; }
-inline Size::operator WSAPI_Size() const { return { m_width, m_height }; }
+inline Rect::operator WSAPI_Rect() const {
+    return { m_location, m_size };
+}
+inline Point::operator WSAPI_Point() const {
+    return { m_x, m_y };
+}
+inline Size::operator WSAPI_Size() const {
+    return { m_width, m_height };
+}

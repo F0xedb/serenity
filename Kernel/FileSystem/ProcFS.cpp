@@ -391,20 +391,20 @@ Optional<KBuffer> procfs$pid_vmo(InodeIdentifier identifier)
     builder.appendf("BEGIN       END         SIZE        NAME\n");
     for (auto& region : process.regions()) {
         builder.appendf("%x -- %x    %x    %s\n",
-            region.vaddr().get(),
-            region.vaddr().offset(region.size() - 1).get(),
-            region.size(),
-            region.name().characters());
+                        region.vaddr().get(),
+                        region.vaddr().offset(region.size() - 1).get(),
+                        region.size(),
+                        region.name().characters());
         builder.appendf("VMO: %s @ %x(%u)\n",
-            region.vmo().is_anonymous() ? "anonymous" : "file-backed",
-            &region.vmo(),
-            region.vmo().ref_count());
+                        region.vmo().is_anonymous() ? "anonymous" : "file-backed",
+                        &region.vmo(),
+                        region.vmo().ref_count());
         for (size_t i = 0; i < region.vmo().page_count(); ++i) {
             auto& physical_page = region.vmo().physical_pages()[i];
             builder.appendf("P%x%s(%u) ",
-                physical_page ? physical_page->paddr().get() : 0,
-                region.should_cow(i) ? "!" : "",
-                physical_page ? physical_page->ref_count() : 0);
+                            physical_page ? physical_page->paddr().get() : 0,
+                            region.should_cow(i) ? "!" : "",
+                            physical_page ? physical_page->ref_count() : 0);
         }
         builder.appendf("\n");
     }
@@ -480,10 +480,10 @@ Optional<KBuffer> procfs$mm(InodeIdentifier)
     MemoryManager::for_each_vmobject([&](auto& vmobject) {
         ++vmobject_count;
         builder.appendf("VMObject: %p %s(%u): p:%4u\n",
-            &vmobject,
-            vmobject.is_anonymous() ? "anon" : "file",
-            vmobject.ref_count(),
-            vmobject.page_count());
+                        &vmobject,
+                        vmobject.is_anonymous() ? "anon" : "file",
+                        vmobject.ref_count(),
+                        vmobject.page_count());
         return IterationDecision::Continue;
     });
     builder.appendf("VMO count: %u\n", vmobject_count);
@@ -554,10 +554,10 @@ Optional<KBuffer> procfs$cpuinfo(InodeIdentifier)
         builder.appendf("cpuid:     ");
         auto emit_u32 = [&](u32 value) {
             builder.appendf("%c%c%c%c",
-                value & 0xff,
-                (value >> 8) & 0xff,
-                (value >> 16) & 0xff,
-                (value >> 24) & 0xff);
+                            value & 0xff,
+                            (value >> 8) & 0xff,
+                            (value >> 16) & 0xff,
+                            (value >> 24) & 0xff);
         };
         emit_u32(cpuid.ebx());
         emit_u32(cpuid.edx());
@@ -1035,7 +1035,8 @@ bool ProcFSInode::traverse_as_directory(Function<bool(const FS::DirectoryEntry&)
                 callback({ entry.name, (int)strlen(entry.name), to_identifier(fsid(), PDI_PID, pid, (ProcFileType)entry.proc_file_type), 0 });
             }
         }
-    } break;
+    }
+    break;
 
     case FI_PID_fd: {
         auto handle = ProcessInspectionHandle::from_pid(pid);
@@ -1050,7 +1051,8 @@ bool ProcFSInode::traverse_as_directory(Function<bool(const FS::DirectoryEntry&)
             int name_length = ksprintf(name, "%u", i);
             callback({ name, name_length, to_identifier_with_fd(fsid(), pid, i), 0 });
         }
-    } break;
+    }
+    break;
     default:
         return true;
     }

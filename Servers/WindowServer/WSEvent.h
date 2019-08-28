@@ -79,9 +79,15 @@ public:
     }
     virtual ~WSEvent() {}
 
-    bool is_client_request() const { return type() > __Begin_API_Client_Requests && type() < __End_API_Client_Requests; }
-    bool is_mouse_event() const { return type() == MouseMove || type() == MouseDown || type() == MouseDoubleClick || type() == MouseUp || type() == MouseWheel; }
-    bool is_key_event() const { return type() == KeyUp || type() == KeyDown; }
+    bool is_client_request() const {
+        return type() > __Begin_API_Client_Requests && type() < __End_API_Client_Requests;
+    }
+    bool is_mouse_event() const {
+        return type() == MouseMove || type() == MouseDown || type() == MouseDoubleClick || type() == MouseUp || type() == MouseWheel;
+    }
+    bool is_key_event() const {
+        return type() == KeyUp || type() == KeyDown;
+    }
 };
 
 class WSAPIClientRequest : public WSEvent {
@@ -92,7 +98,9 @@ public:
     {
     }
 
-    int client_id() const { return m_client_id; }
+    int client_id() const {
+        return m_client_id;
+    }
 
 private:
     int m_client_id { 0 };
@@ -107,8 +115,12 @@ public:
     {
     }
 
-    int target_client_id() const { return m_target_client_id; }
-    int target_window_id() const { return m_target_window_id; }
+    int target_client_id() const {
+        return m_target_client_id;
+    }
+    int target_window_id() const {
+        return m_target_window_id;
+    }
 
 private:
     int m_target_client_id;
@@ -125,9 +137,15 @@ public:
     {
     }
 
-    int target_client_id() const { return m_target_client_id; }
-    int target_window_id() const { return m_target_window_id; }
-    Point position() const { return m_position; }
+    int target_client_id() const {
+        return m_target_client_id;
+    }
+    int target_window_id() const {
+        return m_target_window_id;
+    }
+    Point position() const {
+        return m_position;
+    }
 
 private:
     int m_target_client_id;
@@ -144,8 +162,12 @@ public:
     {
     }
 
-    int target_client_id() const { return m_target_client_id; }
-    int target_window_id() const { return m_target_window_id; }
+    int target_client_id() const {
+        return m_target_client_id;
+    }
+    int target_window_id() const {
+        return m_target_window_id;
+    }
 
 private:
     int m_target_client_id;
@@ -162,9 +184,15 @@ public:
     {
     }
 
-    int target_client_id() const { return m_target_client_id; }
-    int target_window_id() const { return m_target_window_id; }
-    bool is_minimized() const { return m_minimized; }
+    int target_client_id() const {
+        return m_target_client_id;
+    }
+    int target_window_id() const {
+        return m_target_window_id;
+    }
+    bool is_minimized() const {
+        return m_minimized;
+    }
 
 private:
     int m_target_client_id;
@@ -181,8 +209,12 @@ public:
     {
     }
 
-    int window_id() const { return m_window_id; }
-    bool value() const { return m_value; }
+    int window_id() const {
+        return m_window_id;
+    }
+    bool value() const {
+        return m_value;
+    }
 
 private:
     int m_window_id { 0 };
@@ -205,7 +237,9 @@ public:
     {
     }
 
-    int menubar_id() const { return m_menubar_id; }
+    int menubar_id() const {
+        return m_menubar_id;
+    }
 
 private:
     int m_menubar_id { 0 };
@@ -219,7 +253,9 @@ public:
     {
     }
 
-    int menubar_id() const { return m_menubar_id; }
+    int menubar_id() const {
+        return m_menubar_id;
+    }
 
 private:
     int m_menubar_id { 0 };
@@ -234,8 +270,12 @@ public:
     {
     }
 
-    int menubar_id() const { return m_menubar_id; }
-    int menu_id() const { return m_menu_id; }
+    int menubar_id() const {
+        return m_menubar_id;
+    }
+    int menu_id() const {
+        return m_menu_id;
+    }
 
 private:
     int m_menubar_id { 0 };
@@ -251,8 +291,12 @@ public:
     {
     }
 
-    int menu_id() const { return m_menu_id; }
-    Point position() const { return m_position; }
+    int menu_id() const {
+        return m_menu_id;
+    }
+    Point position() const {
+        return m_position;
+    }
 
 private:
     int m_menu_id;
@@ -267,7 +311,9 @@ public:
     {
     }
 
-    int menu_id() const { return m_menu_id; }
+    int menu_id() const {
+        return m_menu_id;
+    }
 
 private:
     int m_menu_id;
@@ -281,7 +327,9 @@ public:
     {
     }
 
-    String text() const { return m_text; }
+    String text() const {
+        return m_text;
+    }
 
 private:
     String m_text;
@@ -295,7 +343,9 @@ public:
     {
     }
 
-    int menu_id() const { return m_menu_id; }
+    int menu_id() const {
+        return m_menu_id;
+    }
 
 private:
     int m_menu_id { 0 };
@@ -316,14 +366,30 @@ public:
     {
     }
 
-    int menu_id() const { return m_menu_id; }
-    unsigned identifier() const { return m_identifier; }
-    String text() const { return m_text; }
-    String shortcut_text() const { return m_shortcut_text; }
-    bool is_enabled() const { return m_enabled; }
-    bool is_checkable() const { return m_checkable; }
-    bool is_checked() const { return m_checked; }
-    int icon_buffer_id() const { return m_icon_buffer_id; }
+    int menu_id() const {
+        return m_menu_id;
+    }
+    unsigned identifier() const {
+        return m_identifier;
+    }
+    String text() const {
+        return m_text;
+    }
+    String shortcut_text() const {
+        return m_shortcut_text;
+    }
+    bool is_enabled() const {
+        return m_enabled;
+    }
+    bool is_checkable() const {
+        return m_checkable;
+    }
+    bool is_checked() const {
+        return m_checked;
+    }
+    int icon_buffer_id() const {
+        return m_icon_buffer_id;
+    }
 
 private:
     int m_menu_id { 0 };
@@ -350,13 +416,27 @@ public:
     {
     }
 
-    int menu_id() const { return m_menu_id; }
-    unsigned identifier() const { return m_identifier; }
-    String text() const { return m_text; }
-    String shortcut_text() const { return m_shortcut_text; }
-    bool is_enabled() const { return m_enabled; }
-    bool is_checkable() const { return m_checkable; }
-    bool is_checked() const { return m_checked; }
+    int menu_id() const {
+        return m_menu_id;
+    }
+    unsigned identifier() const {
+        return m_identifier;
+    }
+    String text() const {
+        return m_text;
+    }
+    String shortcut_text() const {
+        return m_shortcut_text;
+    }
+    bool is_enabled() const {
+        return m_enabled;
+    }
+    bool is_checkable() const {
+        return m_checkable;
+    }
+    bool is_checked() const {
+        return m_checked;
+    }
 
 private:
     int m_menu_id { 0 };
@@ -376,7 +456,9 @@ public:
     {
     }
 
-    int menu_id() const { return m_menu_id; }
+    int menu_id() const {
+        return m_menu_id;
+    }
 
 private:
     int m_menu_id { 0 };
@@ -391,8 +473,12 @@ public:
     {
     }
 
-    int window_id() const { return m_window_id; }
-    WSStandardCursor cursor() const { return m_cursor; }
+    int window_id() const {
+        return m_window_id;
+    }
+    WSStandardCursor cursor() const {
+        return m_cursor;
+    }
 
 private:
     int m_window_id { 0 };
@@ -408,8 +494,12 @@ public:
     {
     }
 
-    int window_id() const { return m_window_id; }
-    bool value() const { return m_value; }
+    int window_id() const {
+        return m_window_id;
+    }
+    bool value() const {
+        return m_value;
+    }
 
 private:
     int m_window_id { 0 };
@@ -424,7 +514,9 @@ public:
     {
     }
 
-    String wallpaper() const { return m_wallpaper; }
+    String wallpaper() const {
+        return m_wallpaper;
+    }
 
 private:
     String m_wallpaper;
@@ -447,8 +539,12 @@ public:
     {
     }
 
-    int window_id() const { return m_window_id; }
-    String title() const { return m_title; }
+    int window_id() const {
+        return m_window_id;
+    }
+    String title() const {
+        return m_title;
+    }
 
 private:
     int m_window_id { 0 };
@@ -463,7 +559,9 @@ public:
     {
     }
 
-    int window_id() const { return m_window_id; }
+    int window_id() const {
+        return m_window_id;
+    }
 
 private:
     int m_window_id { 0 };
@@ -477,7 +575,9 @@ public:
     {
     }
 
-    int window_id() const { return m_window_id; }
+    int window_id() const {
+        return m_window_id;
+    }
 
 private:
     int m_window_id { 0 };
@@ -492,8 +592,12 @@ public:
     {
     }
 
-    int shared_buffer_id() const { return m_shared_buffer_id; }
-    int size() const { return m_size; }
+    int shared_buffer_id() const {
+        return m_shared_buffer_id;
+    }
+    int size() const {
+        return m_size;
+    }
 
 private:
     int m_shared_buffer_id { 0 };
@@ -517,8 +621,12 @@ public:
     {
     }
 
-    int window_id() const { return m_window_id; }
-    float opacity() const { return m_opacity; }
+    int window_id() const {
+        return m_window_id;
+    }
+    float opacity() const {
+        return m_opacity;
+    }
 
 private:
     int m_window_id { 0 };
@@ -539,13 +647,27 @@ public:
     {
     }
 
-    int window_id() const { return m_window_id; }
-    int shared_buffer_id() const { return m_shared_buffer_id; }
-    Size size() const { return m_size; }
-    size_t bpp() const { return m_bpp; }
-    size_t pitch() const { return m_pitch; }
-    bool has_alpha_channel() const { return m_has_alpha_channel; }
-    bool flush_immediately() const { return m_flush_immediately; }
+    int window_id() const {
+        return m_window_id;
+    }
+    int shared_buffer_id() const {
+        return m_shared_buffer_id;
+    }
+    Size size() const {
+        return m_size;
+    }
+    size_t bpp() const {
+        return m_bpp;
+    }
+    size_t pitch() const {
+        return m_pitch;
+    }
+    bool has_alpha_channel() const {
+        return m_has_alpha_channel;
+    }
+    bool flush_immediately() const {
+        return m_flush_immediately;
+    }
 
 private:
     int m_window_id { 0 };
@@ -566,8 +688,12 @@ public:
     {
     }
 
-    int window_id() const { return m_window_id; }
-    Rect rect() const { return m_rect; }
+    int window_id() const {
+        return m_window_id;
+    }
+    Rect rect() const {
+        return m_rect;
+    }
 
 private:
     int m_window_id { 0 };
@@ -584,9 +710,15 @@ public:
     {
     }
 
-    int window_id() const { return m_window_id; }
-    int icon_buffer_id() const { return m_icon_buffer_id; }
-    const Size& icon_size() const { return m_icon_size; }
+    int window_id() const {
+        return m_window_id;
+    }
+    int icon_buffer_id() const {
+        return m_icon_buffer_id;
+    }
+    const Size& icon_size() const {
+        return m_icon_size;
+    }
 
 private:
     int m_window_id { 0 };
@@ -602,7 +734,9 @@ public:
     {
     }
 
-    int window_id() const { return m_window_id; }
+    int window_id() const {
+        return m_window_id;
+    }
 
 private:
     int m_window_id { 0 };
@@ -627,18 +761,42 @@ public:
     {
     }
 
-    Rect rect() const { return m_rect; }
-    String title() const { return m_title; }
-    bool has_alpha_channel() const { return m_has_alpha_channel; }
-    bool is_modal() const { return m_modal; }
-    bool is_resizable() const { return m_resizable; }
-    bool is_fullscreen() const { return m_fullscreen; }
-    bool show_titlebar() const { return m_show_titlebar; }
-    float opacity() const { return m_opacity; }
-    Size size_increment() const { return m_size_increment; }
-    Size base_size() const { return m_base_size; }
-    WSWindowType window_type() const { return m_window_type; }
-    Color background_color() const { return m_background_color; }
+    Rect rect() const {
+        return m_rect;
+    }
+    String title() const {
+        return m_title;
+    }
+    bool has_alpha_channel() const {
+        return m_has_alpha_channel;
+    }
+    bool is_modal() const {
+        return m_modal;
+    }
+    bool is_resizable() const {
+        return m_resizable;
+    }
+    bool is_fullscreen() const {
+        return m_fullscreen;
+    }
+    bool show_titlebar() const {
+        return m_show_titlebar;
+    }
+    float opacity() const {
+        return m_opacity;
+    }
+    Size size_increment() const {
+        return m_size_increment;
+    }
+    Size base_size() const {
+        return m_base_size;
+    }
+    WSWindowType window_type() const {
+        return m_window_type;
+    }
+    Color background_color() const {
+        return m_background_color;
+    }
 
 private:
     Rect m_rect;
@@ -663,7 +821,9 @@ public:
     {
     }
 
-    int window_id() const { return m_window_id; }
+    int window_id() const {
+        return m_window_id;
+    }
 
 private:
     int m_window_id { 0 };
@@ -678,8 +838,12 @@ public:
     {
     }
 
-    int window_id() const { return m_window_id; }
-    const Vector<Rect, 32>& rects() const { return m_rects; }
+    int window_id() const {
+        return m_window_id;
+    }
+    const Vector<Rect, 32>& rects() const {
+        return m_rects;
+    }
 
 private:
     int m_window_id { 0 };
@@ -694,7 +858,9 @@ public:
     {
     }
 
-    int window_id() const { return m_window_id; }
+    int window_id() const {
+        return m_window_id;
+    }
 
 private:
     int m_window_id { 0 };
@@ -709,8 +875,12 @@ public:
     {
     }
 
-    int window_id() const { return m_window_id; }
-    const Vector<Rect, 32>& rects() const { return m_rects; }
+    int window_id() const {
+        return m_window_id;
+    }
+    const Vector<Rect, 32>& rects() const {
+        return m_rects;
+    }
 
 private:
     int m_window_id { 0 };
@@ -734,13 +904,27 @@ public:
     {
     }
 
-    int key() const { return m_key; }
-    bool ctrl() const { return m_modifiers & Mod_Ctrl; }
-    bool alt() const { return m_modifiers & Mod_Alt; }
-    bool shift() const { return m_modifiers & Mod_Shift; }
-    bool logo() const { return m_modifiers & Mod_Logo; }
-    u8 modifiers() const { return m_modifiers; }
-    char character() const { return m_character; }
+    int key() const {
+        return m_key;
+    }
+    bool ctrl() const {
+        return m_modifiers & Mod_Ctrl;
+    }
+    bool alt() const {
+        return m_modifiers & Mod_Alt;
+    }
+    bool shift() const {
+        return m_modifiers & Mod_Shift;
+    }
+    bool logo() const {
+        return m_modifiers & Mod_Logo;
+    }
+    u8 modifiers() const {
+        return m_modifiers;
+    }
+    char character() const {
+        return m_character;
+    }
 
 private:
     friend class WSEventLoop;
@@ -762,15 +946,31 @@ public:
     {
     }
 
-    Point position() const { return m_position; }
-    int x() const { return m_position.x(); }
-    int y() const { return m_position.y(); }
-    MouseButton button() const { return m_button; }
-    unsigned buttons() const { return m_buttons; }
-    unsigned modifiers() const { return m_modifiers; }
-    int wheel_delta() const { return m_wheel_delta; }
+    Point position() const {
+        return m_position;
+    }
+    int x() const {
+        return m_position.x();
+    }
+    int y() const {
+        return m_position.y();
+    }
+    MouseButton button() const {
+        return m_button;
+    }
+    unsigned buttons() const {
+        return m_buttons;
+    }
+    unsigned modifiers() const {
+        return m_modifiers;
+    }
+    int wheel_delta() const {
+        return m_wheel_delta;
+    }
 
-    WSMouseEvent translated(const Point& delta) const { return WSMouseEvent((Type)type(), m_position.translated(delta), m_buttons, m_button, m_modifiers, m_wheel_delta); }
+    WSMouseEvent translated(const Point& delta) const {
+        return WSMouseEvent((Type)type(), m_position.translated(delta), m_buttons, m_button, m_modifiers, m_wheel_delta);
+    }
 
 private:
     Point m_position;
@@ -789,8 +989,12 @@ public:
     {
     }
 
-    Rect old_rect() const { return m_old_rect; }
-    Rect rect() const { return m_rect; }
+    Rect old_rect() const {
+        return m_old_rect;
+    }
+    Rect rect() const {
+        return m_rect;
+    }
 
 private:
     Rect m_old_rect;
@@ -806,8 +1010,12 @@ public:
     {
     }
 
-    int client_id() const { return m_client_id; }
-    int window_id() const { return m_window_id; }
+    int client_id() const {
+        return m_client_id;
+    }
+    int window_id() const {
+        return m_window_id;
+    }
 
 private:
     int m_client_id;
@@ -834,11 +1042,21 @@ public:
     {
     }
 
-    String title() const { return m_title; }
-    Rect rect() const { return m_rect; }
-    bool is_active() const { return m_active; }
-    WSWindowType window_type() const { return m_window_type; }
-    bool is_minimized() const { return m_minimized; }
+    String title() const {
+        return m_title;
+    }
+    Rect rect() const {
+        return m_rect;
+    }
+    bool is_active() const {
+        return m_active;
+    }
+    WSWindowType window_type() const {
+        return m_window_type;
+    }
+    bool is_minimized() const {
+        return m_minimized;
+    }
 
 private:
     String m_title;
@@ -857,8 +1075,12 @@ public:
     {
     }
 
-    int icon_buffer_id() const { return m_icon_buffer_id; }
-    const Size icon_size() const { return m_icon_size; }
+    int icon_buffer_id() const {
+        return m_icon_buffer_id;
+    }
+    const Size icon_size() const {
+        return m_icon_size;
+    }
 
 private:
     int m_icon_buffer_id;
@@ -873,7 +1095,9 @@ public:
     {
     }
 
-    Rect rect() const { return m_rect; }
+    Rect rect() const {
+        return m_rect;
+    }
 
 private:
     Rect m_rect;
