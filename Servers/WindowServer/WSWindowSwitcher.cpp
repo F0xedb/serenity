@@ -1,4 +1,5 @@
 #include <LibDraw/Font.h>
+#include <LibDraw/GraphicsBitmap.h>
 #include <LibDraw/StylePainter.h>
 #include <WindowServer/WSEvent.h>
 #include <WindowServer/WSScreen.h>
@@ -124,7 +125,7 @@ void WSWindowSwitcher::refresh()
         m_windows.append(window.make_weak_ptr());
         return IterationDecision::Continue;
     },
-        true);
+    true);
     if (m_windows.is_empty()) {
         hide();
         return;

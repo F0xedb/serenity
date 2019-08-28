@@ -23,6 +23,14 @@ TextEditorWidget::TextEditorWidget()
     m_editor = new GTextEditor(GTextEditor::MultiLine, this);
     m_editor->set_ruler_visible(true);
     m_editor->set_automatic_indentation_enabled(true);
+    m_editor->set_line_wrapping_enabled(true);
+
+    m_editor->on_change = [this] {
+        bool was_dirty = m_document_dirty;
+        m_document_dirty = true;
+        if (!was_dirty)
+            update_title();
+    };
 
     m_find_widget = new GWidget(this);
     m_find_widget->set_fill_with_background_color(true);
@@ -47,7 +55,6 @@ TextEditorWidget::TextEditorWidget()
                 GMessageBox::Type::Information,
                 GMessageBox::InputType::OK, window());
         }
-
     });
     m_find_previous_action = GAction::create("Find previous", { Mod_Ctrl | Mod_Shift, Key_G }, [&](auto&) {
         auto needle = m_find_textbox->text();
@@ -130,14 +137,19 @@ TextEditorWidget::TextEditorWidget()
             return;
         }
 
+        m_document_dirty = false;
         set_path(FileSystemPath(save_path.value()));
         dbg() << "Wrote document to " << save_path.value();
     });
 
     m_save_action = GAction::create("Save", { Mod_Ctrl, Key_S }, GraphicsBitmap::load_from_file("/res/icons/16x16/save.png"), [&](const GAction&) {
         if (!m_path.is_empty()) {
-            if (!m_editor->write_to_file(m_path))
+            if (!m_editor->write_to_file(m_path)) {
                 GMessageBox::show("Unable to save file.\n", "Error", GMessageBox::Type::Error, GMessageBox::InputType::OK, window());
+            } else {
+                m_document_dirty = false;
+                update_title();
+            }
             return;
         }
 
@@ -153,19 +165,17 @@ TextEditorWidget::TextEditorWidget()
 
     auto menubar = make<GMenuBar>();
     auto app_menu = make<GMenu>("Text Editor");
-    app_menu->add_action(*m_line_wrapping_setting_action);
-    app_menu->add_action(GAction::create("Quit", { Mod_Alt, Key_F4 }, [](const GAction&) {
+    app_menu->add_action(*m_new_action);
+    app_menu->add_action(*m_open_action);
+    app_menu->add_action(*m_save_action);
+    app_menu->add_action(*m_save_as_action);
+    app_menu->add_separator();
+    app_menu->add_action(GAction::create("Quit", { Mod_Alt, Key_F4 }, [this](const GAction&) {
+        if (!request_close())
+            return;
         GApplication::the().quit(0);
-        return;
     }));
     menubar->add_menu(move(app_menu));
-
-    auto file_menu = make<GMenu>("File");
-    file_menu->add_action(*m_new_action);
-    file_menu->add_action(*m_open_action);
-    file_menu->add_action(*m_save_action);
-    file_menu->add_action(*m_save_as_action);
-    menubar->add_menu(move(file_menu));
 
     auto edit_menu = make<GMenu>("Edit");
     edit_menu->add_action(m_editor->undo_action());
@@ -189,6 +199,10 @@ TextEditorWidget::TextEditorWidget()
         }));
     });
     menubar->add_menu(move(font_menu));
+
+    auto view_menu = make<GMenu>("View");
+    view_menu->add_action(*m_line_wrapping_setting_action);
+    menubar->add_menu(move(view_menu));
 
     auto help_menu = make<GMenu>("Help");
     help_menu->add_action(GAction::create("About", [](const GAction&) {
@@ -226,9 +240,16 @@ void TextEditorWidget::set_path(const FileSystemPath& file)
     m_path = file.string();
     m_name = file.title();
     m_extension = file.extension();
+    update_title();
+}
+
+void TextEditorWidget::update_title()
+{
     StringBuilder builder;
     builder.append("Text Editor: ");
-    builder.append(file.string());
+    builder.append(m_path);
+    if (m_document_dirty)
+        builder.append(" (*)");
     window()->set_title(builder.to_string());
 }
 
@@ -242,4 +263,13 @@ void TextEditorWidget::open_sesame(const String& path)
 
     m_editor->set_text(file.read_all());
     set_path(FileSystemPath(path));
+}
+
+bool TextEditorWidget::request_close()
+{
+    if (!m_document_dirty)
+        return true;
+    GMessageBox box("The document has been modified. Quit without saving?", "Quit without saving?", GMessageBox::Type::Warning, GMessageBox::InputType::OKCancel, window());
+    auto result = box.exec();
+    return result == GMessageBox::ExecOK;
 }

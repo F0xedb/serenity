@@ -47,12 +47,13 @@ WSWindowManager::WSWindowManager()
     struct AppMenuItem {
         const char* binary_name;
         const char* description;
+        const char* icon_path;
     };
 
     Vector<AppMenuItem> apps = {
-        { "/bin/Terminal", "Open Terminal..." },
-        { "/bin/FileManager", "Open FileManager..." },
-        { "/bin/ProcessManager", "Open ProcessManager..." }
+        { "/bin/Terminal", "Open Terminal...", "/res/icons/16x16/app-terminal.png" },
+        { "/bin/FileManager", "Open FileManager...", "/res/icons/16x16/filetype-folder.png" },
+        { "/bin/SystemMonitor", "Open SystemMonitor...", "/res/icons/16x16/app-system-monitor.png" }
     };
 
     u8 system_menu_name[] = { 0xf8, 0 };
@@ -60,13 +61,13 @@ WSWindowManager::WSWindowManager()
 
     int appIndex = 1;
     for (const auto& app : apps) {
-        m_system_menu->add_item(make<WSMenuItem>(*m_system_menu, appIndex++, app.description));
+        m_system_menu->add_item(make<WSMenuItem>(*m_system_menu, appIndex++, app.description, String(), true, false, false, load_png(app.icon_path)));
     }
 
     m_system_menu->add_item(make<WSMenuItem>(*m_system_menu, WSMenuItem::Separator));
     m_system_menu->add_item(make<WSMenuItem>(*m_system_menu, 100, "Reload WM Config File"));
     m_system_menu->add_item(make<WSMenuItem>(*m_system_menu, WSMenuItem::Separator));
-    m_system_menu->add_item(make<WSMenuItem>(*m_system_menu, 200, "About..."));
+    m_system_menu->add_item(make<WSMenuItem>(*m_system_menu, 200, "About...", String(), true, false, false, load_png("/res/icons/16x16/ladybug.png")));
     m_system_menu->add_item(make<WSMenuItem>(*m_system_menu, WSMenuItem::Separator));
     m_system_menu->add_item(make<WSMenuItem>(*m_system_menu, 300, "Shutdown..."));
     m_system_menu->on_item_activation = [this, apps](WSMenuItem& item) {
@@ -139,7 +140,7 @@ void WSWindowManager::reload_config(bool set_screen)
 
     if (set_screen)
         set_resolution(m_wm_config->read_num_entry("Screen", "Width", 1920),
-            m_wm_config->read_num_entry("Screen", "Height", 1080));
+                       m_wm_config->read_num_entry("Screen", "Height", 1080));
 
     m_arrow_cursor = get_cursor("Arrow", { 2, 2 });
     m_resize_horizontally_cursor = get_cursor("ResizeH");

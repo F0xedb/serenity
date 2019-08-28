@@ -92,9 +92,9 @@ int main(int argc, char** argv)
         GInputBox input_box("Enter name:", "New directory", window);
         if (input_box.exec() == GInputBox::ExecOK && !input_box.text_value().is_empty()) {
             auto new_dir_path = canonicalized_path(
-                String::format("%s/%s",
-                    directory_view->path().characters(),
-                    input_box.text_value().characters()));
+                                    String::format("%s/%s",
+                                                   directory_view->path().characters(),
+                                                   input_box.text_value().characters()));
             int rc = mkdir(new_dir_path.characters(), 0777);
             if (rc < 0) {
                 GMessageBox::show(String::format("mkdir(\"%s\") failed: %s", new_dir_path.characters(), strerror(errno)), "Error", GMessageBox::Type::Error, GMessageBox::InputType::OK, window);
@@ -151,17 +151,14 @@ int main(int argc, char** argv)
     auto menubar = make<GMenuBar>();
 
     auto app_menu = make<GMenu>("File Manager");
+    app_menu->add_action(mkdir_action);
+    app_menu->add_action(copy_action);
+    app_menu->add_action(delete_action);
+    app_menu->add_separator();
     app_menu->add_action(GAction::create("Quit", { Mod_Alt, Key_F4 }, [](const GAction&) {
         GApplication::the().quit(0);
-        return;
     }));
     menubar->add_menu(move(app_menu));
-
-    auto file_menu = make<GMenu>("File");
-    file_menu->add_action(mkdir_action);
-    file_menu->add_action(copy_action);
-    file_menu->add_action(delete_action);
-    menubar->add_menu(move(file_menu));
 
     auto view_menu = make<GMenu>("View");
     view_menu->add_action(*view_as_icons_action);
@@ -172,6 +169,7 @@ int main(int argc, char** argv)
     go_menu->add_action(go_back_action);
     go_menu->add_action(go_forward_action);
     go_menu->add_action(open_parent_directory_action);
+    go_menu->add_action(go_home_action);
     menubar->add_menu(move(go_menu));
 
     auto help_menu = make<GMenu>("Help");
@@ -204,7 +202,7 @@ int main(int argc, char** argv)
         tree_view->update();
 
         go_forward_action->set_enabled(directory_view->path_history_position()
-            < directory_view->path_history_size() - 1);
+                                       < directory_view->path_history_size() - 1);
         go_back_action->set_enabled(directory_view->path_history_position() > 0);
     };
 

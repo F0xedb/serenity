@@ -4,6 +4,7 @@
 #include <AK/Function.h>
 #include <LibDraw/Rect.h>
 
+class GraphicsBitmap;
 class WSMenu;
 
 class WSMenuItem {
@@ -14,31 +15,62 @@ public:
         Separator,
     };
 
-    WSMenuItem(WSMenu&, unsigned identifier, const String& text, const String& shortcut_text = {}, bool enabled = true, bool checkable = false, bool checked = false);
+    WSMenuItem(WSMenu&, unsigned identifier, const String& text, const String& shortcut_text = {}, bool enabled = true, bool checkable = false, bool checked = false, const GraphicsBitmap* icon = nullptr);
     WSMenuItem(WSMenu&, Type);
     ~WSMenuItem();
 
-    Type type() const { return m_type; }
+    Type type() const {
+        return m_type;
+    }
 
-    bool is_enabled() const { return m_enabled; }
+    bool is_enabled() const {
+        return m_enabled;
+    }
     void set_enabled(bool);
 
-    bool is_checkable() const { return m_checkable; }
-    void set_checkable(bool checkable) { m_checkable = checkable; }
+    bool is_checkable() const {
+        return m_checkable;
+    }
+    void set_checkable(bool checkable) {
+        m_checkable = checkable;
+    }
 
-    bool is_checked() const { return m_checked; }
+    bool is_checked() const {
+        return m_checked;
+    }
     void set_checked(bool);
 
-    String text() const { return m_text; }
-    void set_text(const String& text) { m_text = text; }
+    String text() const {
+        return m_text;
+    }
+    void set_text(const String& text) {
+        m_text = text;
+    }
 
-    String shortcut_text() const { return m_shortcut_text; }
-    void set_shortcut_text(const String& text) { m_shortcut_text = text; }
+    String shortcut_text() const {
+        return m_shortcut_text;
+    }
+    void set_shortcut_text(const String& text) {
+        m_shortcut_text = text;
+    }
 
-    void set_rect(const Rect& rect) { m_rect = rect; }
-    Rect rect() const { return m_rect; }
+    void set_rect(const Rect& rect) {
+        m_rect = rect;
+    }
+    Rect rect() const {
+        return m_rect;
+    }
 
-    unsigned identifier() const { return m_identifier; }
+    unsigned identifier() const {
+        return m_identifier;
+    }
+
+    const GraphicsBitmap* icon() const {
+        return m_icon;
+    }
+    void set_icon(const GraphicsBitmap* icon) {
+        m_icon = icon;
+    }
 
 private:
     WSMenu& m_menu;
@@ -50,4 +82,5 @@ private:
     String m_text;
     String m_shortcut_text;
     Rect m_rect;
+    RefPtr<GraphicsBitmap> m_icon;
 };

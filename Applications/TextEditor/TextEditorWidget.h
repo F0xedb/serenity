@@ -16,9 +16,11 @@ public:
     TextEditorWidget();
     virtual ~TextEditorWidget() override;
     void open_sesame(const String& path);
+    bool request_close();
 
 private:
     void set_path(const FileSystemPath& file);
+    void update_title();
 
     GTextEditor* m_editor { nullptr };
     String m_path;
@@ -37,4 +39,6 @@ private:
     GButton* m_find_previous_button { nullptr };
     GButton* m_find_next_button { nullptr };
     GWidget* m_find_widget { nullptr };
+
+    bool m_document_dirty { false };
 };

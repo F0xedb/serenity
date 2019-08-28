@@ -3,6 +3,7 @@
 #include <AK/AKString.h>
 #include <AK/HashMap.h>
 #include <AK/JsonArray.h>
+#include <AK/JsonObjectSerializer.h>
 #include <AK/JsonValue.h>
 
 namespace AK {
@@ -36,8 +37,12 @@ public:
         return *this;
     }
 
-    int size() const { return m_members.size(); }
-    bool is_empty() const { return m_members.is_empty(); }
+    int size() const {
+        return m_members.size();
+    }
+    bool is_empty() const {
+        return m_members.is_empty();
+    }
 
     JsonValue get(const String& key) const
     {
@@ -70,7 +75,9 @@ public:
     template<typename Builder>
     void serialize(Builder&) const;
 
-    String to_string() const { return serialized<StringBuilder>(); }
+    String to_string() const {
+        return serialized<StringBuilder>();
+    }
 
 private:
     HashMap<String, JsonValue> m_members;
@@ -79,19 +86,10 @@ private:
 template<typename Builder>
 inline void JsonObject::serialize(Builder& builder) const
 {
-    int index = 0;
-    builder.append('{');
+    JsonObjectSerializer serializer { builder };
     for_each_member([&](auto& key, auto& value) {
-        builder.append('"');
-        builder.append(key);
-        builder.append('"');
-        builder.append(':');
-        value.serialize(builder);
-        if (index != size() - 1)
-            builder.append(',');
-        ++index;
+        serializer.add(key, value);
     });
-    builder.append('}');
 }
 
 template<typename Builder>

@@ -1,4 +1,5 @@
 #include <LibC/SharedBuffer.h>
+#include <LibDraw/GraphicsBitmap.h>
 #include <SharedBuffer.h>
 #include <WindowServer/WSAPITypes.h>
 #include <WindowServer/WSClientConnection.h>
@@ -158,7 +159,7 @@ bool WSClientConnection::handle_message(const WSAPI_ClientMessage& message, cons
             did_misbehave();
             return false;
         }
-        CEventLoop::current().post_event(*this, make<WSAPIAddMenuItemRequest>(client_id(), message.menu.menu_id, message.menu.identifier, String(message.text, message.text_length), String(message.menu.shortcut_text, message.menu.shortcut_text_length), message.menu.enabled, message.menu.checkable, message.menu.checked));
+        CEventLoop::current().post_event(*this, make<WSAPIAddMenuItemRequest>(client_id(), message.menu.menu_id, message.menu.identifier, String(message.text, message.text_length), String(message.menu.shortcut_text, message.menu.shortcut_text_length), message.menu.enabled, message.menu.checkable, message.menu.checked, message.menu.icon_buffer_id));
         break;
     case WSAPI_ClientMessage::Type::UpdateMenuItem:
         if (message.text_length > (int)sizeof(message.text)) {
@@ -211,19 +212,19 @@ bool WSClientConnection::handle_message(const WSAPI_ClientMessage& message, cons
         }
 
         CEventLoop::current().post_event(*this,
-            make<WSAPICreateWindowRequest>(client_id(),
-                message.window.rect,
-                String(message.text, message.text_length),
-                message.window.has_alpha_channel,
-                message.window.modal,
-                message.window.resizable,
-                message.window.fullscreen,
-                message.window.show_titlebar,
-                message.window.opacity,
-                message.window.base_size,
-                message.window.size_increment,
-                ws_window_type,
-                Color::from_rgba(message.window.background_color)));
+                                         make<WSAPICreateWindowRequest>(client_id(),
+                                                 message.window.rect,
+                                                 String(message.text, message.text_length),
+                                                 message.window.has_alpha_channel,
+                                                 message.window.modal,
+                                                 message.window.resizable,
+                                                 message.window.fullscreen,
+                                                 message.window.show_titlebar,
+                                                 message.window.opacity,
+                                                 message.window.base_size,
+                                                 message.window.size_increment,
+                                                 ws_window_type,
+                                                 Color::from_rgba(message.window.background_color)));
         break;
     }
     case WSAPI_ClientMessage::Type::DestroyWindow:
@@ -422,7 +423,18 @@ void WSClientConnection::handle_request(const WSAPIAddMenuItemRequest& request)
         return;
     }
     auto& menu = *(*it).value;
-    menu.add_item(make<WSMenuItem>(menu, identifier, request.text(), request.shortcut_text(), request.is_enabled(), request.is_checkable(), request.is_checked()));
+    auto menu_item = make<WSMenuItem>(menu, identifier, request.text(), request.shortcut_text(), request.is_enabled(), request.is_checkable(), request.is_checked());
+    if (request.icon_buffer_id() != -1) {
+        auto icon_buffer = SharedBuffer::create_from_shared_buffer_id(request.icon_buffer_id());
+        if (!icon_buffer) {
+            did_misbehave();
+            return;
+        }
+        // FIXME: Verify that the icon buffer can accomodate a 16x16 bitmap view.
+        auto shared_icon = GraphicsBitmap::create_with_shared_buffer(GraphicsBitmap::Format::RGBA32, icon_buffer.release_nonnull(), { 16, 16 });
+        menu_item->set_icon(shared_icon);
+    }
+    menu.add_item(move(menu_item));
     WSAPI_ServerMessage response;
     response.type = WSAPI_ServerMessage::Type::DidAddMenuItem;
     response.menu.menu_id = menu_id;
@@ -791,9 +803,9 @@ void WSClientConnection::handle_request(const WSAPISetWindowBackingStoreRequest&
         if (!shared_buffer)
             return;
         auto backing_store = GraphicsBitmap::create_with_shared_buffer(
-            request.has_alpha_channel() ? GraphicsBitmap::Format::RGBA32 : GraphicsBitmap::Format::RGB32,
-            *shared_buffer,
-            request.size());
+                                 request.has_alpha_channel() ? GraphicsBitmap::Format::RGBA32 : GraphicsBitmap::Format::RGB32,
+                                 *shared_buffer,
+                                 request.size());
         window.set_backing_store(move(backing_store));
     }
 

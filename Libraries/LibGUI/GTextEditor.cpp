@@ -545,23 +545,20 @@ void GTextEditor::keydown_event(GKeyEvent& event)
         return;
     }
     if (event.key() == KeyCode::Key_Right) {
+        int new_line = m_cursor.line();
+        int new_column = m_cursor.column();
         if (m_cursor.column() < current_line().length()) {
-            int new_column = m_cursor.column() + 1;
-            toggle_selection_if_needed_for_event(event);
-            set_cursor(m_cursor.line(), new_column);
-            if (m_selection.start().is_valid()) {
-                m_selection.set_end(m_cursor);
-                did_update_selection();
-            }
+            new_line = m_cursor.line();
+            new_column = m_cursor.column() + 1;
         } else if (m_cursor.line() != line_count() - 1) {
-            int new_line = m_cursor.line() + 1;
-            int new_column = 0;
-            toggle_selection_if_needed_for_event(event);
-            set_cursor(new_line, new_column);
-            if (m_selection.start().is_valid()) {
-                m_selection.set_end(m_cursor);
-                did_update_selection();
-            }
+            new_line = m_cursor.line() + 1;
+            new_column = 0;
+        }
+        toggle_selection_if_needed_for_event(event);
+        set_cursor(new_line, new_column);
+        if (m_selection.start().is_valid()) {
+            m_selection.set_end(m_cursor);
+            did_update_selection();
         }
         return;
     }
@@ -619,6 +616,7 @@ void GTextEditor::keydown_event(GKeyEvent& event)
             current_line().remove(m_cursor.column() - 1);
             update_content_size();
             set_cursor(m_cursor.line(), m_cursor.column() - 1);
+            did_change();
             return;
         }
         if (m_cursor.column() == 0 && m_cursor.line() != 0) {
@@ -630,6 +628,7 @@ void GTextEditor::keydown_event(GKeyEvent& event)
             update_content_size();
             update();
             set_cursor(m_cursor.line() - 1, previous_length);
+            did_change();
             return;
         }
         return;
@@ -1295,6 +1294,7 @@ GTextRange GTextEditor::find_prev(const StringView& needle, const GTextPosition&
         return {};
 
     GTextPosition position = start.is_valid() ? start : GTextPosition(0, 0);
+    position = prev_position_before(position);
     GTextPosition original_position = position;
 
     GTextPosition end_of_potential_match;

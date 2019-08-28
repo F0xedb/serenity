@@ -44,7 +44,8 @@ void WSMenuManager::draw()
     wm.for_each_active_menubar_menu([&](WSMenu& menu) {
         Color text_color = Color::Black;
         if (&menu == wm.current_menu()) {
-            painter.fill_rect(menu.rect_in_menubar(), wm.menu_selection_color());
+            painter.fill_rect(menu.rect_in_menubar(), Color::from_rgb(0xad714f));
+            painter.draw_rect(menu.rect_in_menubar(), Color::from_rgb(0x793016));
             text_color = Color::White;
         }
         painter.draw_text(
@@ -69,12 +70,12 @@ void WSMenuManager::draw()
     time_t now = time(nullptr);
     auto* tm = localtime(&now);
     auto time_text = String::format("%4u-%02u-%02u %02u:%02u:%02u",
-        tm->tm_year + 1900,
-        tm->tm_mon + 1,
-        tm->tm_mday,
-        tm->tm_hour,
-        tm->tm_min,
-        tm->tm_sec);
+                                    tm->tm_year + 1900,
+                                    tm->tm_mon + 1,
+                                    tm->tm_mday,
+                                    tm->tm_hour,
+                                    tm->tm_min,
+                                    tm->tm_sec);
     int time_width = wm.font().width(time_text);
     Rect time_rect {
         username_rect.left() - wm.menubar_menu_margin() / 2 - time_width,
