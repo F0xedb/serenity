@@ -115,7 +115,7 @@ public:
 
     void close();
 
-    void popup(const Point&);
+    void popup(const Point&, bool is_submenu = false);
 
 private:
     virtual void event(CEvent&) override;

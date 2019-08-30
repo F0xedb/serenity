@@ -1,5 +1,6 @@
 #pragma once
 
+#include <AK/AKString.h>
 #include <AK/Vector.h>
 #include <Kernel/VM/VirtualAddress.h>
 
@@ -14,13 +15,23 @@ public:
     {
     }
 
-    VirtualAddress base() const { return m_base; }
-    size_t size() const { return m_size; }
-    bool is_valid() const { return !m_base.is_null(); }
+    VirtualAddress base() const {
+        return m_base;
+    }
+    size_t size() const {
+        return m_size;
+    }
+    bool is_valid() const {
+        return !m_base.is_null();
+    }
 
-    bool contains(VirtualAddress vaddr) const { return vaddr >= base() && vaddr < end(); }
+    bool contains(VirtualAddress vaddr) const {
+        return vaddr >= base() && vaddr < end();
+    }
 
-    VirtualAddress end() const { return m_base.offset(m_size); }
+    VirtualAddress end() const {
+        return m_base.offset(m_size);
+    }
 
     bool operator==(const Range& other) const
     {
@@ -61,3 +72,8 @@ private:
 
     Vector<Range> m_available_ranges;
 };
+
+inline const LogStream& operator<<(const LogStream& stream, const Range& value)
+{
+    return stream << String::format("Range(%x-%x)", value.base().get(), value.end().get() - 1);
+}

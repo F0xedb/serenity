@@ -83,4 +83,5 @@ private:
     String m_shortcut_text;
     Rect m_rect;
     RefPtr<GraphicsBitmap> m_icon;
+    int m_submenu_id { -1 };
 };

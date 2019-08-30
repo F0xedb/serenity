@@ -19,8 +19,8 @@ void TCPSocket::set_state(State new_state)
 {
 #ifdef TCP_SOCKET_DEBUG
     kprintf("%s(%u) TCPSocket{%p} state moving from %s to %s\n",
-        current->process().name().characters(), current->pid(), this,
-        to_string(m_state), to_string(new_state));
+            current->process().name().characters(), current->pid(), this,
+            to_string(m_state), to_string(new_state));
 #endif
 
     m_state = new_state;
@@ -125,16 +125,8 @@ int TCPSocket::protocol_send(const void* data, int data_length)
 
 void TCPSocket::send_tcp_packet(u16 flags, const void* payload, int payload_size)
 {
-    if (!m_adapter) {
-        if (has_specific_local_address()) {
-            m_adapter = NetworkAdapter::from_ipv4_address(local_address());
-        } else {
-            m_adapter = adapter_for_route_to(peer_address());
-            if (m_adapter)
-                set_local_address(m_adapter->ipv4_address());
-        }
-    }
-    ASSERT(!!m_adapter);
+    auto routing_decision = route_to(peer_address(), local_address());
+    ASSERT(!routing_decision.is_zero());
 
     auto buffer = ByteBuffer::create_zeroed(sizeof(TCPPacket) + payload_size);
     auto& tcp_packet = *(TCPPacket*)(buffer.pointer());
@@ -159,18 +151,18 @@ void TCPSocket::send_tcp_packet(u16 flags, const void* payload, int payload_size
     tcp_packet.set_checksum(compute_tcp_checksum(local_address(), peer_address(), tcp_packet, payload_size));
 #ifdef TCP_SOCKET_DEBUG
     kprintf("sending tcp packet from %s:%u to %s:%u with (%s%s%s%s) seq_no=%u, ack_no=%u\n",
-        local_address().to_string().characters(),
-        local_port(),
-        peer_address().to_string().characters(),
-        peer_port(),
-        tcp_packet.has_syn() ? "SYN " : "",
-        tcp_packet.has_ack() ? "ACK " : "",
-        tcp_packet.has_fin() ? "FIN " : "",
-        tcp_packet.has_rst() ? "RST " : "",
-        tcp_packet.sequence_number(),
-        tcp_packet.ack_number());
+            local_address().to_string().characters(),
+            local_port(),
+            peer_address().to_string().characters(),
+            peer_port(),
+            tcp_packet.has_syn() ? "SYN " : "",
+            tcp_packet.has_ack() ? "ACK " : "",
+            tcp_packet.has_fin() ? "FIN " : "",
+            tcp_packet.has_rst() ? "RST " : "",
+            tcp_packet.sequence_number(),
+            tcp_packet.ack_number());
 #endif
-    m_adapter->send_ipv4(MACAddress(), peer_address(), IPv4Protocol::TCP, buffer.data(), buffer.size());
+    routing_decision.adapter->send_ipv4(routing_decision.next_hop, peer_address(), IPv4Protocol::TCP, buffer.data(), buffer.size());
 
     m_packets_out++;
     m_bytes_out += buffer.size();
@@ -249,19 +241,11 @@ KResult TCPSocket::protocol_listen()
 
 KResult TCPSocket::protocol_connect(FileDescription& description, ShouldBlock should_block)
 {
-    if (!m_adapter) {
-        if (has_specific_local_address()) {
-            m_adapter = NetworkAdapter::from_ipv4_address(local_address());
-            if (!m_adapter)
-                return KResult(-EADDRNOTAVAIL);
-        } else {
-            m_adapter = adapter_for_route_to(peer_address());
-            if (!m_adapter)
-                return KResult(-EHOSTUNREACH);
-
-            set_local_address(m_adapter->ipv4_address());
-        }
-    }
+    auto routing_decision = route_to(peer_address(), local_address());
+    if (routing_decision.is_zero())
+        return KResult(-EHOSTUNREACH);
+    if (!has_specific_local_address())
+        set_local_address(routing_decision.adapter->ipv4_address());
 
     allocate_local_port_if_needed();
 

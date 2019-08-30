@@ -75,6 +75,11 @@ public:
         return m_range.contains(vaddr);
     }
 
+    bool contains(const Range& range) const
+    {
+        return m_range.contains(range);
+    }
+
     unsigned page_index_from_address(VirtualAddress vaddr) const
     {
         return (vaddr - m_range.base()).get() / PAGE_SIZE;

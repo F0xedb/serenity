@@ -4,13 +4,10 @@
 #include <Kernel/IRQHandler.h>
 #include <Kernel/Net/NetworkAdapter.h>
 #include <Kernel/PCI.h>
-#include <Kernel/VM/MemoryManager.h>
 
 class E1000NetworkAdapter final : public NetworkAdapter
     , public IRQHandler {
 public:
-    static E1000NetworkAdapter* the();
-
     static OwnPtr<E1000NetworkAdapter> autodetect();
 
     E1000NetworkAdapter(PCI::Address, u8 irq);
@@ -21,7 +18,9 @@ public:
 
 private:
     virtual void handle_irq() override;
-    virtual const char* class_name() const override { return "E1000NetworkAdapter"; }
+    virtual const char* class_name() const override {
+        return "E1000NetworkAdapter";
+    }
 
     struct [[gnu::packed]] e1000_rx_desc
     {

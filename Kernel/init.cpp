@@ -33,6 +33,7 @@
 #include <Kernel/KParams.h>
 #include <Kernel/Multiboot.h>
 #include <Kernel/Net/E1000NetworkAdapter.h>
+#include <Kernel/Net/LoopbackAdapter.h>
 #include <Kernel/Net/NetworkTask.h>
 #include <Kernel/Net/RTL8139NetworkAdapter.h>
 #include <Kernel/PCI.h>
@@ -152,12 +153,14 @@ VFS* vfs;
     }
     system_server_process->set_priority(Process::HighPriority);
 
+    Process::create_kernel_process("NetworkTask", NetworkTask_main);
+
     current->process().sys$exit(0);
     ASSERT_NOT_REACHED();
 }
 
 extern "C" {
-multiboot_info_t* multiboot_info_ptr;
+    multiboot_info_t* multiboot_info_ptr;
 }
 
 extern "C" [[noreturn]] void init()
@@ -223,12 +226,12 @@ extern "C" [[noreturn]] void init()
 
     PCI::enumerate_all([](const PCI::Address& address, PCI::ID id) {
         kprintf("PCI device: bus=%d slot=%d function=%d id=%w:%w\n",
-            address.bus(),
-            address.slot(),
-            address.function(),
-            id.vendor_id,
-            id.device_id
-        );
+                address.bus(),
+                address.slot(),
+                address.function(),
+                id.vendor_id,
+                id.device_id
+               );
     });
 
     if (multiboot_info_ptr->framebuffer_type == 1) {
@@ -242,6 +245,7 @@ extern "C" [[noreturn]] void init()
         new BXVGADevice;
     }
 
+    LoopbackAdapter::the();
     auto e1000 = E1000NetworkAdapter::autodetect();
     auto rtl8139 = RTL8139NetworkAdapter::autodetect();
 
@@ -268,7 +272,6 @@ extern "C" [[noreturn]] void init()
             (void)current->block<Thread::SemiPermanentBlocker>(Thread::SemiPermanentBlocker::Reason::Lurking);
         }
     });
-    Process::create_kernel_process("NetworkTask", NetworkTask_main);
 
     Scheduler::pick_next();
 

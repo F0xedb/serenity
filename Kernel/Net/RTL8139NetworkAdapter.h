@@ -1,7 +1,6 @@
 #pragma once
 
 #include <AK/OwnPtr.h>
-#include <AK/RefPtr.h>
 #include <Kernel/IRQHandler.h>
 #include <Kernel/Net/NetworkAdapter.h>
 #include <Kernel/PCI.h>
@@ -11,19 +10,21 @@
 class RTL8139NetworkAdapter final : public NetworkAdapter
     , public IRQHandler {
 public:
-    static RTL8139NetworkAdapter* the();
-
     static OwnPtr<RTL8139NetworkAdapter> autodetect();
 
     RTL8139NetworkAdapter(PCI::Address, u8 irq);
     virtual ~RTL8139NetworkAdapter() override;
 
     virtual void send_raw(const u8*, int) override;
-    virtual bool link_up() override { return m_link_up; }
+    virtual bool link_up() override {
+        return m_link_up;
+    }
 
 private:
     virtual void handle_irq() override;
-    virtual const char* class_name() const override { return "RTL8139NetworkAdapter"; }
+    virtual const char* class_name() const override {
+        return "RTL8139NetworkAdapter";
+    }
 
     void reset();
     void read_mac_address();

@@ -55,7 +55,7 @@ void NetworkAdapter::send(const MACAddress& destination, const ARPPacket& packet
     m_packets_out++;
     m_bytes_out += size_in_bytes;
     memcpy(eth->payload(), &packet, sizeof(ARPPacket));
-    send_raw((u8*)eth, size_in_bytes);
+    send_raw((const u8*)eth, size_in_bytes);
 }
 
 void NetworkAdapter::send_ipv4(const MACAddress& destination_mac, const IPv4Address& destination_ipv4, IPv4Protocol protocol, const u8* payload, size_t payload_size)
@@ -88,6 +88,8 @@ void NetworkAdapter::did_receive(const u8* data, int length)
     m_packets_in++;
     m_bytes_in += length;
     m_packet_queue.append(KBuffer::copy(data, length));
+    if (on_receive)
+        on_receive();
 }
 
 Optional<KBuffer> NetworkAdapter::dequeue_packet()
@@ -101,6 +103,16 @@ Optional<KBuffer> NetworkAdapter::dequeue_packet()
 void NetworkAdapter::set_ipv4_address(const IPv4Address& address)
 {
     m_ipv4_address = address;
+}
+
+void NetworkAdapter::set_ipv4_netmask(const IPv4Address& netmask)
+{
+    m_ipv4_netmask = netmask;
+}
+
+void NetworkAdapter::set_ipv4_gateway(const IPv4Address& gateway)
+{
+    m_ipv4_gateway = gateway;
 }
 
 void NetworkAdapter::set_interface_name(const StringView& basename)

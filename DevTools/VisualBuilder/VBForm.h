@@ -13,14 +13,22 @@ public:
 
     static VBForm* current();
 
-    String name() const { return m_name; }
-    void set_name(const String& name) { m_name = name; }
+    String name() const {
+        return m_name;
+    }
+    void set_name(const String& name) {
+        m_name = name;
+    }
 
     bool is_selected(const VBWidget&) const;
     VBWidget* widget_at(const Point&);
 
-    void set_should_snap_to_grip(bool snap) { m_should_snap_to_grid = snap; }
-    bool should_snap_to_grid() const { return m_should_snap_to_grid; }
+    void set_should_snap_to_grip(bool snap) {
+        m_should_snap_to_grid = snap;
+    }
+    bool should_snap_to_grid() const {
+        return m_should_snap_to_grid;
+    }
 
     void insert_widget(VBWidgetType);
 
@@ -47,6 +55,7 @@ private:
     void delete_selected_widgets();
     template<typename Callback>
     void for_each_selected_widget(Callback);
+    void set_cursor_type_from_grabber(Direction grabber);
 
     VBWidget* single_selected_widget();
 
@@ -59,5 +68,6 @@ private:
     Point m_transform_event_origin;
     Point m_next_insertion_position;
     Direction m_resize_direction { Direction::None };
+    Direction m_mouse_direction_type { Direction::None };
     OwnPtr<GMenu> m_context_menu;
 };
