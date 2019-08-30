@@ -43,9 +43,15 @@ public:
     {
         lock();
     }
-    [[gnu::always_inline]] inline ~Locker() { unlock(); }
-    [[gnu::always_inline]] inline void unlock() { m_lock.unlock(); }
-    [[gnu::always_inline]] inline void lock() { m_lock.lock(); }
+    [[gnu::always_inline]] inline ~Locker() {
+        unlock();
+    }
+    [[gnu::always_inline]] inline void unlock() {
+        m_lock.unlock();
+    }
+    [[gnu::always_inline]] inline void lock() {
+        m_lock.lock();
+    }
 
 private:
     Lock& m_lock;
@@ -100,8 +106,12 @@ public:
         : m_resource(move(resource))
     {
     }
-    Lock& lock() { return m_lock; }
-    T& resource() { return m_resource; }
+    Lock& lock() {
+        return m_lock;
+    }
+    T& resource() {
+        return m_resource;
+    }
 
     T lock_and_copy()
     {

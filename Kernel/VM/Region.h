@@ -27,9 +27,6 @@ public:
 
     ~Region();
 
-    const Range& range() const {
-        return m_range;
-    }
     VirtualAddress vaddr() const {
         return m_range.base();
     }
@@ -47,9 +44,6 @@ public:
     }
     const String& name() const {
         return m_name;
-    }
-    unsigned access() const {
-        return m_access;
     }
 
     void set_name(const String& name) {
