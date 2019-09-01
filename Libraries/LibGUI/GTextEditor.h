@@ -245,6 +245,9 @@ public:
         return *m_delete_action;
     }
 
+protected:
+    virtual void did_change_font() override;
+
 private:
     virtual void paint_event(GPaintEvent&) override;
     virtual void mousedown_event(GMouseEvent&) override;
