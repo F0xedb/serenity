@@ -710,13 +710,13 @@ void Process::dump_regions()
     kprintf("BEGIN       END         SIZE        ACCESS  NAME\n");
     for (auto& region : m_regions) {
         kprintf("%08x -- %08x    %08x    %c%c%c     %s\n",
-            region.vaddr().get(),
-            region.vaddr().offset(region.size() - 1).get(),
-            region.size(),
-            region.is_readable() ? 'R' : ' ',
-            region.is_writable() ? 'W' : ' ',
-            region.is_executable() ? 'X' : ' ',
-            region.name().characters());
+                region.vaddr().get(),
+                region.vaddr().offset(region.size() - 1).get(),
+                region.size(),
+                region.is_readable() ? 'R' : ' ',
+                region.is_writable() ? 'W' : ' ',
+                region.is_executable() ? 'X' : ' ',
+                region.name().characters());
     }
 }
 
@@ -1954,8 +1954,12 @@ int Process::sys$select(const Syscall::SC_select_params* params)
             }
         }
     };
-    mark_fds(params->readfds, rfds, [](auto& description) { return description.can_read(); });
-    mark_fds(params->writefds, wfds, [](auto& description) { return description.can_write(); });
+    mark_fds(params->readfds, rfds, [](auto& description) {
+        return description.can_read();
+    });
+    mark_fds(params->writefds, wfds, [](auto& description) {
+        return description.can_write();
+    });
     // FIXME: We should also mark params->exceptfds as appropriate.
 
     return marked_fd_count;

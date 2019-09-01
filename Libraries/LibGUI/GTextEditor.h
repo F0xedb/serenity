@@ -245,8 +245,6 @@ public:
         return *m_delete_action;
     }
 
-    void add_custom_context_menu_action(GAction&);
-
 protected:
     virtual void did_change_font() override;
 

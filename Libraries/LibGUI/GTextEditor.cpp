@@ -405,8 +405,8 @@ void GTextEditor::paint_event(GPaintEvent& event)
 
                     int selection_right = selection_ends_on_current_visual_line
                                           ? content_x_for_position({ line_index, selection_end_column_within_line })
-                                          : visual_line_rect.right() + 1;
 
+                                          : visual_line_rect.right();
                     Rect selection_rect {
                         selection_left,
                         visual_line_rect.y(),

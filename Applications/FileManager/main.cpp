@@ -92,9 +92,9 @@ int main(int argc, char** argv)
         GInputBox input_box("Enter name:", "New directory", window);
         if (input_box.exec() == GInputBox::ExecOK && !input_box.text_value().is_empty()) {
             auto new_dir_path = canonicalized_path(
-                String::format("%s/%s",
-                    directory_view->path().characters(),
-                    input_box.text_value().characters()));
+                                    String::format("%s/%s",
+                                                   directory_view->path().characters(),
+                                                   input_box.text_value().characters()));
             int rc = mkdir(new_dir_path.characters(), 0777);
             if (rc < 0) {
                 GMessageBox::show(String::format("mkdir(\"%s\") failed: %s", new_dir_path.characters(), strerror(errno)), "Error", GMessageBox::Type::Error, GMessageBox::InputType::OK, window);
@@ -202,7 +202,7 @@ int main(int argc, char** argv)
         tree_view->update();
 
         go_forward_action->set_enabled(directory_view->path_history_position()
-            < directory_view->path_history_size() - 1);
+                                       < directory_view->path_history_size() - 1);
         go_back_action->set_enabled(directory_view->path_history_position() > 0);
     };
 
