@@ -38,8 +38,8 @@ InodeVMObject::~InodeVMObject()
 void InodeVMObject::inode_size_changed(Badge<Inode>, size_t old_size, size_t new_size)
 {
     dbgprintf("VMObject::inode_size_changed: {%u:%u} %u -> %u\n",
-        m_inode->fsid(), m_inode->index(),
-        old_size, new_size);
+              m_inode->fsid(), m_inode->index(),
+              old_size, new_size);
 
     InterruptDisabler disabler;
 

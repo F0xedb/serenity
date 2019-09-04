@@ -86,11 +86,11 @@ void MemoryManager::initialize_paging()
 
     for (auto* mmap = (multiboot_memory_map_t*)multiboot_info_ptr->mmap_addr; (unsigned long)mmap < multiboot_info_ptr->mmap_addr + multiboot_info_ptr->mmap_length; mmap = (multiboot_memory_map_t*)((unsigned long)mmap + mmap->size + sizeof(mmap->size))) {
         kprintf("MM: Multiboot mmap: base_addr = 0x%x%08x, length = 0x%x%08x, type = 0x%x\n",
-            (u32)(mmap->addr >> 32),
-            (u32)(mmap->addr & 0xffffffff),
-            (u32)(mmap->len >> 32),
-            (u32)(mmap->len & 0xffffffff),
-            (u32)mmap->type);
+                (u32)(mmap->addr >> 32),
+                (u32)(mmap->addr & 0xffffffff),
+                (u32)(mmap->len >> 32),
+                (u32)(mmap->len & 0xffffffff),
+                (u32)mmap->type);
 
         if (mmap->type != MULTIBOOT_MEMORY_AVAILABLE)
             continue;
@@ -101,7 +101,7 @@ void MemoryManager::initialize_paging()
 
 #ifdef MM_DEBUG
         kprintf("MM: considering memory at %p - %p\n",
-            (u32)mmap->addr, (u32)(mmap->addr + mmap->len));
+                (u32)mmap->addr, (u32)(mmap->addr + mmap->len));
 #endif
 
         for (size_t page_base = mmap->addr; page_base < (mmap->addr + mmap->len); page_base += PAGE_SIZE) {
@@ -144,7 +144,7 @@ void MemoryManager::initialize_paging()
         "movl %%cr0, %%eax\n"
         "orl $0x80000001, %%eax\n"
         "movl %%eax, %%cr0\n" ::
-            : "%eax", "memory");
+        : "%eax", "memory");
 
 #ifdef MM_DEBUG
     dbgprintf("MM: Paging initialized.\n");
@@ -189,12 +189,12 @@ PageTableEntry& MemoryManager::ensure_pte(PageDirectory& page_directory, Virtual
             auto page_table = allocate_page_table(page_directory, page_directory_index);
 #ifdef MM_DEBUG
             dbgprintf("MM: PD K%x (%s) at P%x allocated page table #%u (for V%p) at P%x\n",
-                &page_directory,
-                &page_directory == m_kernel_page_directory ? "Kernel" : "User",
-                page_directory.cr3(),
-                page_directory_index,
-                vaddr.get(),
-                page_table->paddr().get());
+                      &page_directory,
+                      &page_directory == m_kernel_page_directory ? "Kernel" : "User",
+                      page_directory.cr3(),
+                      page_directory_index,
+                      vaddr.get(),
+                      page_table->paddr().get());
 #endif
 
             pde.set_page_table_base(page_table->paddr().get());
@@ -592,7 +592,7 @@ void MemoryManager::flush_entire_tlb()
     asm volatile(
         "mov %%cr3, %%eax\n"
         "mov %%eax, %%cr3\n" ::
-            : "%eax", "memory");
+        : "%eax", "memory");
 }
 
 void MemoryManager::flush_tlb(VirtualAddress vaddr)
