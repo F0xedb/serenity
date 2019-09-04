@@ -148,7 +148,7 @@ private:
     RefPtr<PageDirectory> m_page_directory;
     Range m_range;
     size_t m_offset_in_vmo { 0 };
-    NonnullRefPtr<VMObject> m_vmo;
+    NonnullRefPtr<VMObject> m_vmobject;
     String m_name;
     u8 m_access { 0 };
     bool m_shared { false };

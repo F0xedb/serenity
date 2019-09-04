@@ -1,10 +1,11 @@
-#include "IRCAppWindow.h"
 #include "IRCClient.h"
+#include "IRCAppWindow.h"
 #include "IRCChannel.h"
 #include "IRCLogBuffer.h"
 #include "IRCQuery.h"
 #include "IRCWindow.h"
 #include "IRCWindowListModel.h"
+#include <AK/StringBuilder.h>
 #include <LibCore/CNotifier.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -61,15 +62,12 @@ void IRCClient::on_socket_connected()
     send_user();
     send_nick();
 
-    if (on_connect) {
-        auto channel_str = m_config->read_entry("Connection", "AutoJoinChannels", "#test");
-        dbgprintf("IRCClient: Channels to autojoin: %s\n", channel_str.characters());
-        auto channels = channel_str.split(',');
-        for (auto& channel : channels) {
-            join_channel(channel);
-            dbgprintf("IRCClient: Auto joining channel: %s\n", channel.characters());
-        }
-        on_connect();
+    auto channel_str = m_config->read_entry("Connection", "AutoJoinChannels", "#test");
+    dbgprintf("IRCClient: Channels to autojoin: %s\n", channel_str.characters());
+    auto channels = channel_str.split(',');
+    for (auto& channel : channels) {
+        join_channel(channel);
+        dbgprintf("IRCClient: Auto joining channel: %s\n", channel.characters());
     }
 }
 
@@ -216,9 +214,9 @@ void IRCClient::handle(const Message& msg)
 {
 #ifdef IRC_DEBUG
     printf("IRCClient::execute: prefix='%s', command='%s', arguments=%d\n",
-        msg.prefix.characters(),
-        msg.command.characters(),
-        msg.arguments.size());
+           msg.prefix.characters(),
+           msg.command.characters(),
+           msg.arguments.size());
 
     int i = 0;
     for (auto& arg : msg.arguments) {
@@ -280,15 +278,20 @@ void IRCClient::handle(const Message& msg)
         add_server_message(String::format("[%s] %s", msg.command.characters(), msg.arguments[1].characters()));
 }
 
-void IRCClient::add_server_message(const String& text)
+void IRCClient::add_server_message(const String& text, Color color)
 {
-    m_log->add_message(0, "", text);
+    m_log->add_message(0, "", text, color);
     m_server_subwindow->did_add_message();
 }
 
 void IRCClient::send_privmsg(const String& target, const String& text)
 {
     send(String::format("PRIVMSG %s :%s\r\n", target.characters(), text.characters()));
+}
+
+void IRCClient::send_notice(const String& target, const String& text)
+{
+    send(String::format("NOTICE %s :%s\r\n", target.characters(), text.characters()));
 }
 
 void IRCClient::handle_user_input_in_channel(const String& channel_name, const String& input)
@@ -330,6 +333,11 @@ bool IRCClient::is_nick_prefix(char ch) const
     return false;
 }
 
+static bool has_ctcp_payload(const StringView& string)
+{
+    return string.length() >= 2 && string[0] == 0x01 && string[string.length() - 1] == 0x01;
+}
+
 void IRCClient::handle_privmsg_or_notice(const Message& msg, PrivmsgOrNotice type)
 {
     if (msg.arguments.size() < 2)
@@ -340,11 +348,14 @@ void IRCClient::handle_privmsg_or_notice(const Message& msg, PrivmsgOrNotice typ
     auto sender_nick = parts[0];
     auto target = msg.arguments[0];
 
+    bool is_ctcp = has_ctcp_payload(msg.arguments[1]);
+
 #ifdef IRC_DEBUG
-    printf("handle_privmsg_or_notice: type='%s', sender_nick='%s', target='%s'\n",
-        type == PrivmsgOrNotice::Privmsg ? "privmsg" : "notice",
-        sender_nick.characters(),
-        target.characters());
+    printf("handle_privmsg_or_notice: type='%s'%s, sender_nick='%s', target='%s'\n",
+           type == PrivmsgOrNotice::Privmsg ? "privmsg" : "notice",
+           is_ctcp ? " (ctcp)" : "",
+           sender_nick.characters(),
+           target.characters());
 #endif
 
     if (sender_nick.is_empty())
@@ -356,15 +367,48 @@ void IRCClient::handle_privmsg_or_notice(const Message& msg, PrivmsgOrNotice typ
         sender_nick = sender_nick.substring(1, sender_nick.length() - 1);
     }
 
+    String message_text = msg.arguments[1];
+    auto message_color = Color::Black;
+
+    if (is_ctcp) {
+        auto ctcp_payload = msg.arguments[1].substring_view(1, msg.arguments[1].length() - 2);
+        if (type == PrivmsgOrNotice::Privmsg)
+            handle_ctcp_request(sender_nick, ctcp_payload);
+        else
+            handle_ctcp_response(sender_nick, ctcp_payload);
+        StringBuilder builder;
+        builder.append("(CTCP) ");
+        builder.append(ctcp_payload);
+        message_text = builder.to_string();
+        message_color = Color::Blue;
+    }
+
     {
         auto it = m_channels.find(target);
         if (it != m_channels.end()) {
-            (*it).value->add_message(sender_prefix, sender_nick, msg.arguments[1]);
+            (*it).value->add_message(sender_prefix, sender_nick, message_text, message_color);
             return;
         }
     }
-    auto& query = ensure_query(sender_nick);
-    query.add_message(sender_prefix, sender_nick, msg.arguments[1]);
+
+    // For NOTICE or CTCP messages, only put them in query if one already exists.
+    // Otherwise, put them in the server window. This seems to match other clients.
+    IRCQuery* query = nullptr;
+    if (is_ctcp || type == PrivmsgOrNotice::Notice) {
+        query = query_with_name(sender_nick);
+    } else {
+        query = &ensure_query(sender_nick);
+    }
+    if (query)
+        query->add_message(sender_prefix, sender_nick, message_text, message_color);
+    else {
+        add_server_message(String::format("<%s> %s", sender_nick.characters(), message_text.characters()), message_color);
+    }
+}
+
+IRCQuery* IRCClient::query_with_name(const String& name)
+{
+    return m_queries.get(name).value_or(nullptr);
 }
 
 IRCQuery& IRCClient::ensure_query(const String& name)
@@ -516,10 +560,10 @@ void IRCClient::handle_rpl_whoisuser(const Message& msg)
     auto& realname = msg.arguments[5];
     (void)asterisk;
     add_server_message(String::format("* %s is %s@%s, real name: %s",
-        nick.characters(),
-        username.characters(),
-        host.characters(),
-        realname.characters()));
+                                      nick.characters(),
+                                      username.characters(),
+                                      host.characters(),
+                                      realname.characters()));
 }
 
 void IRCClient::handle_rpl_whoisidle(const Message& msg)
@@ -552,12 +596,12 @@ void IRCClient::handle_rpl_topicwhotime(const Message& msg)
     if (ok) {
         auto* tm = localtime(&setat_time);
         setat = String::format("%4u-%02u-%02u %02u:%02u:%02u",
-            tm->tm_year + 1900,
-            tm->tm_mon + 1,
-            tm->tm_mday,
-            tm->tm_hour,
-            tm->tm_min,
-            tm->tm_sec);
+                               tm->tm_year + 1900,
+                               tm->tm_mon + 1,
+                               tm->tm_mday,
+                               tm->tm_hour,
+                               tm->tm_min,
+                               tm->tm_sec);
     }
     ensure_channel(channel_name).add_message(String::format("*** (set by %s at %s)", nick.characters(), setat.characters()), Color::Blue);
 }
@@ -670,4 +714,35 @@ void IRCClient::did_part_from_channel(Badge<IRCChannel>, IRCChannel& channel)
 {
     if (on_part_from_channel)
         on_part_from_channel(channel);
+}
+
+void IRCClient::send_ctcp_response(const StringView& peer, const StringView& payload)
+{
+    StringBuilder builder;
+    builder.append(0x01);
+    builder.append(payload);
+    builder.append(0x01);
+    auto message = builder.to_string();
+    send_notice(peer, message);
+}
+
+void IRCClient::handle_ctcp_request(const StringView& peer, const StringView& payload)
+{
+    dbg() << "handle_ctcp_request: " << payload;
+
+    if (payload == "VERSION") {
+        send_ctcp_response(peer, "VERSION IRC Client [x86] / Serenity OS");
+        return;
+    }
+
+    // FIXME: Add StringView::starts_with()
+    if (String(payload).starts_with("PING")) {
+        send_ctcp_response(peer, payload);
+        return;
+    }
+}
+
+void IRCClient::handle_ctcp_response(const StringView& peer, const StringView& payload)
+{
+    dbg() << "handle_ctcp_response(" << peer << "): " << payload;
 }

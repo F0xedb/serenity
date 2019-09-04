@@ -39,8 +39,12 @@ public:
     explicit PATAChannel(ChannelType);
     virtual ~PATAChannel() override;
 
-    RefPtr<PATADiskDevice> master_device() { return m_master; };
-    RefPtr<PATADiskDevice> slave_device() { return m_slave; };
+    RefPtr<PATADiskDevice> master_device() {
+        return m_master;
+    };
+    RefPtr<PATADiskDevice> slave_device() {
+        return m_slave;
+    };
 
 private:
     //^ IRQHandler
@@ -58,6 +62,7 @@ private:
     // Data members
     u8 m_channel_number { 0 }; // Channel number. 0 = master, 1 = slave
     u16 m_io_base { 0x1F0 };
+    u16 m_control_base { 0 };
     volatile u8 m_device_error { 0 };
     volatile bool m_interrupted { false };
 

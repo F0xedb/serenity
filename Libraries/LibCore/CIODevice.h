@@ -19,14 +19,27 @@ public:
 
     virtual ~CIODevice() override;
 
-    int fd() const { return m_fd; }
-    unsigned mode() const { return m_mode; }
-    bool eof() const { return m_eof; }
+    int fd() const {
+        return m_fd;
+    }
+    unsigned mode() const {
+        return m_mode;
+    }
+    bool is_open() const {
+        return m_mode != NotOpen;
+    }
+    bool eof() const {
+        return m_eof;
+    }
 
-    int error() const { return m_error; }
+    int error() const {
+        return m_error;
+    }
     const char* error_string() const;
 
-    bool has_error() const { return m_error != 0; }
+    bool has_error() const {
+        return m_error != 0;
+    }
 
 
     int read(u8* buffer, int length);
@@ -36,7 +49,9 @@ public:
     ByteBuffer read_all();
 
     bool write(const u8*, int size);
-    bool write(const StringView& v) { return write((const u8*)v.characters_without_null_termination(), v.length()); }
+    bool write(const StringView& v) {
+        return write((const u8*)v.characters_without_null_termination(), v.length());
+    }
 
     // FIXME: I would like this to be const but currently it needs to call populate_read_buffer().
     bool can_read_line();
@@ -60,9 +75,15 @@ protected:
     explicit CIODevice(CObject* parent = nullptr);
 
     void set_fd(int);
-    void set_mode(OpenMode mode) { m_mode = mode; }
-    void set_error(int error) { m_error = error; }
-    void set_eof(bool eof) { m_eof = eof; }
+    void set_mode(OpenMode mode) {
+        m_mode = mode;
+    }
+    void set_error(int error) {
+        m_error = error;
+    }
+    void set_eof(bool eof) {
+        m_eof = eof;
+    }
 
     virtual void did_update_fd(int) {}
 

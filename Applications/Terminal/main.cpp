@@ -1,7 +1,9 @@
 #include "TerminalWidget.h"
 #include <Kernel/KeyCode.h>
+#include <LibCore/CArgsParser.h>
 #include <LibCore/CUserInfo.h>
 #include <LibDraw/PNGLoader.h>
+#include <LibGUI/GAboutDialog.h>
 #include <LibGUI/GAction.h>
 #include <LibGUI/GApplication.h>
 #include <LibGUI/GBoxLayout.h>
@@ -23,7 +25,7 @@
 #include <sys/select.h>
 #include <unistd.h>
 
-static void make_shell(int ptm_fd)
+static void run_command(int ptm_fd, String command)
 {
     pid_t pid = fork();
     if (pid == 0) {
@@ -71,7 +73,11 @@ static void make_shell(int ptm_fd)
             perror("ioctl(TIOCSCTTY)");
             exit(1);
         }
-        const char* args[] = { "/bin/Shell", nullptr };
+        const char* args[4] = { "/bin/Shell", nullptr, nullptr, nullptr };
+        if (!command.is_empty()) {
+            args[1] = "-c";
+            args[2] = command.characters();
+        }
         const char* envs[] = { "TERM=xterm", "PATH=/bin:/usr/bin:/usr/local/bin", nullptr };
         rc = execve("/bin/Shell", const_cast<char**>(args), const_cast<char**>(envs));
         if (rc < 0) {
@@ -133,6 +139,12 @@ int main(int argc, char** argv)
 {
     GApplication app(argc, argv);
 
+    CArgsParser args_parser("Terminal");
+
+    args_parser.add_arg("e", "execute", "Execute this command inside the terminal.");
+
+    CArgsParserResult args = args_parser.parse(argc, argv);
+
     if (chdir(get_current_user_home_path().characters()) < 0)
         perror("chdir");
 
@@ -142,7 +154,7 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    make_shell(ptm_fd);
+    run_command(ptm_fd, args.get("e"));
 
     auto* window = new GWindow;
     window->set_title("Terminal");
@@ -195,8 +207,8 @@ int main(int argc, char** argv)
     menubar->add_menu(move(font_menu));
 
     auto help_menu = make<GMenu>("Help");
-    help_menu->add_action(GAction::create("About", [](const GAction&) {
-        dbgprintf("FIXME: Implement Help/About\n");
+    help_menu->add_action(GAction::create("About", [&](const GAction&) {
+        GAboutDialog::show("Terminal", load_png("/res/icons/32x32/app-terminal.png"), window);
     }));
     menubar->add_menu(move(help_menu));
 

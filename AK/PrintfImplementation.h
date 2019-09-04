@@ -1,5 +1,6 @@
 #pragma once
 
+#include <AK/Assertions.h>
 #include <AK/Types.h>
 #include <stdarg.h>
 
@@ -38,6 +39,7 @@ template<typename PutChFunc, typename T>
         putch(bufptr, '0');
         putch(bufptr, 'x');
         ret += 2;
+        width += 2;
     }
 
     if (zeroPad) {
@@ -291,6 +293,7 @@ one_more:
             break;
 
             case 'd':
+            case 'i':
                 ret += print_signed_number(putch, bufptr, va_arg(ap, int), left_pad, zeroPad, fieldWidth);
                 break;
 
@@ -347,8 +350,10 @@ one_more:
 
             case 'P':
             case 'p':
-                ret += print_hex(putch, bufptr, va_arg(ap, u32), *p == 'P', true, false, true, 8);
+                ret += print_hex(putch, bufptr, va_arg(ap, u32), *p == 'P', true, true, true, 8);
                 break;
+            default:
+                ASSERT_NOT_REACHED();
             }
         } else {
             putch(bufptr, *p);

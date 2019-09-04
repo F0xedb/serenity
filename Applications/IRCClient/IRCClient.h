@@ -26,10 +26,16 @@ public:
 
     bool connect();
 
-    String hostname() const { return m_hostname; }
-    int port() const { return m_port; }
+    String hostname() const {
+        return m_hostname;
+    }
+    int port() const {
+        return m_port;
+    }
 
-    String nickname() const { return m_nickname; }
+    String nickname() const {
+        return m_nickname;
+    }
 
     void join_channel(const String&);
     void part_channel(const String&);
@@ -37,10 +43,13 @@ public:
 
     bool is_nick_prefix(char) const;
 
-    IRCWindow* current_window() { return aid_get_active_window(); }
-    const IRCWindow* current_window() const { return aid_get_active_window(); }
+    IRCWindow* current_window() {
+        return aid_get_active_window();
+    }
+    const IRCWindow* current_window() const {
+        return aid_get_active_window();
+    }
 
-    Function<void()> on_connect;
     Function<void()> on_disconnect;
     Function<void()> on_server_message;
     Function<void(const String&)> on_nickname_changed;
@@ -53,12 +62,22 @@ public:
     void register_subwindow(IRCWindow&);
     void unregister_subwindow(IRCWindow&);
 
-    IRCWindowListModel* client_window_list_model() { return m_client_window_list_model.ptr(); }
-    const IRCWindowListModel* client_window_list_model() const { return m_client_window_list_model.ptr(); }
+    IRCWindowListModel* client_window_list_model() {
+        return m_client_window_list_model.ptr();
+    }
+    const IRCWindowListModel* client_window_list_model() const {
+        return m_client_window_list_model.ptr();
+    }
 
-    int window_count() const { return m_windows.size(); }
-    const IRCWindow& window_at(int index) const { return *m_windows.at(index); }
-    IRCWindow& window_at(int index) { return *m_windows.at(index); }
+    int window_count() const {
+        return m_windows.size();
+    }
+    const IRCWindow& window_at(int index) const {
+        return *m_windows.at(index);
+    }
+    IRCWindow& window_at(int index) {
+        return *m_windows.at(index);
+    }
 
     int window_index(const IRCWindow& window) const
     {
@@ -82,10 +101,11 @@ public:
     void handle_part_action(const String&);
     void handle_change_nick_action(const String&);
 
+    IRCQuery* query_with_name(const String&);
     IRCQuery& ensure_query(const String& name);
     IRCChannel& ensure_channel(const String& name);
 
-    void add_server_message(const String&);
+    void add_server_message(const String&, Color = Color::Black);
 
 private:
     struct Message {
@@ -105,6 +125,7 @@ private:
     void send_nick();
     void send_pong(const String& server);
     void send_privmsg(const String& target, const String&);
+    void send_notice(const String& target, const String&);
     void send_whois(const String&);
     void process_line(ByteBuffer&&);
     void handle_join(const Message&);
@@ -125,6 +146,9 @@ private:
     void handle_nick(const Message&);
     void handle(const Message&);
     void handle_user_command(const String&);
+    void handle_ctcp_request(const StringView& peer, const StringView& payload);
+    void handle_ctcp_response(const StringView& peer, const StringView& payload);
+    void send_ctcp_response(const StringView& peer, const StringView& payload);
 
     void on_socket_connected();
 

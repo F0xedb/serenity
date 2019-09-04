@@ -287,6 +287,7 @@ private:
         int length() const {
             return m_text.size() - 1;
         }
+
         int width(const Font&) const;
         void set_text(const StringView&);
         void append(char);

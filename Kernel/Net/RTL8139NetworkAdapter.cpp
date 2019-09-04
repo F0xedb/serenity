@@ -40,6 +40,7 @@
 #define INT_LENGTH_CHANGE 0x2000
 #define INT_SYSTEM_ERROR 0x8000
 
+#define CFG9346_NONE 0x00
 #define CFG9346_EEM0 0x40
 #define CFG9346_EEM1 0x80
 
@@ -59,7 +60,7 @@
 #define RXCFG_AM 0x04
 #define RXCFG_AB 0x08
 #define RXCFG_AR 0x10
-#define RXCFG_WRAP 0x80
+#define RXCFG_WRAP_INHIBIT 0x80
 #define RXCFG_MAX_DMA_16B 0x000
 #define RXCFG_MAX_DMA_32B 0x100
 #define RXCFG_MAX_DMA_64B 0x200
@@ -131,21 +132,16 @@ RTL8139NetworkAdapter::RTL8139NetworkAdapter(PCI::Address pci_address, u8 irq)
     // we add space to account for overhang from the last packet - the rtl8139
     // can optionally guarantee that packets will be contiguous by
     // purposefully overrunning the rx buffer
-    auto rx_buffer_addr = (u32)kmalloc_eternal(RX_BUFFER_SIZE + PACKET_SIZE_MAX);
-    if (rx_buffer_addr % 16)
-        rx_buffer_addr = (rx_buffer_addr + 16) - (rx_buffer_addr % 16);
-    m_rx_buffer_addr = rx_buffer_addr;
+    m_rx_buffer_addr = (u32)kmalloc_aligned(RX_BUFFER_SIZE + PACKET_SIZE_MAX, 16);
     kprintf("RTL8139: RX buffer: P%p\n", m_rx_buffer_addr);
 
+    auto tx_buffer_addr = (u32)kmalloc_aligned(TX_BUFFER_SIZE * 4, 16);
     for (int i = 0; i < RTL8139_TX_BUFFER_COUNT; i++) {
-        auto tx_buffer_addr = (u32)kmalloc_eternal(TX_BUFFER_SIZE);
-        if (tx_buffer_addr % 16)
-            tx_buffer_addr = (tx_buffer_addr + 16) - (tx_buffer_addr % 16);
-        m_tx_buffer_addr[i] = tx_buffer_addr;
+        m_tx_buffer_addr[i] = tx_buffer_addr + TX_BUFFER_SIZE * i;
         kprintf("RTL8139: TX buffer %d: P%p\n", i, m_tx_buffer_addr[i]);
     }
 
-    m_packet_buffer = (u32)kmalloc_eternal(PACKET_SIZE_MAX);
+    m_packet_buffer = (u32)kmalloc(PACKET_SIZE_MAX);
     kprintf("RTL8139: Packet buffer: P%p\n", m_packet_buffer);
 
     reset();
@@ -225,7 +221,7 @@ void RTL8139NetworkAdapter::reset()
 
     // unlock config registers
     out8(REG_CFG9346, CFG9346_EEM0 | CFG9346_EEM1);
-    // define multicast addresses as 255.255.255.255
+    // turn on multicast
     out32(REG_MAR0, 0xffffffff);
     out32(REG_MAR4, 0xffffffff);
     // enable rx/tx
@@ -239,17 +235,21 @@ void RTL8139NetworkAdapter::reset()
     // "basic mode control register" options - 100mbit, full duplex, auto
     // negotiation
     out16(REG_BMCR, BMCR_SPEED | BMCR_AUTO_NEGOTIATE | BMCR_DUPLEX);
+    // enable flow control
     out8(REG_MSR, MSR_RX_FLOW_CONTROL_ENABLE);
     // configure rx: accept physical (MAC) match, multicast, and broadcast,
     // use the optional contiguous packet feature, the maximum dma transfer
     // size, a 32k buffer, and no fifo threshold
-    out32(REG_RXCFG, RXCFG_APM | RXCFG_AM | RXCFG_AB | RXCFG_WRAP | RXCFG_MAX_DMA_UNLIMITED | RXCFG_RBLN_32K | RXCFG_FTH_NONE);
-    // configure tx: default retry count (16), max DMA burst size of 1924
+    out32(REG_RXCFG, RXCFG_APM | RXCFG_AM | RXCFG_AB | RXCFG_WRAP_INHIBIT | RXCFG_MAX_DMA_UNLIMITED | RXCFG_RBLN_32K | RXCFG_FTH_NONE);
+    // configure tx: default retry count (16), max DMA burst size of 1024
     // bytes, interframe gap time of the only allowable value. the DMA burst
     // size is important - silent failures have been observed with 2048 bytes.
     out32(REG_TXCFG, TXCFG_TXRR_ZERO | TXCFG_MAX_DMA_1K | TXCFG_IFG11);
+    // tell the chip where we want it to DMA from for outgoing packets.
+    for (int i = 0; i < 4; i++)
+        out32(REG_TXADDR0 + (i * 4), m_tx_buffer_addr[i]);
     // re-lock config registers
-    out8(REG_CFG9346, 0);
+    out8(REG_CFG9346, CFG9346_NONE);
     // enable rx/tx again in case they got turned off (apparently some cards
     // do this?)
     out8(REG_COMMAND, COMMAND_RX_ENABLE | COMMAND_TX_ENABLE);
@@ -302,7 +302,17 @@ void RTL8139NetworkAdapter::send_raw(const u8* data, int length)
     memcpy((void*)(m_tx_buffer_addr[hw_buffer]), data, length);
     memset((void*)(m_tx_buffer_addr[hw_buffer] + length), 0, TX_BUFFER_SIZE - length);
 
-    out32(REG_TXADDR0 + (hw_buffer * 4), m_tx_buffer_addr[hw_buffer]);
+    // the rtl8139 will not actually emit packets onto the network if they're
+    // smaller than 64 bytes. the rtl8139 adds a checksum to the end of each
+    // packet, and that checksum is four bytes long, so we pad the packet to
+    // 60 bytes if necessary to make sure the whole thing is large enough.
+    if (length < 60) {
+#ifdef RTL8139_DEBUG
+        kprintf("RTL8139NetworkAdapter: adjusting payload size from %d to 60\n", length);
+#endif
+        length = 60;
+    }
+
     out32(REG_TXSTATUS0 + (hw_buffer * 4), length);
 }
 
@@ -324,8 +334,8 @@ void RTL8139NetworkAdapter::receive()
     }
 
     // we never have to worry about the packet wrapping around the buffer,
-    // since we set RXCFG_WRAP, which allows the rtl8139 to write data past
-    // the end of the alloted space.
+    // since we set RXCFG_WRAP_INHIBIT, which allows the rtl8139 to write data
+    // past the end of the alloted space.
     memcpy((u8*)m_packet_buffer, (const u8*)(start_of_packet + 4), length - 4);
     // let the card know that we've read this data
     m_rx_buffer_offset = ((m_rx_buffer_offset + length + 4 + 3) & ~3) % RX_BUFFER_SIZE;

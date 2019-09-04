@@ -306,10 +306,10 @@ Rect GTextEditor::ruler_rect_in_inner_coordinates() const
 Rect GTextEditor::visible_text_rect_in_inner_coordinates() const
 {
     return {
-        (m_horizontal_content_padding * 2) + (m_ruler_visible ? (ruler_rect_in_inner_coordinates().right() + 1) : 0),
+        m_horizontal_content_padding + (m_ruler_visible ? (ruler_rect_in_inner_coordinates().right() + 1) : 0),
         0,
-        width() - width_occupied_by_vertical_scrollbar() - ruler_width(),
-        height() - height_occupied_by_horizontal_scrollbar()
+        frame_inner_rect().width() - (m_horizontal_content_padding * 2) - width_occupied_by_vertical_scrollbar() - ruler_width(),
+        frame_inner_rect().height() - height_occupied_by_horizontal_scrollbar()
     };
 }
 
@@ -405,7 +405,6 @@ void GTextEditor::paint_event(GPaintEvent& event)
 
                     int selection_right = selection_ends_on_current_visual_line
                                           ? content_x_for_position({ line_index, selection_end_column_within_line })
-
                                           : visual_line_rect.right();
                     Rect selection_rect {
                         selection_left,
@@ -941,13 +940,6 @@ void GTextEditor::Line::set_text(const StringView& text)
     memcpy(m_text.data(), text.characters_without_null_termination(), text.length() + 1);
 }
 
-int GTextEditor::Line::width(const Font& font) const
-{
-    if (m_editor.is_line_wrapping_enabled())
-        return m_editor.visible_text_rect_in_inner_coordinates().width();
-    return font.width(view());
-}
-
 void GTextEditor::Line::append(const char* characters, int length)
 {
     int old_length = m_text.size() - 1;
@@ -1367,8 +1359,6 @@ void GTextEditor::recompute_all_visual_lines()
         line.m_visual_rect.set_y(y_offset);
         y_offset += line.m_visual_rect.height();
     }
-    if (content_size().height() == y_offset)
-        return;
 
     update_content_size();
 }
@@ -1387,7 +1377,7 @@ void GTextEditor::Line::recompute_visual_lines()
             auto glyph_width = m_editor.font().glyph_width(ch);
             if ((line_width_so_far + glyph_width) > available_width) {
                 m_visual_line_breaks.append(i);
-                line_width_so_far = 0;
+                line_width_so_far = glyph_width;
                 continue;
             }
             line_width_so_far += glyph_width;
@@ -1428,6 +1418,7 @@ void GTextEditor::set_line_wrapping_enabled(bool enabled)
         return;
 
     m_line_wrapping_enabled = enabled;
+    horizontal_scrollbar().set_visible(!m_line_wrapping_enabled);
     update_content_size();
     recompute_all_visual_lines();
     update();

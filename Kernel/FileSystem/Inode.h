@@ -27,18 +27,36 @@ public:
 
     virtual void one_ref_left() {}
 
-    FS& fs() { return m_fs; }
-    const FS& fs() const { return m_fs; }
+    FS& fs() {
+        return m_fs;
+    }
+    const FS& fs() const {
+        return m_fs;
+    }
     unsigned fsid() const;
-    unsigned index() const { return m_index; }
+    unsigned index() const {
+        return m_index;
+    }
 
-    size_t size() const { return metadata().size; }
-    bool is_symlink() const { return metadata().is_symlink(); }
-    bool is_directory() const { return metadata().is_directory(); }
-    bool is_character_device() const { return metadata().is_character_device(); }
-    mode_t mode() const { return metadata().mode; }
+    size_t size() const {
+        return metadata().size;
+    }
+    bool is_symlink() const {
+        return metadata().is_symlink();
+    }
+    bool is_directory() const {
+        return metadata().is_directory();
+    }
+    bool is_character_device() const {
+        return metadata().is_character_device();
+    }
+    mode_t mode() const {
+        return metadata().mode;
+    }
 
-    InodeIdentifier identifier() const { return { fsid(), index() }; }
+    InodeIdentifier identifier() const {
+        return { fsid(), index() };
+    }
     virtual InodeMetadata metadata() const = 0;
 
     ByteBuffer read_entire(FileDescription* = nullptr) const;
@@ -52,14 +70,22 @@ public:
     virtual size_t directory_entry_count() const = 0;
     virtual KResult chmod(mode_t) = 0;
     virtual KResult chown(uid_t, gid_t) = 0;
-    virtual KResult truncate(off_t) { return KSuccess; }
+    virtual KResult truncate(off_t) {
+        return KSuccess;
+    }
 
-    LocalSocket* socket() { return m_socket.ptr(); }
-    const LocalSocket* socket() const { return m_socket.ptr(); }
+    LocalSocket* socket() {
+        return m_socket.ptr();
+    }
+    const LocalSocket* socket() const {
+        return m_socket.ptr();
+    }
     bool bind_socket(LocalSocket&);
     bool unbind_socket();
 
-    bool is_metadata_dirty() const { return m_metadata_dirty; }
+    bool is_metadata_dirty() const {
+        return m_metadata_dirty;
+    }
 
     virtual int set_atime(time_t);
     virtual int set_ctime(time_t);
@@ -72,8 +98,12 @@ public:
     void will_be_destroyed();
 
     void set_vmo(VMObject&);
-    InodeVMObject* vmo() { return m_vmo.ptr(); }
-    const InodeVMObject* vmo() const { return m_vmo.ptr(); }
+    InodeVMObject* vmobject() {
+        return m_vmobject.ptr();
+    }
+    const InodeVMObject* vmobject() const {
+        return m_vmobject.ptr();
+    }
 
     static void sync();
 
@@ -95,7 +125,7 @@ protected:
 private:
     FS& m_fs;
     unsigned m_index { 0 };
-    WeakPtr<InodeVMObject> m_vmo;
+    WeakPtr<InodeVMObject> m_vmobject;
     RefPtr<LocalSocket> m_socket;
     HashTable<InodeWatcher*> m_watchers;
     bool m_metadata_dirty { false };

@@ -531,24 +531,21 @@ static int run_command(const String& cmd)
     return return_value;
 }
 
-CFile get_history_file()
+static String get_history_path()
 {
-    StringBuilder sb;
-    sb.append(g.home);
-    sb.append("/.history");
-    CFile f(sb.to_string());
-    if (!f.open(CIODevice::ReadWrite)) {
-        fprintf(stderr, "Error opening file '%s': '%s'\n", f.filename().characters(), f.error_string());
-        exit(1);
-    }
-    return f;
+    StringBuilder builder;
+    builder.append(g.home);
+    builder.append("/.history");
+    return builder.to_string();
 }
 
 void load_history()
 {
-    CFile history_file = get_history_file();
+    CFile history_file(get_history_path());
+    if (!history_file.open(CIODevice::ReadOnly))
+        return;
     while (history_file.can_read_line()) {
-        const auto&b = history_file.read_line(1024);
+        auto b = history_file.read_line(1024);
         // skip the newline and terminating bytes
         editor.add_to_history(String(reinterpret_cast<const char*>(b.pointer()), b.size() - 2));
     }
@@ -556,7 +553,9 @@ void load_history()
 
 void save_history()
 {
-    CFile history_file = get_history_file();
+    CFile history_file(get_history_path());
+    if (!history_file.open(CIODevice::WriteOnly))
+        return;
     for (const auto& line : editor.history()) {
         history_file.write(line);
         history_file.write("\n");

@@ -71,13 +71,9 @@
 #define ATA_REG_HDDEVSEL 0x06
 #define ATA_REG_COMMAND 0x07
 #define ATA_REG_STATUS 0x07
-#define ATA_REG_SECCOUNT1 0x08
-#define ATA_REG_LBA3 0x09
-#define ATA_REG_LBA4 0x0A
-#define ATA_REG_LBA5 0x0B
-#define ATA_REG_CONTROL 0x0C
-#define ATA_REG_ALTSTATUS 0x0C
-#define ATA_REG_DEVADDRESS 0x0D
+#define ATA_CTL_CONTROL 0x00
+#define ATA_CTL_ALTSTATUS 0x00
+#define ATA_CTL_DEVADDRESS 0x01
 
 static Lock& s_lock()
 {
@@ -97,6 +93,7 @@ PATAChannel::PATAChannel(ChannelType type)
     : IRQHandler((type == ChannelType::Primary ? PATA_PRIMARY_IRQ : PATA_SECONDARY_IRQ))
     , m_channel_number((type == ChannelType::Primary ? 0 : 1))
     , m_io_base((type == ChannelType::Primary ? 0x1F0 : 0x170))
+    , m_control_base((type == ChannelType::Primary ? 0x3f6 : 0x376))
 {
     m_dma_enabled.resource() = true;
     ProcFS::add_sys_bool("ide_dma", m_dma_enabled);
@@ -133,14 +130,14 @@ void PATAChannel::initialize()
 static void print_ide_status(u8 status)
 {
     kprintf("PATAChannel: print_ide_status: DRQ=%u BSY=%u DRDY=%u DSC=%u DF=%u CORR=%u IDX=%u ERR=%u\n",
-        (status & ATA_SR_DRQ) != 0,
-        (status & ATA_SR_BSY) != 0,
-        (status & ATA_SR_DRDY) != 0,
-        (status & ATA_SR_DSC) != 0,
-        (status & ATA_SR_DF) != 0,
-        (status & ATA_SR_CORR) != 0,
-        (status & ATA_SR_IDX) != 0,
-        (status & ATA_SR_ERR) != 0);
+            (status & ATA_SR_DRQ) != 0,
+            (status & ATA_SR_BSY) != 0,
+            (status & ATA_SR_DRDY) != 0,
+            (status & ATA_SR_DSC) != 0,
+            (status & ATA_SR_DF) != 0,
+            (status & ATA_SR_CORR) != 0,
+            (status & ATA_SR_IDX) != 0,
+            (status & ATA_SR_ERR) != 0);
 }
 
 bool PATAChannel::wait_for_irq()
@@ -175,10 +172,10 @@ void PATAChannel::handle_irq()
     m_interrupted = true;
 }
 
-static void wait_400ns(u16 io_base)
+static void io_delay()
 {
     for (int i = 0; i < 4; ++i)
-        IO::in8(io_base + ATA_REG_ALTSTATUS);
+        IO::in8(0x3f6);
 }
 
 void PATAChannel::detect_disks()
@@ -252,8 +249,8 @@ bool PATAChannel::ata_read_sectors_with_dma(u32 lba, u16 count, u8* outbuf, bool
     LOCKER(s_lock());
 #ifdef PATA_DEBUG
     kprintf("%s(%u): PATAChannel::ata_read_sectors_with_dma (%u x%u) -> %p\n",
-        current->process().name().characters(),
-        current->pid(), lba, count, outbuf);
+            current->process().name().characters(),
+            current->pid(), lba, count, outbuf);
 #endif
 
     disable_irq();
@@ -285,9 +282,9 @@ bool PATAChannel::ata_read_sectors_with_dma(u32 lba, u16 count, u8* outbuf, bool
     if (slave_request)
         devsel |= 0x10;
 
-    IO::out8(m_io_base + ATA_REG_CONTROL, 0);
+    IO::out8(m_control_base + ATA_CTL_CONTROL, 0);
     IO::out8(m_io_base + ATA_REG_HDDEVSEL, devsel | (static_cast<u8>(slave_request) << 4));
-    wait_400ns(m_io_base);
+    io_delay();
 
     IO::out8(m_io_base + ATA_REG_FEATURES, 0);
 
@@ -308,7 +305,7 @@ bool PATAChannel::ata_read_sectors_with_dma(u32 lba, u16 count, u8* outbuf, bool
     }
 
     IO::out8(m_io_base + ATA_REG_COMMAND, ATA_CMD_READ_DMA_EXT);
-    wait_400ns(m_io_base);
+    io_delay();
 
     // Start bus master
     IO::out8(m_bus_master_base, 0x9);
@@ -331,8 +328,8 @@ bool PATAChannel::ata_write_sectors_with_dma(u32 lba, u16 count, const u8* inbuf
     LOCKER(s_lock());
 #ifdef PATA_DEBUG
     kprintf("%s(%u): PATAChannel::ata_write_sectors_with_dma (%u x%u) <- %p\n",
-        current->process().name().characters(),
-        current->pid(), lba, count, inbuf);
+            current->process().name().characters(),
+            current->pid(), lba, count, inbuf);
 #endif
 
     disable_irq();
@@ -363,9 +360,9 @@ bool PATAChannel::ata_write_sectors_with_dma(u32 lba, u16 count, const u8* inbuf
     if (slave_request)
         devsel |= 0x10;
 
-    IO::out8(m_io_base + ATA_REG_CONTROL, 0);
+    IO::out8(m_control_base + ATA_CTL_CONTROL, 0);
     IO::out8(m_io_base + ATA_REG_HDDEVSEL, devsel | (static_cast<u8>(slave_request) << 4));
-    wait_400ns(m_io_base);
+    io_delay();
 
     IO::out8(m_io_base + ATA_REG_FEATURES, 0);
 
@@ -386,7 +383,7 @@ bool PATAChannel::ata_write_sectors_with_dma(u32 lba, u16 count, const u8* inbuf
     }
 
     IO::out8(m_io_base + ATA_REG_COMMAND, ATA_CMD_WRITE_DMA_EXT);
-    wait_400ns(m_io_base);
+    io_delay();
 
     // Start bus master
     IO::out8(m_bus_master_base, 0x1);
@@ -408,11 +405,11 @@ bool PATAChannel::ata_read_sectors(u32 start_sector, u16 count, u8* outbuf, bool
     LOCKER(s_lock());
 #ifdef PATA_DEBUG
     kprintf("%s(%u): PATAChannel::ata_read_sectors request (%u sector(s) @ %u into %p)\n",
-        current->process().name().characters(),
-        current->pid(),
-        count,
-        start_sector,
-        outbuf);
+            current->process().name().characters(),
+            current->pid(),
+            count,
+            start_sector,
+            outbuf);
 #endif
     disable_irq();
 
@@ -446,7 +443,7 @@ bool PATAChannel::ata_read_sectors(u32 start_sector, u16 count, u8* outbuf, bool
         return false;
 
     for (int i = 0; i < count; i++) {
-        wait_400ns(m_io_base);
+        io_delay();
 
         while (IO::in8(m_io_base + ATA_REG_STATUS) & ATA_SR_BSY)
             ;
@@ -469,10 +466,10 @@ bool PATAChannel::ata_write_sectors(u32 start_sector, u16 count, const u8* inbuf
     LOCKER(s_lock());
 #ifdef PATA_DEBUG
     kprintf("%s(%u): PATAChannel::ata_write_sectors request (%u sector(s) @ %u)\n",
-        current->process().name().characters(),
-        current->pid(),
-        count,
-        start_sector);
+            current->process().name().characters(),
+            current->pid(),
+            count,
+            start_sector);
 #endif
     disable_irq();
 
@@ -500,7 +497,7 @@ bool PATAChannel::ata_write_sectors(u32 start_sector, u16 count, const u8* inbuf
     IO::out8(m_io_base + ATA_REG_COMMAND, ATA_CMD_WRITE_PIO);
 
     for (int i = 0; i < count; i++) {
-        wait_400ns(m_io_base);
+        io_delay();
         while (IO::in8(m_io_base + ATA_REG_STATUS) & ATA_SR_BSY)
             ;
 
