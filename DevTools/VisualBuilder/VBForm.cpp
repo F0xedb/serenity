@@ -100,7 +100,9 @@ VBWidget* VBForm::widget_at(const Point& position)
 void VBForm::grabber_mousedown_event(GMouseEvent& event, Direction grabber)
 {
     m_transform_event_origin = event.position();
-    for_each_selected_widget([](auto& widget) { widget.capture_transform_origin_rect(); });
+    for_each_selected_widget([](auto& widget) {
+        widget.capture_transform_origin_rect();
+    });
     m_resize_direction = grabber;
 }
 
@@ -134,19 +136,27 @@ void VBForm::keydown_event(GKeyEvent& event)
         switch (event.key()) {
         case KeyCode::Key_Up:
             update();
-            for_each_selected_widget([this](auto& widget) { widget.gwidget()->move_by(0, -m_grid_size); });
+            for_each_selected_widget([this](auto& widget) {
+                widget.gwidget()->move_by(0, -m_grid_size);
+            });
             break;
         case KeyCode::Key_Down:
             update();
-            for_each_selected_widget([this](auto& widget) { widget.gwidget()->move_by(0, m_grid_size); });
+            for_each_selected_widget([this](auto& widget) {
+                widget.gwidget()->move_by(0, m_grid_size);
+            });
             break;
         case KeyCode::Key_Left:
             update();
-            for_each_selected_widget([this](auto& widget) { widget.gwidget()->move_by(-m_grid_size, 0); });
+            for_each_selected_widget([this](auto& widget) {
+                widget.gwidget()->move_by(-m_grid_size, 0);
+            });
             break;
         case KeyCode::Key_Right:
             update();
-            for_each_selected_widget([this](auto& widget) { widget.gwidget()->move_by(m_grid_size, 0); });
+            for_each_selected_widget([this](auto& widget) {
+                widget.gwidget()->move_by(m_grid_size, 0);
+            });
             break;
         }
         return;
@@ -208,7 +218,9 @@ void VBForm::mousedown_event(GMouseEvent& event)
             add_to_selection(*widget);
         else if (!m_selected_widgets.contains(widget))
             set_single_selected_widget(widget);
-        for_each_selected_widget([](auto& widget) { widget.capture_transform_origin_rect(); });
+        for_each_selected_widget([](auto& widget) {
+            widget.capture_transform_origin_rect();
+        });
         on_widget_selected(single_selected_widget());
     }
 }
@@ -389,7 +401,9 @@ void VBForm::delete_selected_widgets()
         to_delete.append(&widget);
     });
     for (auto& widget : to_delete)
-        m_widgets.remove_first_matching([&widget](auto& entry) { return entry == widget; });
+        m_widgets.remove_first_matching([&widget](auto& entry) {
+        return entry == widget;
+    });
     on_widget_selected(single_selected_widget());
 }
 

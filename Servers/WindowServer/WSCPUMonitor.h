@@ -11,9 +11,15 @@ class WSCPUMonitor {
 public:
     WSCPUMonitor();
 
-    bool is_dirty() const { return m_dirty; }
-    void set_dirty(bool dirty) { m_dirty = dirty; }
-    int capacity() const { return m_cpu_history.capacity(); }
+    bool is_dirty() const {
+        return m_dirty;
+    }
+    void set_dirty(bool dirty) {
+        m_dirty = dirty;
+    }
+    int capacity() const {
+        return m_cpu_history.capacity();
+    }
     void paint(Painter&, const Rect&);
 
 private:

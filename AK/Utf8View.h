@@ -29,7 +29,9 @@ public:
     explicit Utf8View(const StringView&);
     ~Utf8View() {}
 
-    const StringView& as_string() const { return m_string; }
+    const StringView& as_string() const {
+        return m_string;
+    }
 
     Utf8CodepointIterator begin() const;
     Utf8CodepointIterator end() const;

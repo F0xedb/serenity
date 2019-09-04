@@ -413,12 +413,6 @@ extern "C" {
     {
         (void)fd;
         (void)name;
-
-        switch (name) {
-        case _PC_PATH_MAX:
-            return PATH_MAX;
-        }
-
         ASSERT_NOT_REACHED();
     }
 
@@ -426,12 +420,6 @@ extern "C" {
     {
         (void)path;
         (void)name;
-
-        switch (name) {
-        case _PC_PATH_MAX:
-            return PATH_MAX;
-        }
-
         ASSERT_NOT_REACHED();
     }
 
@@ -603,7 +591,7 @@ extern "C" {
         syscall(SC_dump_backtrace);
     }
 
-    int get_process_name(char* buffer, int buffer_size)
+  int get_process_name(char* buffer, int buffer_size)
     {
         int rc = syscall(SC_get_process_name, buffer, buffer_size);
         __RETURN_WITH_ERRNO(rc, rc, -1);

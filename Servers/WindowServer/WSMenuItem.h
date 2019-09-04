@@ -19,36 +19,58 @@ public:
     WSMenuItem(WSMenu&, Type);
     ~WSMenuItem();
 
-    Type type() const { return m_type; }
+    Type type() const {
+        return m_type;
+    }
 
-    bool is_enabled() const { return m_enabled; }
+    bool is_enabled() const {
+        return m_enabled;
+    }
     void set_enabled(bool);
 
-    bool is_checkable() const { return m_checkable; }
-    void set_checkable(bool checkable) { m_checkable = checkable; }
+    bool is_checkable() const {
+        return m_checkable;
+    }
+    void set_checkable(bool checkable) {
+        m_checkable = checkable;
+    }
 
-    bool is_checked() const { return m_checked; }
+    bool is_checked() const {
+        return m_checked;
+    }
     void set_checked(bool);
 
-    String text() const { return m_text; }
-    void set_text(const String& text) { m_text = text; }
+    String text() const {
+        return m_text;
+    }
+    void set_text(const String& text) {
+        m_text = text;
+    }
 
-    String shortcut_text() const { return m_shortcut_text; }
-    void set_shortcut_text(const String& text) { m_shortcut_text = text; }
+    String shortcut_text() const {
+        return m_shortcut_text;
+    }
+    void set_shortcut_text(const String& text) {
+        m_shortcut_text = text;
+    }
 
-    void set_rect(const Rect& rect) { m_rect = rect; }
-    Rect rect() const { return m_rect; }
+    void set_rect(const Rect& rect) {
+        m_rect = rect;
+    }
+    Rect rect() const {
+        return m_rect;
+    }
 
-    unsigned identifier() const { return m_identifier; }
+    unsigned identifier() const {
+        return m_identifier;
+    }
 
-    const GraphicsBitmap* icon() const { return m_icon; }
-    void set_icon(const GraphicsBitmap* icon) { m_icon = icon; }
-
-    bool is_submenu() const { return m_submenu_id != -1; }
-    int submenu_id() const { return m_submenu_id; }
-    void set_submenu_id(int submenu_id) { m_submenu_id = submenu_id; }
-
-    WSMenu* submenu();
+    const GraphicsBitmap* icon() const {
+        return m_icon;
+    }
+    void set_icon(const GraphicsBitmap* icon) {
+        m_icon = icon;
+    }
 
 private:
     WSMenu& m_menu;

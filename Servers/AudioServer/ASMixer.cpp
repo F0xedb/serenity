@@ -6,9 +6,9 @@
 ASMixer::ASMixer()
     : m_device("/dev/audio", this)
     , m_sound_thread([this] {
-        mix();
-        return 0;
-    })
+    mix();
+    return 0;
+})
 {
     if (!m_device.open(CIODevice::WriteOnly)) {
         dbgprintf("Can't open audio device: %s\n", m_device.error_string());

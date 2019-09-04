@@ -245,8 +245,6 @@ public:
         return *m_delete_action;
     }
 
-    void add_custom_context_menu_action(GAction&);
-
 protected:
     virtual void did_change_font() override;
 
@@ -289,6 +287,8 @@ private:
         int length() const {
             return m_text.size() - 1;
         }
+
+        int width(const Font&) const;
         void set_text(const StringView&);
         void append(char);
         void prepend(char);
