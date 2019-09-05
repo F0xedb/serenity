@@ -3,6 +3,7 @@
 #include "IRCWindow.h"
 #include "IRCWindowListModel.h"
 #include <LibDraw/PNGLoader.h>
+#include <LibGUI/GAboutDialog.h>
 #include <LibGUI/GAction.h>
 #include <LibGUI/GApplication.h>
 #include <LibGUI/GBoxLayout.h>
@@ -123,7 +124,7 @@ void IRCAppWindow::setup_menus()
 {
     auto menubar = make<GMenuBar>();
     auto app_menu = make<GMenu>("IRC Client");
-    app_menu->add_action(GAction::create("Quit", { Mod_Alt, Key_F4 }, [](const GAction&) {
+    app_menu->add_action(GCommonActions::make_quit_action([] {
         dbgprintf("Terminal: Quit menu activated!\n");
         GApplication::the().quit(0);
         return;
@@ -142,8 +143,8 @@ void IRCAppWindow::setup_menus()
     menubar->add_menu(move(server_menu));
 
     auto help_menu = make<GMenu>("Help");
-    help_menu->add_action(GAction::create("About", [](const GAction&) {
-        dbgprintf("FIXME: Implement Help/About\n");
+    help_menu->add_action(GAction::create("About", [this](const GAction&) {
+        GAboutDialog::show("IRC Client", load_png("/res/icons/32x32/app-irc-client.png"), this);
     }));
     menubar->add_menu(move(help_menu));
 
@@ -179,6 +180,7 @@ void IRCAppWindow::setup_widgets()
     m_window_list = new GTableView(horizontal_container);
     m_window_list->set_headers_visible(false);
     m_window_list->set_alternating_row_colors(false);
+    m_window_list->set_size_columns_to_fit_content(true);
     m_window_list->set_model(m_client.client_window_list_model());
     m_window_list->set_activates_on_selection(true);
     m_window_list->set_size_policy(SizePolicy::Fixed, SizePolicy::Fill);

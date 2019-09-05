@@ -59,6 +59,7 @@ void GTextEditor::create_actions()
     },
     this);
 
+
     m_paste_action = GAction::create(
     "Paste", { Mod_Ctrl, Key_V }, GraphicsBitmap::load_from_file("/res/icons/paste16.png"), [&](const GAction&) {
         paste();

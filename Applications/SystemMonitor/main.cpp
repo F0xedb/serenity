@@ -139,7 +139,7 @@ int main(int argc, char** argv)
 
     auto menubar = make<GMenuBar>();
     auto app_menu = make<GMenu>("System Monitor");
-    app_menu->add_action(GAction::create("Quit", { Mod_Alt, Key_F4 }, [](const GAction&) {
+    app_menu->add_action(GCommonActions::make_quit_action([] {
         GApplication::the().quit(0);
         return;
     }));
@@ -246,42 +246,43 @@ GWidget* build_file_systems_tab()
     df_fields.empend("class_name", "Class", TextAlignment::CenterLeft);
     df_fields.empend(
         "Size", TextAlignment::CenterRight,
-        [](const JsonObject& object) {
-            return human_readable_size(object.get("total_block_count").to_u32() * object.get("block_size").to_u32());
-        },
-        [](const JsonObject& object) {
-            return object.get("total_block_count").to_u32() * object.get("block_size").to_u32();
-        });
+    [](const JsonObject& object) {
+        return human_readable_size(object.get("total_block_count").to_u32() * object.get("block_size").to_u32());
+    },
+    [](const JsonObject& object) {
+        return object.get("total_block_count").to_u32() * object.get("block_size").to_u32();
+    });
     df_fields.empend(
         "Used", TextAlignment::CenterRight,
-        [](const JsonObject& object) {
-            auto total_blocks = object.get("total_block_count").to_u32();
-            auto free_blocks = object.get("free_block_count").to_u32();
-            auto used_blocks = total_blocks - free_blocks;
-            return human_readable_size(used_blocks * object.get("block_size").to_u32()); },
-        [](const JsonObject& object) {
-            auto total_blocks = object.get("total_block_count").to_u32();
-            auto free_blocks = object.get("free_block_count").to_u32();
-            auto used_blocks = total_blocks - free_blocks;
-            return used_blocks * object.get("block_size").to_u32();
-        },
-        [](const JsonObject& object) {
-            auto total_blocks = object.get("total_block_count").to_u32();
-            if (total_blocks == 0)
-                return 0;
-            auto free_blocks = object.get("free_block_count").to_u32();
-            auto used_blocks = total_blocks - free_blocks;
-            int percentage = (int)((float)used_blocks / (float)total_blocks * 100.0f);
-            return percentage;
-        });
+    [](const JsonObject& object) {
+        auto total_blocks = object.get("total_block_count").to_u32();
+        auto free_blocks = object.get("free_block_count").to_u32();
+        auto used_blocks = total_blocks - free_blocks;
+        return human_readable_size(used_blocks * object.get("block_size").to_u32());
+    },
+    [](const JsonObject& object) {
+        auto total_blocks = object.get("total_block_count").to_u32();
+        auto free_blocks = object.get("free_block_count").to_u32();
+        auto used_blocks = total_blocks - free_blocks;
+        return used_blocks * object.get("block_size").to_u32();
+    },
+    [](const JsonObject& object) {
+        auto total_blocks = object.get("total_block_count").to_u32();
+        if (total_blocks == 0)
+            return 0;
+        auto free_blocks = object.get("free_block_count").to_u32();
+        auto used_blocks = total_blocks - free_blocks;
+        int percentage = (int)((float)used_blocks / (float)total_blocks * 100.0f);
+        return percentage;
+    });
     df_fields.empend(
         "Available", TextAlignment::CenterRight,
-        [](const JsonObject& object) {
-            return human_readable_size(object.get("free_block_count").to_u32() * object.get("block_size").to_u32());
-        },
-        [](const JsonObject& object) {
-            return object.get("free_block_count").to_u32() * object.get("block_size").to_u32();
-        });
+    [](const JsonObject& object) {
+        return human_readable_size(object.get("free_block_count").to_u32() * object.get("block_size").to_u32());
+    },
+    [](const JsonObject& object) {
+        return object.get("free_block_count").to_u32() * object.get("block_size").to_u32();
+    });
     df_fields.empend("Access", TextAlignment::CenterLeft, [](const JsonObject& object) {
         return object.get("readonly").to_bool() ? "Read-only" : "Read/Write";
     });
@@ -311,40 +312,40 @@ GWidget* build_pci_devices_tab()
     Vector<GJsonArrayModel::FieldSpec> pci_fields;
     pci_fields.empend(
         "Address", TextAlignment::CenterLeft,
-        [](const JsonObject& object) {
-            auto bus = object.get("bus").to_u32();
-            auto slot = object.get("slot").to_u32();
-            auto function = object.get("function").to_u32();
-            return String::format("%02x:%02x.%d", bus, slot, function);
-        });
+    [](const JsonObject& object) {
+        auto bus = object.get("bus").to_u32();
+        auto slot = object.get("slot").to_u32();
+        auto function = object.get("function").to_u32();
+        return String::format("%02x:%02x.%d", bus, slot, function);
+    });
     pci_fields.empend(
         "Class", TextAlignment::CenterLeft,
-        [db](const JsonObject& object) {
-            auto class_id = object.get("class").to_u32();
-            String class_name = db->get_class(class_id);
-            return class_name == "" ? String::format("%04x", class_id) : class_name;
-        });
+    [db](const JsonObject& object) {
+        auto class_id = object.get("class").to_u32();
+        String class_name = db->get_class(class_id);
+        return class_name == "" ? String::format("%04x", class_id) : class_name;
+    });
     pci_fields.empend(
         "Vendor", TextAlignment::CenterLeft,
-        [db](const JsonObject& object) {
-            auto vendor_id = object.get("vendor_id").to_u32();
-            String vendor_name = db->get_vendor(vendor_id);
-            return vendor_name == "" ? String::format("%02x", vendor_id) : vendor_name;
-        });
+    [db](const JsonObject& object) {
+        auto vendor_id = object.get("vendor_id").to_u32();
+        String vendor_name = db->get_vendor(vendor_id);
+        return vendor_name == "" ? String::format("%02x", vendor_id) : vendor_name;
+    });
     pci_fields.empend(
         "Device", TextAlignment::CenterLeft,
-        [db](const JsonObject& object) {
-            auto vendor_id = object.get("vendor_id").to_u32();
-            auto device_id = object.get("device_id").to_u32();
-            String device_name = db->get_device(vendor_id, device_id);
-            return device_name == "" ? String::format("%02x", device_id) : device_name;
-        });
+    [db](const JsonObject& object) {
+        auto vendor_id = object.get("vendor_id").to_u32();
+        auto device_id = object.get("device_id").to_u32();
+        String device_name = db->get_device(vendor_id, device_id);
+        return device_name == "" ? String::format("%02x", device_id) : device_name;
+    });
     pci_fields.empend(
         "Revision", TextAlignment::CenterRight,
-        [](const JsonObject& object) {
-            auto revision_id = object.get("revision_id").to_u32();
-            return String::format("%02x", revision_id);
-        });
+    [](const JsonObject& object) {
+        auto revision_id = object.get("revision_id").to_u32();
+        return String::format("%02x", revision_id);
+    });
 
     pci_table_view->set_model(GSortingProxyModel::create(GJsonArrayModel::create("/proc/pci", move(pci_fields))));
     pci_table_view->model()->update();

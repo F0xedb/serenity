@@ -15,16 +15,31 @@ class ByteBuffer;
 class AWavLoader {
 public:
     explicit AWavLoader(const StringView& path);
-    RefPtr<ABuffer> load_wav(const StringView& path);
-    const char* error_string() { return m_error_string.characters(); }
 
-    RefPtr<ABuffer> get_more_samples();
+    bool has_error() const {
+        return !m_error_string.is_null();
+    }
+    const char* error_string() {
+        return m_error_string.characters();
+    }
 
-    int loaded_samples() const { return m_loaded_samples; }
-    int total_samples() const { return m_total_samples; }
-    u32 sample_rate() const { return m_sample_rate; }
-    u16 num_channels() const { return m_num_channels; }
-    u16 bits_per_sample() const { return m_bits_per_sample; }
+    RefPtr<ABuffer> get_more_samples(size_t max_bytes_to_read_from_input = 128 * KB);
+
+    int loaded_samples() const {
+        return m_loaded_samples;
+    }
+    int total_samples() const {
+        return m_total_samples;
+    }
+    u32 sample_rate() const {
+        return m_sample_rate;
+    }
+    u16 num_channels() const {
+        return m_num_channels;
+    }
+    u16 bits_per_sample() const {
+        return m_bits_per_sample;
+    }
 
 private:
     bool parse_header();

@@ -35,6 +35,16 @@ void DirectoryView::handle_activation(const GModelIndex& index)
         return;
     }
 
+    if (path.to_lowercase().ends_with(".wav")) {
+        if (fork() == 0) {
+            int rc = execl("/bin/SoundPlayer", "/bin/SoundPlayer", path.characters(), nullptr);
+            if (rc < 0)
+                perror("exec");
+            ASSERT_NOT_REACHED();
+        }
+        return;
+    }
+
     if (fork() == 0) {
         int rc = execl("/bin/TextEditor", "/bin/TextEditor", path.characters(), nullptr);
         if (rc < 0)
@@ -60,10 +70,10 @@ DirectoryView::DirectoryView(GWidget* parent)
 
     m_table_view->model()->on_update = [this] {
         set_status_message(String::format("%d item%s (%u byte%s)",
-            model().row_count(),
-            model().row_count() != 1 ? "s" : "",
-            model().bytes_in_files(),
-            model().bytes_in_files() != 1 ? "s" : ""));
+                                          model().row_count(),
+                                          model().row_count() != 1 ? "s" : "",
+                                          model().bytes_in_files(),
+                                          model().bytes_in_files() != 1 ? "s" : ""));
 
         if (on_path_change)
             on_path_change(model().path());

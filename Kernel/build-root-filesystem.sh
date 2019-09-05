@@ -6,12 +6,12 @@ set -e
 rm -f ../Userland/qs
 
 die() {
-    echo "die: $@"
-    exit 1
+	echo "die: $@"
+	exit 1
 }
 
 if [ $(id -u) != 0 ]; then
-    die "this script needs to run as root"
+	die "this script needs to run as root"
 fi
 
 echo -n "creating initial filesystem structure... "
@@ -85,6 +85,7 @@ cp ../Applications/Piano/Piano mnt/bin/Piano
 cp ../Applications/SystemDialog/SystemDialog mnt/bin/SystemDialog
 cp ../Applications/ChanViewer/ChanViewer mnt/bin/ChanViewer
 cp ../Applications/Calculator/Calculator mnt/bin/Calculator
+cp ../Applications/SoundPlayer/SoundPlayer mnt/bin/SoundPlayer
 cp ../Demos/HelloWorld/HelloWorld mnt/bin/HelloWorld
 cp ../Demos/HelloWorld2/HelloWorld2 mnt/bin/HelloWorld2
 cp ../Demos/RetroFetch/RetroFetch mnt/bin/RetroFetch
@@ -123,9 +124,10 @@ ln -s SystemDialog mnt/bin/sd
 ln -s ChanViewer mnt/bin/cv
 ln -s Calculator mnt/bin/calc
 ln -s Inspector mnt/bin/ins
+ln -s SoundPlayer mnt/bin/sp
 echo "done"
 
 # Run local sync script, if it exists
 if [ -f sync-local.sh ]; then
-    sh sync-local.sh
+	sh sync-local.sh
 fi
