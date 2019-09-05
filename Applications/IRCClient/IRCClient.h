@@ -26,10 +26,16 @@ public:
 
     bool connect();
 
-    String hostname() const { return m_hostname; }
-    int port() const { return m_port; }
+    String hostname() const {
+        return m_hostname;
+    }
+    int port() const {
+        return m_port;
+    }
 
-    String nickname() const { return m_nickname; }
+    String nickname() const {
+        return m_nickname;
+    }
 
     void join_channel(const String&);
     void part_channel(const String&);
@@ -37,8 +43,12 @@ public:
 
     bool is_nick_prefix(char) const;
 
-    IRCWindow* current_window() { return aid_get_active_window(); }
-    const IRCWindow* current_window() const { return aid_get_active_window(); }
+    IRCWindow* current_window() {
+        return aid_get_active_window();
+    }
+    const IRCWindow* current_window() const {
+        return aid_get_active_window();
+    }
 
     Function<void()> on_disconnect;
     Function<void()> on_server_message;
@@ -52,12 +62,22 @@ public:
     void register_subwindow(IRCWindow&);
     void unregister_subwindow(IRCWindow&);
 
-    IRCWindowListModel* client_window_list_model() { return m_client_window_list_model.ptr(); }
-    const IRCWindowListModel* client_window_list_model() const { return m_client_window_list_model.ptr(); }
+    IRCWindowListModel* client_window_list_model() {
+        return m_client_window_list_model.ptr();
+    }
+    const IRCWindowListModel* client_window_list_model() const {
+        return m_client_window_list_model.ptr();
+    }
 
-    int window_count() const { return m_windows.size(); }
-    const IRCWindow& window_at(int index) const { return *m_windows.at(index); }
-    IRCWindow& window_at(int index) { return *m_windows.at(index); }
+    int window_count() const {
+        return m_windows.size();
+    }
+    const IRCWindow& window_at(int index) const {
+        return *m_windows.at(index);
+    }
+    IRCWindow& window_at(int index) {
+        return *m_windows.at(index);
+    }
 
     int window_index(const IRCWindow& window) const
     {

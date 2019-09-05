@@ -41,7 +41,7 @@ RoutingDecision route_to(const IPv4Address& target, const IPv4Address& source)
     if (!local_adapter && !gateway_adapter) {
 #ifdef ROUTING_DEBUG
         kprintf("Routing: Couldn't find a suitable adapter for route to %s\n",
-            target.to_string().characters());
+                target.to_string().characters());
 #endif
         return { nullptr, {} };
     }
@@ -52,21 +52,21 @@ RoutingDecision route_to(const IPv4Address& target, const IPv4Address& source)
     if (local_adapter) {
 #ifdef ROUTING_DEBUG
         kprintf("Routing: Got adapter for route (direct): %s (%s/%s) for %s\n",
-            local_adapter->name().characters(),
-            local_adapter->ipv4_address().to_string().characters(),
-            local_adapter->ipv4_netmask().to_string().characters(),
-            target.to_string().characters());
+                local_adapter->name().characters(),
+                local_adapter->ipv4_address().to_string().characters(),
+                local_adapter->ipv4_netmask().to_string().characters(),
+                target.to_string().characters());
 #endif
         adapter = local_adapter;
         next_hop_ip = target;
     } else if (gateway_adapter) {
 #ifdef ROUTING_DEBUG
         kprintf("Routing: Got adapter for route (using gateway %s): %s (%s/%s) for %s\n",
-            gateway_adapter->ipv4_gateway().to_string().characters(),
-            gateway_adapter->name().characters(),
-            gateway_adapter->ipv4_address().to_string().characters(),
-            gateway_adapter->ipv4_netmask().to_string().characters(),
-            target.to_string().characters());
+                gateway_adapter->ipv4_gateway().to_string().characters(),
+                gateway_adapter->name().characters(),
+                gateway_adapter->ipv4_address().to_string().characters(),
+                gateway_adapter->ipv4_netmask().to_string().characters(),
+                target.to_string().characters());
 #endif
         adapter = gateway_adapter;
         next_hop_ip = gateway_adapter->ipv4_gateway();
@@ -80,8 +80,8 @@ RoutingDecision route_to(const IPv4Address& target, const IPv4Address& source)
         if (addr.has_value()) {
 #ifdef ROUTING_DEBUG
             kprintf("Routing: Using cached ARP entry for %s (%s)\n",
-                next_hop_ip.to_string().characters(),
-                addr.value().to_string().characters());
+                    next_hop_ip.to_string().characters(),
+                    addr.value().to_string().characters());
 #endif
             return { adapter, addr.value() };
         }
@@ -89,8 +89,8 @@ RoutingDecision route_to(const IPv4Address& target, const IPv4Address& source)
 
 #ifdef ROUTING_DEBUG
     kprintf("Routing: Sending ARP request via adapter %s for IPv4 address %s\n",
-        adapter->name().characters(),
-        next_hop_ip.to_string().characters());
+            adapter->name().characters(),
+            next_hop_ip.to_string().characters());
 #endif
 
     ARPPacket request;
@@ -111,9 +111,9 @@ RoutingDecision route_to(const IPv4Address& target, const IPv4Address& source)
         if (addr.has_value()) {
 #ifdef ROUTING_DEBUG
             kprintf("Routing: Got ARP response using adapter %s for %s (%s)\n",
-                adapter->name().characters(),
-                next_hop_ip.to_string().characters(),
-                addr.value().to_string().characters());
+                    adapter->name().characters(),
+                    next_hop_ip.to_string().characters(),
+                    addr.value().to_string().characters());
 #endif
             return { adapter, addr.value() };
         }
@@ -121,8 +121,8 @@ RoutingDecision route_to(const IPv4Address& target, const IPv4Address& source)
 
 #ifdef ROUTING_DEBUG
     kprintf("Routing: Couldn't find route using adapter %s for %s\n",
-        adapter->name().characters(),
-        target.to_string().characters());
+            adapter->name().characters(),
+            target.to_string().characters());
 #endif
 
     return { nullptr, {} };

@@ -20,13 +20,19 @@ public:
         if (m_is_end && other.m_is_end)
             return false;
         return &m_table != &other.m_table
-            || m_is_end != other.m_is_end
-            || m_bucket_index != other.m_bucket_index
-            || m_bucket_iterator != other.m_bucket_iterator;
+               || m_is_end != other.m_is_end
+               || m_bucket_index != other.m_bucket_index
+               || m_bucket_iterator != other.m_bucket_iterator;
     }
-    bool operator==(const HashTableIterator& other) const { return !(*this != other); }
-    ElementType& operator*() { return *m_bucket_iterator; }
-    ElementType* operator->() { return m_bucket_iterator.operator->(); }
+    bool operator==(const HashTableIterator& other) const {
+        return !(*this != other);
+    }
+    ElementType& operator*() {
+        return *m_bucket_iterator;
+    }
+    ElementType* operator->() {
+        return m_bucket_iterator.operator->();
+    }
     HashTableIterator& operator++()
     {
         skip_to_next();
@@ -121,10 +127,18 @@ public:
         return *this;
     }
 
-    ~HashTable() { clear(); }
-    bool is_empty() const { return !m_size; }
-    int size() const { return m_size; }
-    int capacity() const { return m_capacity; }
+    ~HashTable() {
+        clear();
+    }
+    bool is_empty() const {
+        return !m_size;
+    }
+    int size() const {
+        return m_size;
+    }
+    int capacity() const {
+        return m_capacity;
+    }
 
     void ensure_capacity(int capacity)
     {
@@ -141,13 +155,21 @@ public:
 
     using Iterator = HashTableIterator<HashTable, T, typename Bucket::Iterator>;
     friend Iterator;
-    Iterator begin() { return Iterator(*this, is_empty()); }
-    Iterator end() { return Iterator(*this, true); }
+    Iterator begin() {
+        return Iterator(*this, is_empty());
+    }
+    Iterator end() {
+        return Iterator(*this, true);
+    }
 
     using ConstIterator = HashTableIterator<const HashTable, const T, typename Bucket::ConstIterator>;
     friend ConstIterator;
-    ConstIterator begin() const { return ConstIterator(*this, is_empty()); }
-    ConstIterator end() const { return ConstIterator(*this, true); }
+    ConstIterator begin() const {
+        return ConstIterator(*this, is_empty());
+    }
+    ConstIterator end() const {
+        return ConstIterator(*this, true);
+    }
 
     template<typename Finder>
     Iterator find(unsigned hash, Finder finder)
@@ -177,12 +199,16 @@ public:
 
     Iterator find(const T& value)
     {
-        return find(TraitsForT::hash(value), [&](auto& other) { return TraitsForT::equals(value, other); });
+        return find(TraitsForT::hash(value), [&](auto& other) {
+            return TraitsForT::equals(value, other);
+        });
     }
 
     ConstIterator find(const T& value) const
     {
-        return find(TraitsForT::hash(value), [&](auto& other) { return TraitsForT::equals(value, other); });
+        return find(TraitsForT::hash(value), [&](auto& other) {
+            return TraitsForT::equals(value, other);
+        });
     }
 
     void remove(const T& value)
@@ -216,8 +242,12 @@ private:
     void insert(const T&);
     void insert(T&&);
 
-    Bucket& bucket(int index) { return m_buckets[index]; }
-    const Bucket& bucket(int index) const { return m_buckets[index]; }
+    Bucket& bucket(int index) {
+        return m_buckets[index];
+    }
+    const Bucket& bucket(int index) const {
+        return m_buckets[index];
+    }
 
     Bucket* m_buckets { nullptr };
 

@@ -57,9 +57,9 @@ template<typename PutChFunc, typename T>
         while (shift_count) {
             shift_count -= 4;
             putch(bufptr,
-                upper_case
-                    ? printf_hex_digits_upper[(number >> shift_count) & 0x0f]
-                    : printf_hex_digits_lower[(number >> shift_count) & 0x0f]);
+                  upper_case
+                  ? printf_hex_digits_upper[(number >> shift_count) & 0x0f]
+                  : printf_hex_digits_lower[(number >> shift_count) & 0x0f]);
             ++ret;
         }
     }
@@ -247,7 +247,7 @@ template<typename PutChFunc>
         (void)size_qualifier;
         bool alternate_form = 0;
         if (*p == '%' && *(p + 1)) {
-        one_more:
+one_more:
             ++p;
             if (*p == '-') {
                 left_pad = true;
@@ -266,9 +266,9 @@ template<typename PutChFunc>
                     goto one_more;
             }
             if (*p == '*') {
-              fieldWidth = va_arg(ap, int);
-              if (*(p + 1))
-                goto one_more;
+                fieldWidth = va_arg(ap, int);
+                if (*(p + 1))
+                    goto one_more;
             }
             if (*p == 'l') {
                 ++long_qualifiers;
@@ -289,7 +289,8 @@ template<typename PutChFunc>
             case 's': {
                 const char* sp = va_arg(ap, const char*);
                 ret += print_string(putch, bufptr, sp ? sp : "(null)", left_pad, fieldWidth);
-            } break;
+            }
+            break;
 
             case 'd':
             case 'i':

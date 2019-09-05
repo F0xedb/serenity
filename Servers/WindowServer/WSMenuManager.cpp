@@ -79,12 +79,12 @@ void WSMenuManager::draw()
     time_t now = time(nullptr);
     auto* tm = localtime(&now);
     auto time_text = String::format("%4u-%02u-%02u %02u:%02u:%02u",
-        tm->tm_year + 1900,
-        tm->tm_mon + 1,
-        tm->tm_mday,
-        tm->tm_hour,
-        tm->tm_min,
-        tm->tm_sec);
+                                    tm->tm_year + 1900,
+                                    tm->tm_mon + 1,
+                                    tm->tm_mday,
+                                    tm->tm_hour,
+                                    tm->tm_min,
+                                    tm->tm_sec);
     int time_width = wm.font().width(time_text);
     Rect time_rect {
         username_rect.left() - wm.menubar_menu_margin() / 2 - time_width,

@@ -35,9 +35,9 @@ class BackgroundAction final : public CObject
 
 public:
     static NonnullRefPtr<BackgroundAction<Result>> create(
-        Function<Result()> action,
-        Function<void(Result)> on_complete = nullptr
-    )
+                Function<Result()> action,
+                Function<void(Result)> on_complete = nullptr
+            )
     {
         return adopt(*new BackgroundAction(move(action), move(on_complete)));
     }

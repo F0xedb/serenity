@@ -47,17 +47,21 @@ void GTextEditor::create_actions()
     },
     this);
 
-    m_cut_action = GCommonActions::make_cut_action([&] {
+    m_cut_action = GAction::create(
+    "Cut", { Mod_Ctrl, Key_X }, GraphicsBitmap::load_from_file("/res/icons/cut16.png"), [&](const GAction&) {
         cut();
     },
     this);
 
-    m_copy_action = GCommonActions::make_copy_action([&] {
+    m_copy_action = GAction::create(
+    "Copy", { Mod_Ctrl, Key_C }, GraphicsBitmap::load_from_file("/res/icons/16x16/edit-copy.png"), [&](const GAction&) {
         copy();
     },
     this);
 
-    m_paste_action = GCommonActions::make_paste_action([&] {
+
+    m_paste_action = GAction::create(
+    "Paste", { Mod_Ctrl, Key_V }, GraphicsBitmap::load_from_file("/res/icons/paste16.png"), [&](const GAction&) {
         paste();
     },
     this);
@@ -402,8 +406,7 @@ void GTextEditor::paint_event(GPaintEvent& event)
 
                     int selection_right = selection_ends_on_current_visual_line
                                           ? content_x_for_position({ line_index, selection_end_column_within_line })
-                                          : visual_line_rect.right() + 1;
-
+                                          : visual_line_rect.right();
                     Rect selection_rect {
                         selection_left,
                         visual_line_rect.y(),
