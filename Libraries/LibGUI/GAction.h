@@ -57,6 +57,13 @@ public:
         return m_widget.ptr();
     }
 
+    GWidget* widget() {
+        return m_widget.ptr();
+    }
+    const GWidget* widget() const {
+        return m_widget.ptr();
+    }
+
     String text() const {
         return m_text;
     }

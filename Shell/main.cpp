@@ -181,7 +181,9 @@ static bool handle_builtin(int argc, char** argv, int& retval)
 class FileDescriptionCollector {
 public:
     FileDescriptionCollector() {}
-    ~FileDescriptionCollector() { collect(); }
+    ~FileDescriptionCollector() {
+        collect();
+    }
 
     void collect()
     {
@@ -189,7 +191,9 @@ public:
             close(fd);
         m_fds.clear();
     }
-    void add(int fd) { m_fds.append(fd); }
+    void add(int fd) {
+        m_fds.append(fd);
+    }
 
 private:
     Vector<int, 32> m_fds;

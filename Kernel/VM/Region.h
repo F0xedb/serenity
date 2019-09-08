@@ -26,10 +26,7 @@ public:
     static NonnullRefPtr<Region> create_kernel_only(const Range&, const StringView& name, u8 access, bool cow = false);
 
     ~Region();
-
-    const Range& range() const {
-        return m_range;
-    }
+    
     VirtualAddress vaddr() const {
         return m_range.base();
     }
@@ -48,19 +45,16 @@ public:
     const String& name() const {
         return m_name;
     }
-    unsigned access() const {
-        return m_access;
-    }
 
     void set_name(const String& name) {
         m_name = name;
     }
 
-    const VMObject& vmobject() const {
-        return *m_vmobject;
+    const VMObject& vmo() const {
+        return *m_vmo;
     }
-    VMObject& vmobject() {
-        return *m_vmobject;
+    VMObject& vmo() {
+        return *m_vmo;
     }
 
     bool is_shared() const {

@@ -72,18 +72,6 @@ public:
         m_icon = icon;
     }
 
-    bool is_submenu() const {
-        return m_submenu_id != -1;
-    }
-    int submenu_id() const {
-        return m_submenu_id;
-    }
-    void set_submenu_id(int submenu_id) {
-        m_submenu_id = submenu_id;
-    }
-
-    WSMenu* submenu();
-
 private:
     WSMenu& m_menu;
     Type m_type { None };

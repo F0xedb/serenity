@@ -15,7 +15,9 @@ public:
 
     static GMenu* from_menu_id(int);
 
-    const String& name() const { return m_name; }
+    const String& name() const {
+        return m_name;
+    }
 
     GAction* action_at(int);
 
@@ -31,7 +33,9 @@ public:
 private:
     friend class GMenuBar;
 
-    int menu_id() const { return m_menu_id; }
+    int menu_id() const {
+        return m_menu_id;
+    }
     int realize_menu();
     void unrealize_menu();
     void realize_if_needed();

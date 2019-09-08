@@ -194,19 +194,17 @@ void TCPSocket::send_outgoing_packets()
         packet.tx_counter++;
 
 #ifdef TCP_SOCKET_DEBUG
-        auto& tcp_packet = *(TCPPacket*)(packet.buffer.pointer());
-        kprintf("sending tcp packet from %s:%u to %s:%u with (%s%s%s%s) seq_no=%u, ack_no=%u, tx_counter=%u\n",
-                local_address().to_string().characters(),
-                local_port(),
-                peer_address().to_string().characters(),
-                peer_port(),
-                tcp_packet.has_syn() ? "SYN " : "",
-                tcp_packet.has_ack() ? "ACK " : "",
-                tcp_packet.has_fin() ? "FIN " : "",
-                tcp_packet.has_rst() ? "RST " : "",
-                tcp_packet.sequence_number(),
-                tcp_packet.ack_number(),
-                packet.tx_counter);
+    kprintf("sending tcp packet from %s:%u to %s:%u with (%s%s%s%s) seq_no=%u, ack_no=%u\n",
+            local_address().to_string().characters(),
+            local_port(),
+            peer_address().to_string().characters(),
+            peer_port(),
+            tcp_packet.has_syn() ? "SYN " : "",
+            tcp_packet.has_ack() ? "ACK " : "",
+            tcp_packet.has_fin() ? "FIN " : "",
+            tcp_packet.has_rst() ? "RST " : "",
+            tcp_packet.sequence_number(),
+            tcp_packet.ack_number());
 #endif
         routing_decision.adapter->send_ipv4(
             routing_decision.next_hop, peer_address(), IPv4Protocol::TCP,

@@ -393,9 +393,6 @@ public:
     int icon_buffer_id() const {
         return m_icon_buffer_id;
     }
-    int submenu_id() const {
-        return m_submenu_id;
-    }
 
 private:
     int m_menu_id { 0 };
