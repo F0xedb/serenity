@@ -29,7 +29,9 @@ class FS : public RefCounted<FS> {
 public:
     virtual ~FS();
 
-    unsigned fsid() const { return m_fsid; }
+    unsigned fsid() const {
+        return m_fsid;
+    }
     static FS* from_fsid(u32);
     static void sync();
     static void lock_all();
@@ -38,14 +40,26 @@ public:
     virtual const char* class_name() const = 0;
     virtual InodeIdentifier root_inode() const = 0;
 
-    bool is_readonly() const { return m_readonly; }
+    bool is_readonly() const {
+        return m_readonly;
+    }
 
-    virtual unsigned total_block_count() const { return 0; }
-    virtual unsigned free_block_count() const { return 0; }
-    virtual unsigned total_inode_count() const { return 0; }
-    virtual unsigned free_inode_count() const { return 0; }
+    virtual unsigned total_block_count() const {
+        return 0;
+    }
+    virtual unsigned free_block_count() const {
+        return 0;
+    }
+    virtual unsigned total_inode_count() const {
+        return 0;
+    }
+    virtual unsigned free_inode_count() const {
+        return 0;
+    }
 
-    virtual KResult prepare_to_unmount() const { return KSuccess; }
+    virtual KResult prepare_to_unmount() const {
+        return KSuccess;
+    }
 
     struct DirectoryEntry {
         DirectoryEntry(const char* name, InodeIdentifier, u8 file_type);
@@ -63,9 +77,13 @@ public:
 
     virtual void flush_writes() {}
 
-    int block_size() const { return m_block_size; }
+    int block_size() const {
+        return m_block_size;
+    }
 
-    virtual bool is_disk_backed() const { return false; }
+    virtual bool is_disk_backed() const {
+        return false;
+    }
 
 protected:
     FS();
@@ -99,8 +117,12 @@ namespace AK {
 
 template<>
 struct Traits<InodeIdentifier> : public GenericTraits<InodeIdentifier> {
-    static unsigned hash(const InodeIdentifier& inode) { return pair_int_hash(inode.fsid(), inode.index()); }
-    static void dump(const InodeIdentifier& inode) { kprintf("%02u:%08u", inode.fsid(), inode.index()); }
+    static unsigned hash(const InodeIdentifier& inode) {
+        return pair_int_hash(inode.fsid(), inode.index());
+    }
+    static void dump(const InodeIdentifier& inode) {
+        kprintf("%02u:%08u", inode.fsid(), inode.index());
+    }
 };
 
 }

@@ -56,21 +56,43 @@ public:
 
     virtual String absolute_path(const FileDescription&) const = 0;
 
-    virtual KResult truncate(off_t) { return KResult(-EINVAL); }
+    virtual KResult truncate(off_t) {
+        return KResult(-EINVAL);
+    }
 
     virtual const char* class_name() const = 0;
 
-    virtual bool is_seekable() const { return false; }
+    virtual bool is_seekable() const {
+        return false;
+    }
 
-    virtual bool is_inode() const { return false; }
-    virtual bool is_shared_memory() const { return false; }
-    virtual bool is_fifo() const { return false; }
-    virtual bool is_device() const { return false; }
-    virtual bool is_tty() const { return false; }
-    virtual bool is_master_pty() const { return false; }
-    virtual bool is_block_device() const { return false; }
-    virtual bool is_character_device() const { return false; }
-    virtual bool is_socket() const { return false; }
+    virtual bool is_inode() const {
+        return false;
+    }
+    virtual bool is_shared_memory() const {
+        return false;
+    }
+    virtual bool is_fifo() const {
+        return false;
+    }
+    virtual bool is_device() const {
+        return false;
+    }
+    virtual bool is_tty() const {
+        return false;
+    }
+    virtual bool is_master_pty() const {
+        return false;
+    }
+    virtual bool is_block_device() const {
+        return false;
+    }
+    virtual bool is_character_device() const {
+        return false;
+    }
+    virtual bool is_socket() const {
+        return false;
+    }
 
 protected:
     File();

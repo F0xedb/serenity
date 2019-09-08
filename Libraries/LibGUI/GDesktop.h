@@ -15,7 +15,9 @@ public:
     String wallpaper() const;
     bool set_wallpaper(const StringView& path);
 
-    Rect rect() const { return m_rect; }
+    Rect rect() const {
+        return m_rect;
+    }
     void did_receive_screen_rect(Badge<GWindowServerConnection>, const Rect&);
 
     Function<void(const Rect&)> on_rect_change;

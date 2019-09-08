@@ -9,14 +9,26 @@ public:
     FileSystemPath() {}
     explicit FileSystemPath(const StringView&);
 
-    bool is_valid() const { return m_is_valid; }
-    const String& string() const { return m_string; }
+    bool is_valid() const {
+        return m_is_valid;
+    }
+    const String& string() const {
+        return m_string;
+    }
 
-    const String& basename() const { return m_basename; }
-    const String& title() const { return m_title; }
-    const String& extension() const { return m_extension; }
+    const String& basename() const {
+        return m_basename;
+    }
+    const String& title() const {
+        return m_title;
+    }
+    const String& extension() const {
+        return m_extension;
+    }
 
-    const Vector<String>& parts() const { return m_parts; }
+    const Vector<String>& parts() const {
+        return m_parts;
+    }
 
     bool has_extension(StringView) const;
 

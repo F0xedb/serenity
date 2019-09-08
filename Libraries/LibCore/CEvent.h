@@ -29,7 +29,9 @@ public:
     }
     virtual ~CEvent() {}
 
-    unsigned type() const { return m_type; }
+    unsigned type() const {
+        return m_type;
+    }
 
 private:
     unsigned m_type { Type::Invalid };
@@ -58,7 +60,9 @@ public:
     }
     ~CTimerEvent() {}
 
-    int timer_id() const { return m_timer_id; }
+    int timer_id() const {
+        return m_timer_id;
+    }
 
 private:
     int m_timer_id;
@@ -73,7 +77,9 @@ public:
     }
     ~CNotifierReadEvent() {}
 
-    int fd() const { return m_fd; }
+    int fd() const {
+        return m_fd;
+    }
 
 private:
     int m_fd;
@@ -88,7 +94,9 @@ public:
     }
     ~CNotifierWriteEvent() {}
 
-    int fd() const { return m_fd; }
+    int fd() const {
+        return m_fd;
+    }
 
 private:
     int m_fd;
@@ -99,8 +107,12 @@ public:
     CChildEvent(Type, CObject& child);
     ~CChildEvent();
 
-    CObject* child() { return m_child.ptr(); }
-    const CObject* child() const { return m_child.ptr(); }
+    CObject* child() {
+        return m_child.ptr();
+    }
+    const CObject* child() const {
+        return m_child.ptr();
+    }
 
 private:
     WeakPtr<CObject> m_child;
@@ -116,9 +128,15 @@ public:
     }
     ~CCustomEvent() {}
 
-    int custom_type() const { return m_custom_type; }
-    void* data() { return m_data; }
-    const void* data() const { return m_data; }
+    int custom_type() const {
+        return m_custom_type;
+    }
+    void* data() {
+        return m_data;
+    }
+    const void* data() const {
+        return m_data;
+    }
 
 private:
     int m_custom_type { 0 };

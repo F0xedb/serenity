@@ -51,14 +51,14 @@ int main(int, char**)
 
         printf("\033[3J\033[H\033[2J");
         printf("\033[47;30m%6s  %3s  %-8s  %-8s  %6s  %6s  %4s  %s\033[K\033[0m\n",
-            "PID",
-            "PRI",
-            "USER",
-            "STATE",
-            "VIRT",
-            "PHYS",
-            "%CPU",
-            "NAME");
+               "PID",
+               "PRI",
+               "USER",
+               "STATE",
+               "VIRT",
+               "PHYS",
+               "%CPU",
+               "NAME");
         for (auto& it : current.map) {
             pid_t pid = it.key;
             if (pid == 0)
@@ -81,15 +81,15 @@ int main(int, char**)
 
         for (auto* process : processes) {
             printf("%6d  %c    %-8s  %-10s  %6zu  %6zu  %2u.%1u  %s\n",
-                process->stats.pid,
-                process->stats.priority[0],
-                process->stats.username.characters(),
-                process->stats.state.characters(),
-                process->stats.amount_virtual / 1024,
-                process->stats.amount_resident / 1024,
-                process->cpu_percent,
-                process->cpu_percent_decimal,
-                process->stats.name.characters());
+                   process->stats.pid,
+                   process->stats.priority[0],
+                   process->stats.username.characters(),
+                   process->stats.state.characters(),
+                   process->stats.amount_virtual / 1024,
+                   process->stats.amount_resident / 1024,
+                   process->cpu_percent,
+                   process->cpu_percent_decimal,
+                   process->stats.name.characters());
         }
         processes.clear_with_capacity();
         prev = move(current);

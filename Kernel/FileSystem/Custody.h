@@ -23,15 +23,29 @@ public:
 
     ~Custody();
 
-    Custody* parent() { return m_parent.ptr(); }
-    const Custody* parent() const { return m_parent.ptr(); }
-    Inode& inode() { return *m_inode; }
-    const Inode& inode() const { return *m_inode; }
-    const String& name() const { return m_name; }
+    Custody* parent() {
+        return m_parent.ptr();
+    }
+    const Custody* parent() const {
+        return m_parent.ptr();
+    }
+    Inode& inode() {
+        return *m_inode;
+    }
+    const Inode& inode() const {
+        return *m_inode;
+    }
+    const String& name() const {
+        return m_name;
+    }
     String absolute_path() const;
 
-    bool is_deleted() const { return m_deleted; }
-    bool is_mounted_on() const { return m_mounted_on; }
+    bool is_deleted() const {
+        return m_deleted;
+    }
+    bool is_mounted_on() const {
+        return m_mounted_on;
+    }
 
     void did_delete(Badge<VFS>);
     void did_mount_on(Badge<VFS>);

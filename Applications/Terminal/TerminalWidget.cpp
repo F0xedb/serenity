@@ -37,8 +37,8 @@ TerminalWidget::TerminalWidget(int ptm_fd, RefPtr<CConfigFile> config)
 
     dbgprintf("Terminal: Load config file from %s\n", m_config->file_name().characters());
     m_cursor_blink_timer.set_interval(m_config->read_num_entry("Text",
-        "CursorBlinkInterval",
-        500));
+                                      "CursorBlinkInterval",
+                                      500));
     m_cursor_blink_timer.on_timeout = [this] {
         m_cursor_blink_state = !m_cursor_blink_state;
         update_cursor();

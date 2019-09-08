@@ -19,7 +19,9 @@ public:
     void appendf(const char*, ...);
     void appendvf(const char*, va_list);
 
-    String build() { return to_string(); }
+    String build() {
+        return to_string();
+    }
 
     String to_string();
     ByteBuffer to_byte_buffer();

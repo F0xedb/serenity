@@ -33,9 +33,9 @@ int main(int argc, char** argv)
 }
 
 /**
- * Copy a file or directory to a new location. Returns true if successful, false 
+ * Copy a file or directory to a new location. Returns true if successful, false
  * otherwise. If there is an error, its description is output to stderr.
- * 
+ *
  * Directories should only be copied if recursion_allowed is set.
  */
 bool copy_file_or_directory(String src_path, String dst_path, bool recursion_allowed)
@@ -64,9 +64,9 @@ bool copy_file_or_directory(String src_path, String dst_path, bool recursion_all
 }
 
 /**
- * Copy a source file to a destination file. Returns true if successful, false 
+ * Copy a source file to a destination file. Returns true if successful, false
  * otherwise. If there is an error, its description is output to stderr.
- * 
+ *
  * To avoid repeated work, the source file's stat and file descriptor are required.
  */
 bool copy_file(String src_path, String dst_path, struct stat src_stat, int src_fd)
@@ -143,9 +143,9 @@ bool copy_directory(String src_path, String dst_path)
     while (di.has_next()) {
         String filename = di.next_path();
         bool is_copied = copy_file_or_directory(
-            String::format("%s/%s", src_path.characters(), filename.characters()),
-            String::format("%s/%s", dst_path.characters(), filename.characters()),
-            true);
+                             String::format("%s/%s", src_path.characters(), filename.characters()),
+                             String::format("%s/%s", dst_path.characters(), filename.characters()),
+                             true);
         if (!is_copied) {
             return false;
         }

@@ -12,8 +12,12 @@ public:
         return adopt(*new CHttpResponse(code, move(headers), move(payload)));
     }
 
-    int code() const { return m_code; }
-    const HashMap<String, String>& headers() const { return m_headers; }
+    int code() const {
+        return m_code;
+    }
+    const HashMap<String, String>& headers() const {
+        return m_headers;
+    }
 
 private:
     CHttpResponse(int code, HashMap<String, String>&&, ByteBuffer&&);

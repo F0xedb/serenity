@@ -23,8 +23,12 @@ class TestElapsedTimer {
     typedef std::chrono::high_resolution_clock clock;
 
 public:
-    TestElapsedTimer() { restart(); }
-    void restart() { m_started = clock::now(); }
+    TestElapsedTimer() {
+        restart();
+    }
+    void restart() {
+        m_started = clock::now();
+    }
     int64_t elapsed()
     {
         auto end = clock::now();
@@ -73,9 +77,15 @@ public:
     {
     }
 
-    bool is_benchmark() const { return m_is_benchmark; }
-    const String& name() const { return m_name; }
-    const TestFunction& func() const { return m_function; }
+    bool is_benchmark() const {
+        return m_is_benchmark;
+    }
+    const String& name() const {
+        return m_name;
+    }
+    const TestFunction& func() const {
+        return m_function;
+    }
 
 private:
     String m_name;
