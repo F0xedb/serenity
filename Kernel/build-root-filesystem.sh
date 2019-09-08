@@ -6,12 +6,12 @@ set -e
 rm -f ../Userland/qs
 
 die() {
-    echo "die: $@"
-    exit 1
+	echo "die: $@"
+	exit 1
 }
 
 if [ $(id -u) != 0 ]; then
-    die "this script needs to run as root"
+	die "this script needs to run as root"
 fi
 
 echo -n "creating initial filesystem structure... "
@@ -131,5 +131,5 @@ echo "done"
 
 # Run local sync script, if it exists
 if [ -f sync-local.sh ]; then
-    sh sync-local.sh
+	sh sync-local.sh
 fi
