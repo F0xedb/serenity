@@ -1,4 +1,4 @@
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/JsonArray.h>
 #include <AK/JsonObject.h>
 #include <LibCore/CFile.h>
@@ -49,9 +49,9 @@ int main(int argc, char** argv)
             class_name = class_ptr;
 
         printf("%02x:%02x.%d %s: %s %s (rev %02x)\n",
-            bus, slot, function,
-            class_name.characters(), vendor_name.characters(),
-            device_name.characters(), revision_id);
+               bus, slot, function,
+               class_name.characters(), vendor_name.characters(),
+               device_name.characters(), revision_id);
     });
 
     return 0;

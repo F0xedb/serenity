@@ -12,9 +12,9 @@
 #define ASSERT_NOT_REACHED() fprintf(stderr, "\033[31;1mASSERT_NOT_REACHED\033[0m\n");
 #define RELEASE_ASSERT ASSERT
 
-#include "AKString.h"
-#include "Function.h"
-#include "NonnullRefPtrVector.h"
+#include <AK/Function.h>
+#include <AK/NonnullRefPtrVector.h>
+#include <AK/String.h>
 #include <chrono>
 
 namespace AK {
@@ -23,8 +23,12 @@ class TestElapsedTimer {
     typedef std::chrono::high_resolution_clock clock;
 
 public:
-    TestElapsedTimer() { restart(); }
-    void restart() { m_started = clock::now(); }
+    TestElapsedTimer() {
+        restart();
+    }
+    void restart() {
+        m_started = clock::now();
+    }
     int64_t elapsed()
     {
         auto end = clock::now();
@@ -73,9 +77,15 @@ public:
     {
     }
 
-    bool is_benchmark() const { return m_is_benchmark; }
-    const String& name() const { return m_name; }
-    const TestFunction& func() const { return m_function; }
+    bool is_benchmark() const {
+        return m_is_benchmark;
+    }
+    const String& name() const {
+        return m_name;
+    }
+    const TestFunction& func() const {
+        return m_function;
+    }
 
 private:
     String m_name;

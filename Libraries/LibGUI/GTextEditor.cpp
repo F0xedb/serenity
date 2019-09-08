@@ -111,11 +111,8 @@ void GTextEditor::update_content_size()
     int content_width = 0;
     int content_height = 0;
     for (auto& line : m_lines) {
-        line.for_each_visual_line([&](const Rect& rect, const StringView&, int) {
-            content_width = max(rect.width(), content_width);
-            content_height += rect.height();
-            return IterationDecision::Continue;
-        });
+        content_width = max(line.m_visual_rect.width(), content_width);
+        content_height += line.m_visual_rect.height();
     }
     content_width += m_horizontal_content_padding * 2;
     if (is_right_text_alignment(m_text_alignment))
@@ -347,10 +344,10 @@ void GTextEditor::paint_event(GPaintEvent& event)
             bool is_current_line = i == m_cursor.line();
             auto ruler_line_rect = ruler_content_rect(i);
             painter.draw_text(
-                ruler_line_rect.shrunken(2, 0),
+                ruler_line_rect.shrunken(2, 0).translated(0, m_line_spacing / 2),
                 String::number(i + 1),
                 is_current_line ? Font::default_bold_font() : font(),
-                TextAlignment::CenterRight,
+                TextAlignment::TopRight,
                 is_current_line ? Color::DarkGray : Color::MidGray);
         }
     }

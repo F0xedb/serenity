@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/ByteBuffer.h>
 
 namespace AK {
@@ -200,7 +200,9 @@ public:
             m_buffer[m_offset++] = ch;
     }
 
-    ssize_t offset() const { return m_offset; }
+    ssize_t offset() const {
+        return m_offset;
+    }
 
     void snip()
     {

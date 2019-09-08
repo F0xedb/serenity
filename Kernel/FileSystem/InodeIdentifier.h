@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/ByteBuffer.h>
 #include <AK/Types.h>
 
@@ -16,10 +16,16 @@ public:
     {
     }
 
-    bool is_valid() const { return m_fsid != 0 && m_index != 0; }
+    bool is_valid() const {
+        return m_fsid != 0 && m_index != 0;
+    }
 
-    u32 fsid() const { return m_fsid; }
-    u32 index() const { return m_index; }
+    u32 fsid() const {
+        return m_fsid;
+    }
+    u32 index() const {
+        return m_index;
+    }
 
     FS* fs();
     const FS* fs() const;
@@ -36,7 +42,9 @@ public:
 
     bool is_root_inode() const;
 
-    String to_string() const { return String::format("%u:%u", m_fsid, m_index); }
+    String to_string() const {
+        return String::format("%u:%u", m_fsid, m_index);
+    }
 
 private:
     u32 m_fsid { 0 };

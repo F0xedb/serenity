@@ -1,4 +1,4 @@
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/QuickSort.h>
 #include <AK/StringBuilder.h>
 #include <AK/Vector.h>
@@ -155,14 +155,14 @@ bool print_filesystem_object(const char* path, const char* name)
         printf("?");
 
     printf("%c%c%c%c%c%c%c%c",
-        st.st_mode & S_IRUSR ? 'r' : '-',
-        st.st_mode & S_IWUSR ? 'w' : '-',
-        st.st_mode & S_ISUID ? 's' : (st.st_mode & S_IXUSR ? 'x' : '-'),
-        st.st_mode & S_IRGRP ? 'r' : '-',
-        st.st_mode & S_IWGRP ? 'w' : '-',
-        st.st_mode & S_ISGID ? 's' : (st.st_mode & S_IXGRP ? 'x' : '-'),
-        st.st_mode & S_IROTH ? 'r' : '-',
-        st.st_mode & S_IWOTH ? 'w' : '-');
+           st.st_mode & S_IRUSR ? 'r' : '-',
+           st.st_mode & S_IWUSR ? 'w' : '-',
+           st.st_mode & S_ISUID ? 's' : (st.st_mode & S_IXUSR ? 'x' : '-'),
+           st.st_mode & S_IRGRP ? 'r' : '-',
+           st.st_mode & S_IWGRP ? 'w' : '-',
+           st.st_mode & S_ISGID ? 's' : (st.st_mode & S_IXGRP ? 'x' : '-'),
+           st.st_mode & S_IROTH ? 'r' : '-',
+           st.st_mode & S_IWOTH ? 'w' : '-');
 
     if (st.st_mode & S_ISVTX)
         printf("t");
@@ -189,12 +189,12 @@ bool print_filesystem_object(const char* path, const char* name)
 
     auto* tm = localtime(&st.st_mtime);
     printf("  %4u-%02u-%02u %02u:%02u:%02u  ",
-        tm->tm_year + 1900,
-        tm->tm_mon + 1,
-        tm->tm_mday,
-        tm->tm_hour,
-        tm->tm_min,
-        tm->tm_sec);
+           tm->tm_year + 1900,
+           tm->tm_mon + 1,
+           tm->tm_mday,
+           tm->tm_hour,
+           tm->tm_min,
+           tm->tm_sec);
 
     print_name(st, name, path);
 
@@ -218,7 +218,9 @@ int do_file_system_object_long(const char* path)
     Vector<String, 1024> names;
     while (di.has_next())
         names.append(di.next_path());
-    quick_sort(names.begin(), names.end(), [](auto& a, auto& b) { return a < b; });
+    quick_sort(names.begin(), names.end(), [](auto& a, auto& b) {
+        return a < b;
+    });
 
     for (auto& name : names) {
         ASSERT(!name.is_empty());
@@ -271,7 +273,9 @@ int do_file_system_object_short(const char* path)
         if (names.last().length() > longest_name)
             longest_name = name.length();
     }
-    quick_sort(names.begin(), names.end(), [](auto& a, auto& b) { return a < b; });
+    quick_sort(names.begin(), names.end(), [](auto& a, auto& b) {
+        return a < b;
+    });
 
     int printed_on_row = 0;
     int nprinted;

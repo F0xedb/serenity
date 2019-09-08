@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/Badge.h>
 #include <AK/Bitmap.h>
 #include <AK/ByteBuffer.h>
@@ -75,10 +75,18 @@ public:
     RefPtr<Region> allocate_user_accessible_kernel_region(size_t, const StringView& name);
     void map_region_at_address(PageDirectory&, Region&, VirtualAddress);
 
-    unsigned user_physical_pages() const { return m_user_physical_pages; }
-    unsigned user_physical_pages_used() const { return m_user_physical_pages_used; }
-    unsigned super_physical_pages() const { return m_super_physical_pages; }
-    unsigned super_physical_pages_used() const { return m_super_physical_pages_used; }
+    unsigned user_physical_pages() const {
+        return m_user_physical_pages;
+    }
+    unsigned user_physical_pages_used() const {
+        return m_user_physical_pages_used;
+    }
+    unsigned super_physical_pages() const {
+        return m_super_physical_pages;
+    }
+    unsigned super_physical_pages_used() const {
+        return m_super_physical_pages_used;
+    }
 
     template<typename Callback>
     static void for_each_vmobject(Callback callback)
@@ -125,7 +133,9 @@ private:
     u8* quickmap_page(PhysicalPage&);
     void unquickmap_page();
 
-    PageDirectory& kernel_page_directory() { return *m_kernel_page_directory; }
+    PageDirectory& kernel_page_directory() {
+        return *m_kernel_page_directory;
+    }
 
     PageTableEntry& ensure_pte(PageDirectory&, VirtualAddress);
 

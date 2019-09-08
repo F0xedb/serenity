@@ -9,6 +9,28 @@
 
 //#define SIGNAL_DEBUG
 
+u16 thread_specific_selector()
+{
+    static u16 selector;
+    if (!selector) {
+        selector = gdt_alloc_entry();
+        auto& descriptor = get_gdt_entry(selector);
+        descriptor.dpl = 3;
+        descriptor.segment_present = 1;
+        descriptor.granularity = 0;
+        descriptor.zero = 0;
+        descriptor.operation_size = 1;
+        descriptor.descriptor_type = 1;
+        descriptor.type = 2;
+    }
+    return selector;
+}
+
+Descriptor& thread_specific_descriptor()
+{
+    return get_gdt_entry(thread_specific_selector());
+}
+
 HashTable<Thread*>& thread_table()
 {
     ASSERT_INTERRUPTS_DISABLED();
@@ -32,22 +54,24 @@ Thread::Thread(Process& process)
 
     // Only IF is set when a process boots.
     m_tss.eflags = 0x0202;
-    u16 cs, ds, ss;
+    u16 cs, ds, ss, gs;
 
     if (m_process.is_ring0()) {
         cs = 0x08;
         ds = 0x10;
         ss = 0x10;
+        gs = 0;
     } else {
         cs = 0x1b;
         ds = 0x23;
         ss = 0x23;
+        gs = thread_specific_selector() | 3;
     }
 
     m_tss.ds = ds;
     m_tss.es = ds;
     m_tss.fs = ds;
-    m_tss.gs = ds;
+    m_tss.gs = gs;
     m_tss.ss = ss;
     m_tss.cs = cs;
 
@@ -57,14 +81,16 @@ Thread::Thread(Process& process)
         // FIXME: This memory is leaked.
         // But uh, there's also no kernel process termination, so I guess it's not technically leaked...
         m_kernel_stack_base = (u32)kmalloc_eternal(default_kernel_stack_size);
-        m_tss.esp = (m_kernel_stack_base + default_kernel_stack_size) & 0xfffffff8u;
+        m_kernel_stack_top = (m_kernel_stack_base + default_kernel_stack_size) & 0xfffffff8u;
+        m_tss.esp = m_kernel_stack_top;
 
     } else {
         // Ring3 processes need a separate stack for Ring0.
         m_kernel_stack_region = MM.allocate_kernel_region(default_kernel_stack_size, String::format("Kernel Stack (Thread %d)", m_tid));
         m_kernel_stack_base = m_kernel_stack_region->vaddr().get();
+        m_kernel_stack_top = m_kernel_stack_region->vaddr().offset(default_kernel_stack_size).get() & 0xfffffff8u;
         m_tss.ss0 = 0x10;
-        m_tss.esp0 = m_kernel_stack_region->vaddr().offset(default_kernel_stack_size).get() & 0xfffffff8u;
+        m_tss.esp0 = m_kernel_stack_top;
     }
 
     // HACK: Ring2 SS in the TSS is the current PID.
@@ -159,7 +185,7 @@ const char* Thread::state_string() const
         ASSERT(!m_blockers.is_empty());
         return m_blockers.first()->state_string();
     }
-    kprintf("to_string(Thread::State): Invalid state: %u\n", state());
+    kprintf("Thread::state_string(): Invalid state: %u\n", state());
     ASSERT_NOT_REACHED();
     return nullptr;
 }
@@ -314,6 +340,7 @@ ShouldUnblockThread Thread::dispatch_signal(u8 signal)
 {
     ASSERT_INTERRUPTS_DISABLED();
     ASSERT(signal > 0 && signal <= 32);
+    ASSERT(!process().is_ring0());
 
 #ifdef SIGNAL_DEBUG
     kprintf("dispatch_signal %s(%u) <- %u\n", process().name().characters(), pid(), signal);
@@ -364,6 +391,12 @@ ShouldUnblockThread Thread::dispatch_signal(u8 signal)
         return ShouldUnblockThread::Yes;
     }
 
+    ProcessPagingScope paging_scope(m_process);
+    // The userspace registers should be stored at the top of the stack
+    // We have to subtract 2 because the processor decrements the kernel
+    // stack before pushing the args.
+    auto& regs = *(RegisterDump*)(kernel_stack_top() - sizeof(RegisterDump) - 2);
+
     u32 old_signal_mask = m_signal_mask;
     u32 new_signal_mask = action.mask;
     if (action.flags & SA_NODEFER)
@@ -373,81 +406,58 @@ ShouldUnblockThread Thread::dispatch_signal(u8 signal)
 
     m_signal_mask |= new_signal_mask;
 
-    Scheduler::prepare_to_modify_tss(*this);
+    u32 old_esp = regs.esp_if_crossRing;
+    u32 ret_eip = regs.eip;
+    u32 ret_eflags = regs.eflags;
 
-    u16 ret_cs = m_tss.cs;
-    u32 ret_eip = m_tss.eip;
-    u32 ret_eflags = m_tss.eflags;
-    bool interrupting_in_kernel = (ret_cs & 3) == 0;
+    // Align the stack to 16 bytes.
+    // Note that we push 56 bytes (4 * 14) on to the stack,
+    // so we need to account for this here.
+    u32 stack_alignment = (regs.esp_if_crossRing - 56) % 16;
+    regs.esp_if_crossRing -= stack_alignment;
 
-    ProcessPagingScope paging_scope(m_process);
+    push_value_on_user_stack(regs, ret_eflags);
 
-    if (interrupting_in_kernel) {
-#ifdef SIGNAL_DEBUG
-        kprintf("dispatch_signal to %s(%u) in state=%s with return to %w:%x\n", process().name().characters(), pid(), to_string(state()), ret_cs, ret_eip);
-#endif
-        ASSERT(is_blocked());
-        m_tss_to_resume_kernel = make<TSS32>(m_tss);
-#ifdef SIGNAL_DEBUG
-        kprintf("resume tss pc: %w:%x stack: %w:%x flags: %x cr3: %x\n", m_tss_to_resume_kernel->cs, m_tss_to_resume_kernel->eip, m_tss_to_resume_kernel->ss, m_tss_to_resume_kernel->esp, m_tss_to_resume_kernel->eflags, m_tss_to_resume_kernel->cr3);
-#endif
-
-        if (!m_signal_stack_user_region) {
-            m_signal_stack_user_region = m_process.allocate_region(VirtualAddress(), default_userspace_stack_size, String::format("User Signal Stack (Thread %d)", m_tid));
-            ASSERT(m_signal_stack_user_region);
-        }
-        if (!m_kernel_stack_for_signal_handler_region)
-            m_kernel_stack_for_signal_handler_region = MM.allocate_kernel_region(default_kernel_stack_size, String::format("Kernel Signal Stack (Thread %d)", m_tid));
-        m_tss.ss = 0x23;
-        m_tss.esp = m_signal_stack_user_region->vaddr().offset(default_userspace_stack_size).get();
-        m_tss.ss0 = 0x10;
-        m_tss.esp0 = m_kernel_stack_for_signal_handler_region->vaddr().offset(default_kernel_stack_size).get();
-
-        push_value_on_stack(0);
-    } else {
-        push_value_on_stack(ret_eip);
-        push_value_on_stack(ret_eflags);
-
-        // PUSHA
-        u32 old_esp = m_tss.esp;
-        push_value_on_stack(m_tss.eax);
-        push_value_on_stack(m_tss.ecx);
-        push_value_on_stack(m_tss.edx);
-        push_value_on_stack(m_tss.ebx);
-        push_value_on_stack(old_esp);
-        push_value_on_stack(m_tss.ebp);
-        push_value_on_stack(m_tss.esi);
-        push_value_on_stack(m_tss.edi);
-
-        // Align the stack.
-        m_tss.esp -= 12;
-    }
+    push_value_on_user_stack(regs, ret_eip);
+    push_value_on_user_stack(regs, regs.eax);
+    push_value_on_user_stack(regs, regs.ecx);
+    push_value_on_user_stack(regs, regs.edx);
+    push_value_on_user_stack(regs, regs.ebx);
+    push_value_on_user_stack(regs, old_esp);
+    push_value_on_user_stack(regs, regs.ebp);
+    push_value_on_user_stack(regs, regs.esi);
+    push_value_on_user_stack(regs, regs.edi);
 
     // PUSH old_signal_mask
-    push_value_on_stack(old_signal_mask);
+    push_value_on_user_stack(regs, old_signal_mask);
 
-    m_tss.cs = 0x1b;
-    m_tss.ds = 0x23;
-    m_tss.es = 0x23;
-    m_tss.fs = 0x23;
-    m_tss.gs = 0x23;
-    m_tss.eip = handler_vaddr.get();
+    push_value_on_user_stack(regs, signal);
+    push_value_on_user_stack(regs, handler_vaddr.get());
+    push_value_on_user_stack(regs, 0); //push fake return address
 
-    // FIXME: Should we worry about the stack being 16 byte aligned when entering a signal handler?
-    push_value_on_stack(signal);
+    regs.eip = g_return_to_ring3_from_signal_trampoline.get();
 
-    if (interrupting_in_kernel)
-        push_value_on_stack(g_return_to_ring0_from_signal_trampoline.get());
-    else
-        push_value_on_stack(g_return_to_ring3_from_signal_trampoline.get());
+    ASSERT((regs.esp_if_crossRing % 16) == 0);
 
-    ASSERT((m_tss.esp % 16) == 0);
-
-    // FIXME: This state is such a hack. It avoids trouble if 'current' is the process receiving a signal.
-    set_state(Skip1SchedulerPass);
+    // If we're not blocking we need to update the tss so
+    // that the far jump in Scheduler goes to the proper location.
+    // When we are blocking we don't update the TSS as we want to
+    // resume at the blocker and descend the stack, cleaning up nicely.
+    if (!in_kernel()) {
+        Scheduler::prepare_to_modify_tss(*this);
+        m_tss.cs = 0x1b;
+        m_tss.ds = 0x23;
+        m_tss.es = 0x23;
+        m_tss.fs = 0x23;
+        m_tss.gs = thread_specific_selector() | 3;
+        m_tss.eip = regs.eip;
+        m_tss.esp = regs.esp_if_crossRing;
+        // FIXME: This state is such a hack. It avoids trouble if 'current' is the process receiving a signal.
+        set_state(Skip1SchedulerPass);
+    }
 
 #ifdef SIGNAL_DEBUG
-    kprintf("signal: Okay, %s(%u) {%s} has been primed with signal handler %w:%x\n", process().name().characters(), pid(), to_string(state()), m_tss.cs, m_tss.eip);
+    kprintf("signal: Okay, %s(%u) {%s} has been primed with signal handler %w:%x\n", process().name().characters(), pid(), state_string(), m_tss.cs, m_tss.eip);
 #endif
     return ShouldUnblockThread::Yes;
 }
@@ -458,6 +468,13 @@ void Thread::set_default_signal_dispositions()
     memset(&m_signal_action_data, 0, sizeof(m_signal_action_data));
     m_signal_action_data[SIGCHLD].handler_or_sigaction = VirtualAddress((u32)SIG_IGN);
     m_signal_action_data[SIGWINCH].handler_or_sigaction = VirtualAddress((u32)SIG_IGN);
+}
+
+void Thread::push_value_on_user_stack(RegisterDump& registers, u32 value)
+{
+    registers.esp_if_crossRing -= 4;
+    u32* stack_ptr = (u32*)registers.esp_if_crossRing;
+    *stack_ptr = value;
 }
 
 void Thread::push_value_on_stack(u32 value)
@@ -532,6 +549,7 @@ Thread* Thread::clone(Process& process)
     clone->m_fpu_state = (FPUState*)kmalloc_aligned(sizeof(FPUState), 16);
     memcpy(clone->m_fpu_state, m_fpu_state, sizeof(FPUState));
     clone->m_has_used_fpu = m_has_used_fpu;
+    clone->m_thread_specific_data = m_thread_specific_data;
     return clone;
 }
 
@@ -608,4 +626,17 @@ String Thread::backtrace_impl() const
             builder.appendf("%p  %s +%u\n", symbol.address, symbol.ksym->name, offset);
     }
     return builder.to_string();
+}
+
+void Thread::make_thread_specific_region(Badge<Process>)
+{
+    size_t thread_specific_region_alignment = max(process().m_master_tls_alignment, alignof(ThreadSpecificData));
+    size_t thread_specific_region_size = align_up_to(process().m_master_tls_size, thread_specific_region_alignment) + sizeof(ThreadSpecificData);
+    auto* region = process().allocate_region({}, thread_specific_region_size, "Thread-specific", PROT_READ | PROT_WRITE, true);
+    auto* thread_specific_data = (ThreadSpecificData*)region->vaddr().offset(align_up_to(process().m_master_tls_size, thread_specific_region_alignment)).as_ptr();
+    auto* thread_local_storage = (u8*)((u8*)thread_specific_data) - align_up_to(process().m_master_tls_size, process().m_master_tls_alignment);
+    m_thread_specific_data = VirtualAddress((u32)thread_specific_data);
+    thread_specific_data->self = thread_specific_data;
+    if (process().m_master_tls_size)
+        memcpy(thread_local_storage, process().m_master_tls_region->vaddr().as_ptr(), process().m_master_tls_size);
 }

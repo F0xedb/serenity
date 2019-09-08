@@ -1,7 +1,7 @@
 #pragma once
 
-#include "AKString.h"
-#include "Vector.h"
+#include <AK/String.h>
+#include <AK/Vector.h>
 #include <stdarg.h>
 
 namespace AK {
@@ -19,7 +19,9 @@ public:
     void appendf(const char*, ...);
     void appendvf(const char*, va_list);
 
-    String build() { return to_string(); }
+    String build() {
+        return to_string();
+    }
 
     String to_string();
     ByteBuffer to_byte_buffer();

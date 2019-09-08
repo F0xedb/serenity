@@ -1,3 +1,4 @@
+#include <AK/Time.h>
 #include <Kernel/Devices/RandomDevice.h>
 #include <Kernel/FileSystem/FileDescription.h>
 #include <Kernel/Net/NetworkAdapter.h>
@@ -37,7 +38,7 @@ Lockable<HashMap<IPv4SocketTuple, TCPSocket*>>& TCPSocket::sockets_by_tuple()
     return *s_map;
 }
 
-SocketHandle<TCPSocket> TCPSocket::from_tuple(const IPv4SocketTuple& tuple)
+RefPtr<TCPSocket> TCPSocket::from_tuple(const IPv4SocketTuple& tuple)
 {
     LOCKER(sockets_by_tuple().lock());
 
@@ -58,12 +59,12 @@ SocketHandle<TCPSocket> TCPSocket::from_tuple(const IPv4SocketTuple& tuple)
     return {};
 }
 
-SocketHandle<TCPSocket> TCPSocket::from_endpoints(const IPv4Address& local_address, u16 local_port, const IPv4Address& peer_address, u16 peer_port)
+RefPtr<TCPSocket> TCPSocket::from_endpoints(const IPv4Address& local_address, u16 local_port, const IPv4Address& peer_address, u16 peer_port)
 {
     return from_tuple(IPv4SocketTuple(local_address, local_port, peer_address, peer_port));
 }
 
-SocketHandle<TCPSocket> TCPSocket::create_client(const IPv4Address& new_local_address, u16 new_local_port, const IPv4Address& new_peer_address, u16 new_peer_port)
+RefPtr<TCPSocket> TCPSocket::create_client(const IPv4Address& new_local_address, u16 new_local_port, const IPv4Address& new_peer_address, u16 new_peer_port)
 {
     auto tuple = IPv4SocketTuple(new_local_address, new_local_port, new_peer_address, new_peer_port);
 
@@ -79,12 +80,25 @@ SocketHandle<TCPSocket> TCPSocket::create_client(const IPv4Address& new_local_ad
     client->set_peer_address(new_peer_address);
     client->set_peer_port(new_peer_port);
     client->set_direction(Direction::Incoming);
+    client->set_originator(*this);
 
-    queue_connection_from(client);
-
+    m_pending_release_for_accept.set(tuple, client);
     sockets_by_tuple().resource().set(tuple, client);
 
     return from_tuple(tuple);
+}
+
+void TCPSocket::release_to_originator()
+{
+    ASSERT(!!m_originator);
+    m_originator->release_for_accept(this);
+}
+
+void TCPSocket::release_for_accept(RefPtr<TCPSocket> socket)
+{
+    ASSERT(m_pending_release_for_accept.contains(socket->tuple()));
+    m_pending_release_for_accept.remove(socket->tuple());
+    queue_connection_from(*socket);
 }
 
 TCPSocket::TCPSocket(int protocol)
@@ -125,9 +139,6 @@ int TCPSocket::protocol_send(const void* data, int data_length)
 
 void TCPSocket::send_tcp_packet(u16 flags, const void* payload, int payload_size)
 {
-    auto routing_decision = route_to(peer_address(), local_address());
-    ASSERT(!routing_decision.is_zero());
-
     auto buffer = ByteBuffer::create_zeroed(sizeof(TCPPacket) + payload_size);
     auto& tcp_packet = *(TCPPacket*)(buffer.pointer());
     ASSERT(local_port());
@@ -149,6 +160,39 @@ void TCPSocket::send_tcp_packet(u16 flags, const void* payload, int payload_size
 
     memcpy(tcp_packet.payload(), payload, payload_size);
     tcp_packet.set_checksum(compute_tcp_checksum(local_address(), peer_address(), tcp_packet, payload_size));
+
+    if (tcp_packet.has_syn() || payload_size > 0) {
+        m_not_acked.append({ m_sequence_number, buffer, 0, {} });
+        send_outgoing_packets();
+    } else {
+        auto routing_decision = route_to(peer_address(), local_address());
+        ASSERT(!routing_decision.is_zero());
+
+        routing_decision.adapter->send_ipv4(
+            routing_decision.next_hop, peer_address(), IPv4Protocol::TCP,
+            buffer.data(), buffer.size());
+
+        m_packets_out++;
+        m_bytes_out += buffer.size();
+    }
+}
+
+void TCPSocket::send_outgoing_packets()
+{
+    auto routing_decision = route_to(peer_address(), local_address());
+    ASSERT(!routing_decision.is_zero());
+
+    auto now = kgettimeofday();
+
+    for (auto& packet : m_not_acked) {
+        timeval diff;
+        timeval_sub(packet.tx_time, now, diff);
+        if (diff.tv_sec < 1 && diff.tv_usec <= 500000)
+            continue;
+
+        packet.tx_time = now;
+        packet.tx_counter++;
+
 #ifdef TCP_SOCKET_DEBUG
     kprintf("sending tcp packet from %s:%u to %s:%u with (%s%s%s%s) seq_no=%u, ack_no=%u\n",
             local_address().to_string().characters(),
@@ -162,16 +206,47 @@ void TCPSocket::send_tcp_packet(u16 flags, const void* payload, int payload_size
             tcp_packet.sequence_number(),
             tcp_packet.ack_number());
 #endif
-    routing_decision.adapter->send_ipv4(routing_decision.next_hop, peer_address(), IPv4Protocol::TCP, buffer.data(), buffer.size());
+        routing_decision.adapter->send_ipv4(
+            routing_decision.next_hop, peer_address(), IPv4Protocol::TCP,
+            packet.buffer.data(), packet.buffer.size());
 
-    m_packets_out++;
-    m_bytes_out += buffer.size();
+        m_packets_out++;
+        m_bytes_out += packet.buffer.size();
+    }
 }
 
-void TCPSocket::record_incoming_data(int size)
+void TCPSocket::receive_tcp_packet(const TCPPacket& packet, u16 size)
 {
+    if (packet.has_ack()) {
+        u32 ack_number = packet.ack_number();
+
+#ifdef TCP_SOCKET_DEBUG
+        dbg() << "TCPSocket: receive_tcp_packet: " << ack_number;
+#endif
+
+        int removed = 0;
+        while (!m_not_acked.is_empty()) {
+            auto& packet = m_not_acked.first();
+
+#ifdef TCP_SOCKET_DEBUG
+            dbg() << "TCPSocket: iterate: " << packet.ack_number;
+#endif
+
+            if (packet.ack_number <= ack_number) {
+                m_not_acked.take_first();
+                removed++;
+            } else {
+                break;
+            }
+        }
+
+#ifdef TCP_SOCKET_DEBUG
+        dbg() << "TCPSocket: receive_tcp_packet acknowledged " << removed << " packets";
+#endif
+    }
+
     m_packets_in++;
-    m_bytes_in += size;
+    m_bytes_in += packet.header_size() + size;
 }
 
 NetworkOrdered<u16> TCPSocket::compute_tcp_checksum(const IPv4Address& source, const IPv4Address& destination, const TCPPacket& packet, u16 payload_size)

@@ -8,6 +8,7 @@
 
 GAbstractView::GAbstractView(GWidget* parent)
     : GScrollableWidget(parent)
+    , m_selection(*this)
 {
 }
 
@@ -30,16 +31,16 @@ void GAbstractView::set_model(RefPtr<GModel>&& model)
 
 void GAbstractView::did_update_model()
 {
-    if (!model() || model()->selected_index() != m_edit_index)
+    if (!model() || selection().first() != m_edit_index)
         stop_editing();
 }
 
 void GAbstractView::did_update_selection()
 {
-    if (!model() || model()->selected_index() != m_edit_index)
+    if (!model() || selection().first() != m_edit_index)
         stop_editing();
-    if (model() && on_selection && model()->selected_index().is_valid())
-        on_selection(model()->selected_index());
+    if (model() && on_selection && selection().first().is_valid())
+        on_selection(selection().first());
 }
 
 void GAbstractView::did_scroll()
@@ -95,4 +96,12 @@ void GAbstractView::activate(const GModelIndex& index)
 {
     if (on_activation)
         on_activation(index);
+}
+
+void GAbstractView::notify_selection_changed(Badge<GModelSelection>)
+{
+    did_update_selection();
+    if (on_selection_change)
+        on_selection_change();
+    update();
 }

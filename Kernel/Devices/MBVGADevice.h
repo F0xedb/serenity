@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/Types.h>
 #include <Kernel/Devices/BlockDevice.h>
 #include <Kernel/VM/PhysicalAddress.h>
@@ -16,13 +16,17 @@ public:
     virtual KResultOr<Region*> mmap(Process&, FileDescription&, VirtualAddress preferred_vaddr, size_t offset, size_t, int prot) override;
 
 private:
-    virtual const char* class_name() const override { return "MBVGA"; }
+    virtual const char* class_name() const override {
+        return "MBVGA";
+    }
     virtual bool can_read(FileDescription&) const override;
     virtual bool can_write(FileDescription&) const override;
     virtual ssize_t read(FileDescription&, u8*, ssize_t) override;
     virtual ssize_t write(FileDescription&, const u8*, ssize_t) override;
 
-    size_t framebuffer_size_in_bytes() const { return m_framebuffer_pitch * m_framebuffer_height; }
+    size_t framebuffer_size_in_bytes() const {
+        return m_framebuffer_pitch * m_framebuffer_height;
+    }
 
     PhysicalAddress m_framebuffer_address;
     int m_framebuffer_pitch { 0 };

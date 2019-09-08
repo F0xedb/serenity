@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/RefPtr.h>
 #include <AK/Types.h>
 #include <Kernel/Devices/DiskDevice.h>
@@ -11,7 +11,9 @@ public:
     static RefPtr<FileBackedDiskDevice> create(const String& image_path, size_t block_size);
     virtual ~FileBackedDiskDevice() override;
 
-    bool is_valid() const { return m_file; }
+    bool is_valid() const {
+        return m_file;
+    }
 
     virtual bool read_block(unsigned index, u8* out) const override;
     virtual bool write_block(unsigned index, const u8*) override;

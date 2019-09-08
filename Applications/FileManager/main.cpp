@@ -77,8 +77,8 @@ int main(int argc, char** argv)
         directory_view->open(location_textbox->text());
     };
 
-    file_system_model->on_selection_changed = [&](auto& index) {
-        auto path = file_system_model->path(index);
+    tree_view->on_selection_change = [&] {
+        auto path = file_system_model->path(tree_view->selection().first());
         if (directory_view->path() == path)
             return;
         directory_view->open(path);
@@ -197,8 +197,9 @@ int main(int argc, char** argv)
     directory_view->on_path_change = [window, location_textbox, &file_system_model, tree_view, &go_forward_action, &go_back_action, directory_view](const String& new_path) {
         window->set_title(String::format("File Manager: %s", new_path.characters()));
         location_textbox->set_text(new_path);
-        file_system_model->set_selected_index(file_system_model->index(new_path));
-        tree_view->scroll_into_view(file_system_model->selected_index(), Orientation::Vertical);
+        auto new_index = file_system_model->index(new_path);
+        tree_view->selection().set(new_index);
+        tree_view->scroll_into_view(new_index, Orientation::Vertical);
         tree_view->update();
 
         go_forward_action->set_enabled(directory_view->path_history_position()

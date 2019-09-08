@@ -1,6 +1,6 @@
 #include "TerminalWidget.h"
 #include "XtermColors.h"
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/StdLibExtras.h>
 #include <AK/StringBuilder.h>
 #include <Kernel/KeyCode.h>
@@ -225,6 +225,7 @@ void TerminalWidget::paint_event(GPaintEvent& event)
             painter.fill_rect(row_rect, Color::Red);
         else if (has_only_one_background_color)
             painter.fill_rect(row_rect, lookup_color(line.attributes[0].background_color).with_alpha(m_opacity));
+
         for (u16 column = 0; column < m_terminal.columns(); ++column) {
             char ch = line.characters[column];
             bool should_reverse_fill_for_cursor_or_selection = (m_cursor_blink_state && m_in_active_window && row == row_with_cursor && column == m_terminal.cursor_column())
@@ -235,11 +236,16 @@ void TerminalWidget::paint_event(GPaintEvent& event)
                 auto cell_rect = character_rect.inflated(0, m_line_spacing);
                 painter.fill_rect(cell_rect, lookup_color(should_reverse_fill_for_cursor_or_selection ? attribute.foreground_color : attribute.background_color).with_alpha(m_opacity));
             }
-            if (ch == ' ')
+
+            if (codepoint == ' ')
                 continue;
-            painter.draw_glyph(
+
+            auto character_rect = glyph_rect(row, this_char_column);
+            auto num_columns = next_char_column - this_char_column;
+            character_rect.move_by((num_columns - 1) * font().glyph_width('x') / 2, 0);
+            painter.draw_glyph_or_emoji(
                 character_rect.location(),
-                ch,
+                codepoint,
                 attribute.flags & VT::Attribute::Bold ? Font::default_bold_fixed_width_font() : font(),
                 lookup_color(should_reverse_fill_for_cursor_or_selection ? attribute.background_color : attribute.foreground_color));
         }

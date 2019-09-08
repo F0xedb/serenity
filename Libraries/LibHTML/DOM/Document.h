@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/NonnullRefPtrVector.h>
 #include <AK/OwnPtr.h>
 #include <LibHTML/CSS/StyleResolver.h>
@@ -18,8 +18,12 @@ public:
 
     StyleResolver& style_resolver();
 
-    void add_sheet(const StyleSheet& sheet) { m_sheets.append(sheet); }
-    const NonnullRefPtrVector<StyleSheet>& stylesheets() const { return m_sheets; }
+    void add_sheet(const StyleSheet& sheet) {
+        m_sheets.append(sheet);
+    }
+    const NonnullRefPtrVector<StyleSheet>& stylesheets() const {
+        return m_sheets;
+    }
 
 private:
     OwnPtr<StyleResolver> m_style_resolver;

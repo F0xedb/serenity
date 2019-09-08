@@ -3,7 +3,7 @@
 #include "Color.h"
 #include "Rect.h"
 #include "Size.h"
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/MappedFile.h>
 #include <AK/RefCounted.h>
 #include <AK/RefPtr.h>
@@ -32,12 +32,24 @@ public:
     u8* bits(int y);
     const u8* bits(int y) const;
 
-    Rect rect() const { return { {}, m_size }; }
-    Size size() const { return m_size; }
-    int width() const { return m_size.width(); }
-    int height() const { return m_size.height(); }
-    size_t pitch() const { return m_pitch; }
-    int shared_buffer_id() const { return m_shared_buffer ? m_shared_buffer->shared_buffer_id() : -1; }
+    Rect rect() const {
+        return { {}, m_size };
+    }
+    Size size() const {
+        return m_size;
+    }
+    int width() const {
+        return m_size.width();
+    }
+    int height() const {
+        return m_size.height();
+    }
+    size_t pitch() const {
+        return m_pitch;
+    }
+    int shared_buffer_id() const {
+        return m_shared_buffer ? m_shared_buffer->shared_buffer_id() : -1;
+    }
 
     unsigned bpp() const
     {
@@ -56,15 +68,25 @@ public:
 
     void fill(Color);
 
-    bool has_alpha_channel() const { return m_format == Format::RGBA32; }
-    Format format() const { return m_format; }
+    bool has_alpha_channel() const {
+        return m_format == Format::RGBA32;
+    }
+    Format format() const {
+        return m_format;
+    }
 
     void set_mmap_name(const StringView&);
 
-    size_t size_in_bytes() const { return m_pitch * m_size.height(); }
+    size_t size_in_bytes() const {
+        return m_pitch * m_size.height();
+    }
 
-    Color palette_color(u8 index) const { return Color::from_rgba(m_palette[index]); }
-    void set_palette_color(u8 index, Color color) { m_palette[index] = color.value(); }
+    Color palette_color(u8 index) const {
+        return Color::from_rgba(m_palette[index]);
+    }
+    void set_palette_color(u8 index, Color color) {
+        m_palette[index] = color.value();
+    }
 
     template<Format>
     Color get_pixel(int x, int y) const

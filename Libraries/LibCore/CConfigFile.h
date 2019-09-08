@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/HashMap.h>
 #include <AK/RefPtr.h>
 #include <AK/RefCounted.h>
@@ -31,14 +31,18 @@ public:
 
     void dump() const;
 
-    bool is_dirty() const { return m_dirty; }
+    bool is_dirty() const {
+        return m_dirty;
+    }
 
     bool sync();
 
     void remove_group(const String& group);
     void remove_entry(const String& group, const String& key);
 
-    String file_name() const { return m_file_name; }
+    String file_name() const {
+        return m_file_name;
+    }
 
 private:
     explicit CConfigFile(const String& file_name);

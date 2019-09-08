@@ -1,7 +1,7 @@
+#include <LibDraw/StylePainter.h>
 #include <LibGUI/GBoxLayout.h>
 #include <LibGUI/GPainter.h>
 #include <LibGUI/GTabWidget.h>
-#include <LibDraw/StylePainter.h>
 
 GTabWidget::GTabWidget(GWidget* parent)
     : GWidget(parent)
@@ -207,4 +207,13 @@ void GTabWidget::set_tab_position(TabPosition tab_position)
     if (m_active_widget)
         m_active_widget->set_relative_rect(child_rect_for_size(size()));
     update();
+}
+
+int GTabWidget::active_tab_index() const
+{
+    for (int i = 0; i < m_tabs.size(); i++) {
+        if (m_tabs.at(i).widget == m_active_widget)
+            return i;
+    }
+    return -1;
 }

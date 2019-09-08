@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/RefCounted.h>
 #include <AK/RefPtr.h>
 #include <AK/StringView.h>
@@ -18,15 +18,25 @@ public:
         Length,
     };
 
-    Type type() const { return m_type; }
+    Type type() const {
+        return m_type;
+    }
 
-    bool is_inherit() const { return type() == Type::Inherit; }
-    bool is_initial() const { return type() == Type::Initial; }
+    bool is_inherit() const {
+        return type() == Type::Inherit;
+    }
+    bool is_initial() const {
+        return type() == Type::Initial;
+    }
 
     virtual String to_string() const = 0;
-    virtual Length to_length() const { return {}; }
+    virtual Length to_length() const {
+        return {};
+    }
 
-    virtual bool is_auto() const { return false; }
+    virtual bool is_auto() const {
+        return false;
+    }
 
 protected:
     explicit StyleValue(Type);
@@ -43,7 +53,9 @@ public:
     }
     virtual ~StringStyleValue() override {}
 
-    String to_string() const override { return m_string; }
+    String to_string() const override {
+        return m_string;
+    }
 
 private:
     explicit StringStyleValue(const String& string)
@@ -63,12 +75,20 @@ public:
     }
     virtual ~LengthStyleValue() override {}
 
-    virtual String to_string() const override { return m_length.to_string(); }
-    virtual Length to_length() const override { return m_length; }
+    virtual String to_string() const override {
+        return m_length.to_string();
+    }
+    virtual Length to_length() const override {
+        return m_length;
+    }
 
-    const Length& length() const { return m_length; }
+    const Length& length() const {
+        return m_length;
+    }
 
-    virtual bool is_auto() const override { return m_length.is_auto(); }
+    virtual bool is_auto() const override {
+        return m_length.is_auto();
+    }
 
 private:
     explicit LengthStyleValue(const Length& length)
@@ -82,10 +102,14 @@ private:
 
 class InitialStyleValue final : public StyleValue {
 public:
-    static NonnullRefPtr<InitialStyleValue> create() { return adopt(*new InitialStyleValue); }
+    static NonnullRefPtr<InitialStyleValue> create() {
+        return adopt(*new InitialStyleValue);
+    }
     virtual ~InitialStyleValue() override {}
 
-    String to_string() const override { return "initial"; }
+    String to_string() const override {
+        return "initial";
+    }
 
 private:
     InitialStyleValue()
@@ -96,10 +120,14 @@ private:
 
 class InheritStyleValue final : public StyleValue {
 public:
-    static NonnullRefPtr<InheritStyleValue> create() { return adopt(*new InheritStyleValue); }
+    static NonnullRefPtr<InheritStyleValue> create() {
+        return adopt(*new InheritStyleValue);
+    }
     virtual ~InheritStyleValue() override {}
 
-    String to_string() const override { return "inherit"; }
+    String to_string() const override {
+        return "inherit";
+    }
 
 private:
     InheritStyleValue()

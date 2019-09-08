@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/LogStream.h>
 #include <LibDraw/Orientation.h>
 
@@ -16,16 +16,30 @@ public:
     }
     Size(const WSAPI_Size&);
 
-    bool is_null() const { return !m_width && !m_height; }
-    bool is_empty() const { return m_width <= 0 || m_height <= 0; }
+    bool is_null() const {
+        return !m_width && !m_height;
+    }
+    bool is_empty() const {
+        return m_width <= 0 || m_height <= 0;
+    }
 
-    int width() const { return m_width; }
-    int height() const { return m_height; }
+    int width() const {
+        return m_width;
+    }
+    int height() const {
+        return m_height;
+    }
 
-    int area() const { return width() * height(); }
+    int area() const {
+        return width() * height();
+    }
 
-    void set_width(int w) { m_width = w; }
-    void set_height(int h) { m_height = h; }
+    void set_width(int w) {
+        m_width = w;
+    }
+    void set_height(int h) {
+        m_height = h;
+    }
 
     bool operator==(const Size& other) const
     {
@@ -79,7 +93,9 @@ public:
 
     operator WSAPI_Size() const;
 
-    String to_string() const { return String::format("[%dx%d]", m_width, m_height); }
+    String to_string() const {
+        return String::format("[%dx%d]", m_width, m_height);
+    }
 
 private:
     int m_width { 0 };

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/HashMap.h>
 
 class KParams {
@@ -10,7 +10,9 @@ public:
 
     KParams(const String& cmdline);
 
-    const String& cmdline() const { return m_cmdline; }
+    const String& cmdline() const {
+        return m_cmdline;
+    }
     String get(const String& key) const;
     bool has(const String& key) const;
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/IPv4Address.h>
 #include <AK/Optional.h>
 #include <AK/StringBuilder.h>
@@ -30,7 +30,9 @@ public:
     static JsonValue from_string(const StringView&);
 
     explicit JsonValue(Type = Type::Null);
-    ~JsonValue() { clear(); }
+    ~JsonValue() {
+        clear();
+    }
 
     JsonValue(const JsonValue&);
     JsonValue(JsonValue&&);
@@ -166,12 +168,24 @@ public:
         return m_type;
     }
 
-    bool is_null() const { return m_type == Type::Null; }
-    bool is_undefined() const { return m_type == Type::Undefined; }
-    bool is_bool() const { return m_type == Type::Bool; }
-    bool is_string() const { return m_type == Type::String; }
-    bool is_int() const { return m_type == Type::Int; }
-    bool is_uint() const { return m_type == Type::UnsignedInt; }
+    bool is_null() const {
+        return m_type == Type::Null;
+    }
+    bool is_undefined() const {
+        return m_type == Type::Undefined;
+    }
+    bool is_bool() const {
+        return m_type == Type::Bool;
+    }
+    bool is_string() const {
+        return m_type == Type::String;
+    }
+    bool is_int() const {
+        return m_type == Type::Int;
+    }
+    bool is_uint() const {
+        return m_type == Type::UnsignedInt;
+    }
 #ifndef KERNEL
     bool is_double() const
     {
@@ -182,7 +196,9 @@ public:
     {
         return m_type == Type::Array;
     }
-    bool is_object() const { return m_type == Type::Object; }
+    bool is_object() const {
+        return m_type == Type::Object;
+    }
     bool is_number() const
     {
         if (m_type == Type::Int || m_type == Type::UnsignedInt)

@@ -239,7 +239,7 @@ void GScrollBar::mousedown_event(GMouseEvent& event)
         return;
     }
     if (has_scrubber() && scrubber_rect().contains(event.position())) {
-	m_scrubber_in_use = true;
+        m_scrubber_in_use = true;
         m_scrubbing = true;
         m_scrub_start_value = value();
         m_scrub_origin = event.position();
@@ -285,7 +285,7 @@ void GScrollBar::mousewheel_event(GMouseEvent& event)
 {
     if (!is_scrollable())
         return;
-    set_value(value() + event.wheel_delta());
+    set_value(value() + event.wheel_delta() * m_step);
     GWidget::mousewheel_event(event);
 }
 

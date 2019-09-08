@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/StringView.h>
 
 namespace AK {
@@ -18,11 +18,21 @@ public:
     {
     }
 
-    bool is_valid() const { return m_valid; }
-    String protocol() const { return m_protocol; }
-    String host() const { return m_host; }
-    String path() const { return m_path; }
-    u16 port() const { return m_port; }
+    bool is_valid() const {
+        return m_valid;
+    }
+    String protocol() const {
+        return m_protocol;
+    }
+    String host() const {
+        return m_host;
+    }
+    String path() const {
+        return m_path;
+    }
+    u16 port() const {
+        return m_port;
+    }
 
     String to_string() const;
 

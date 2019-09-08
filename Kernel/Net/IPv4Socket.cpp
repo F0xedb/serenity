@@ -106,6 +106,7 @@ KResult IPv4Socket::listen(int backlog)
         return KResult(-EADDRINUSE);
 
     set_backlog(backlog);
+    m_role = Role::Listener;
 
     kprintf("IPv4Socket{%p} listening with backlog=%d\n", this, backlog);
 
@@ -189,7 +190,9 @@ ssize_t IPv4Socket::sendto(FileDescription&, const void* data, size_t data_lengt
     if (rc < 0)
         return rc;
 
+#ifdef IPV4_SOCKET_DEBUG
     kprintf("sendto: destination=%s:%u\n", m_peer_address.to_string().characters(), m_peer_port);
+#endif
 
     if (type() == SOCK_RAW) {
         routing_decision.adapter->send_ipv4(routing_decision.next_hop, m_peer_address, (IPv4Protocol)protocol(), (const u8*)data, data_length);
@@ -216,7 +219,7 @@ ssize_t IPv4Socket::recvfrom(FileDescription& description, void* buffer, size_t 
             packet = m_receive_queue.take_first();
             m_can_read = !m_receive_queue.is_empty();
 #ifdef IPV4_SOCKET_DEBUG
-            kprintf("IPv4Socket(%p): recvfrom without blocking %d bytes, packets in queue: %d\n", this, packet.data.size(), m_receive_queue.size_slow());
+            kprintf("IPv4Socket(%p): recvfrom without blocking %d bytes, packets in queue: %d\n", this, packet.data.value().size(), m_receive_queue.size_slow());
 #endif
         }
     }
@@ -242,7 +245,7 @@ ssize_t IPv4Socket::recvfrom(FileDescription& description, void* buffer, size_t 
         packet = m_receive_queue.take_first();
         m_can_read = !m_receive_queue.is_empty();
 #ifdef IPV4_SOCKET_DEBUG
-        kprintf("IPv4Socket(%p): recvfrom with blocking %d bytes, packets in queue: %d\n", this, packet.data.size(), m_receive_queue.size_slow());
+        kprintf("IPv4Socket(%p): recvfrom with blocking %d bytes, packets in queue: %d\n", this, packet.data.value().size(), m_receive_queue.size_slow());
 #endif
     }
     ASSERT(packet.data.has_value());

@@ -310,6 +310,9 @@ Process* Process::fork(RegisterDump& regs)
         auto cloned_region = region.clone();
         child->m_regions.append(move(cloned_region));
         MM.map_region(*child, child->m_regions.last());
+
+        if (&region == m_master_tls_region)
+            child->m_master_tls_region = child->m_regions.last();
     }
 
     for (auto gid : m_gids)
@@ -403,6 +406,10 @@ int Process::do_exec(String path, Vector<String> arguments, Vector<String> envir
     RefPtr<Region> region = allocate_region_with_vmo(VirtualAddress(), metadata.size, vmo, 0, description->absolute_path(), PROT_READ);
     ASSERT(region);
 
+    RefPtr<Region> master_tls_region;
+    size_t master_tls_size = 0;
+    size_t master_tls_alignment = 0;
+
     OwnPtr<ELFLoader> loader;
     {
         // Okay, here comes the sleight of hand, pay close attention..
@@ -433,6 +440,13 @@ int Process::do_exec(String path, Vector<String> arguments, Vector<String> envir
             (void)allocate_region(vaddr, size, String(name), prot);
             return vaddr.as_ptr();
         };
+        loader->tls_section_hook = [&](size_t size, size_t alignment) {
+            ASSERT(size);
+            master_tls_region = allocate_region({}, size, String(), PROT_READ | PROT_WRITE);
+            master_tls_size = size;
+            master_tls_alignment = alignment;
+            return master_tls_region->vaddr().as_ptr();
+        };
         bool success = loader->load();
         if (!success || !loader->entry().get()) {
             m_page_directory = move(old_page_directory);
@@ -450,6 +464,9 @@ int Process::do_exec(String path, Vector<String> arguments, Vector<String> envir
 
     m_elf_loader = move(loader);
     m_executable = description->custody();
+
+    // Copy of the master TLS region that we will clone for new threads
+    m_master_tls_region = master_tls_region.ptr();
 
     if (metadata.is_setuid())
         m_euid = metadata.uid;
@@ -483,6 +500,11 @@ int Process::do_exec(String path, Vector<String> arguments, Vector<String> envir
     // ss0 sp!!!!!!!!!
     u32 old_esp0 = main_thread().m_tss.esp0;
 
+    m_master_tls_size = master_tls_size;
+    m_master_tls_alignment = master_tls_alignment;
+
+    main_thread().make_thread_specific_region({});
+
     memset(&main_thread().m_tss, 0, sizeof(main_thread().m_tss));
     main_thread().m_tss.eflags = 0x0202;
     main_thread().m_tss.eip = entry_eip;
@@ -490,7 +512,7 @@ int Process::do_exec(String path, Vector<String> arguments, Vector<String> envir
     main_thread().m_tss.ds = 0x23;
     main_thread().m_tss.es = 0x23;
     main_thread().m_tss.fs = 0x23;
-    main_thread().m_tss.gs = 0x23;
+    main_thread().m_tss.gs = thread_specific_selector() | 3;
     main_thread().m_tss.ss = 0x23;
     main_thread().m_tss.cr3 = page_directory().cr3();
     main_thread().make_userspace_stack_for_main_thread(move(arguments), move(environment));
@@ -735,6 +757,30 @@ void Process::sys$exit(int status)
     ASSERT_NOT_REACHED();
 }
 
+// The trampoline preserves the current eax, pushes the signal code and
+// then calls the signal handler. We do this because, when interrupting a
+// blocking syscall, that syscall may return some special error code in eax;
+// This error code would likely be overwritten by the signal handler, so it's
+// neccessary to preserve it here.
+asm(
+    ".intel_syntax noprefix\n"
+    "asm_signal_trampoline:\n"
+    "push ebp\n"
+    "mov ebp, esp\n"
+    "push eax\n" // we have to store eax 'cause it might be the return value from a syscall
+    "sub esp, 4\n" // align the stack to 16 bytes
+    "mov eax, [ebp+12]\n" // push the signal code
+    "push eax\n"
+    "call [ebp+8]\n" // call the signal handler
+    "add esp, 8\n"
+    "mov eax, 0x2d\n" // FIXME: We shouldn't be hardcoding this.
+    "int 0x82\n" // sigreturn syscall
+    "asm_signal_trampoline_end:\n"
+    ".att_syntax");
+
+extern "C" void asm_signal_trampoline(void);
+extern "C" void asm_signal_trampoline_end(void);
+
 void create_signal_trampolines()
 {
     InterruptDisabler disabler;
@@ -743,42 +789,12 @@ void create_signal_trampolines()
     auto* trampoline_region = MM.allocate_user_accessible_kernel_region(PAGE_SIZE, "Signal trampolines").leak_ref();
     g_return_to_ring3_from_signal_trampoline = trampoline_region->vaddr();
 
+    u8* trampoline = (u8*)asm_signal_trampoline;
+    u8* trampoline_end = (u8*)asm_signal_trampoline_end;
+    size_t trampoline_size = trampoline_end - trampoline;
+
     u8* code_ptr = (u8*)trampoline_region->vaddr().as_ptr();
-    *code_ptr++ = 0x58; // pop eax (Argument to signal handler (ignored here))
-    *code_ptr++ = 0x5a; // pop edx (Original signal mask to restore)
-    *code_ptr++ = 0xb8; // mov eax, <u32>
-    *(u32*)code_ptr = Syscall::SC_restore_signal_mask;
-    code_ptr += sizeof(u32);
-    *code_ptr++ = 0xcd; // int 0x82
-    *code_ptr++ = 0x82;
-
-    *code_ptr++ = 0x83; // add esp, (stack alignment padding)
-    *code_ptr++ = 0xc4;
-    *code_ptr++ = sizeof(u32) * 3;
-
-    *code_ptr++ = 0x61; // popa
-    *code_ptr++ = 0x9d; // popf
-    *code_ptr++ = 0xc3; // ret
-    *code_ptr++ = 0x0f; // ud2
-    *code_ptr++ = 0x0b;
-
-    g_return_to_ring0_from_signal_trampoline = VirtualAddress((u32)code_ptr);
-    *code_ptr++ = 0x58; // pop eax (Argument to signal handler (ignored here))
-    *code_ptr++ = 0x5a; // pop edx (Original signal mask to restore)
-    *code_ptr++ = 0xb8; // mov eax, <u32>
-    *(u32*)code_ptr = Syscall::SC_restore_signal_mask;
-    code_ptr += sizeof(u32);
-    *code_ptr++ = 0xcd; // int 0x82
-    // NOTE: Stack alignment padding doesn't matter when returning to ring0.
-    //       Nothing matters really, as we're returning by replacing the entire TSS.
-    *code_ptr++ = 0x82;
-    *code_ptr++ = 0xb8; // mov eax, <u32>
-    *(u32*)code_ptr = Syscall::SC_sigreturn;
-    code_ptr += sizeof(u32);
-    *code_ptr++ = 0xcd; // int 0x82
-    *code_ptr++ = 0x82;
-    *code_ptr++ = 0x0f; // ud2
-    *code_ptr++ = 0x0b;
+    memcpy(code_ptr, trampoline, trampoline_size);
 
     trampoline_region->set_writable(false);
     MM.remap_region(*trampoline_region->page_directory(), *trampoline_region);
@@ -790,21 +806,27 @@ int Process::sys$restore_signal_mask(u32 mask)
     return 0;
 }
 
-void Process::sys$sigreturn()
+int Process::sys$sigreturn(RegisterDump& registers)
 {
-    InterruptDisabler disabler;
-    Scheduler::prepare_to_modify_tss(*current);
-    current->m_tss = *current->m_tss_to_resume_kernel;
-    current->m_tss_to_resume_kernel.clear();
-#ifdef SIGNAL_DEBUG
-    kprintf("sys$sigreturn in %s(%u)\n", name().characters(), pid());
-    auto& tss = current->tss();
-    kprintf(" -> resuming execution at %w:%x stack %w:%x flags %x cr3 %x\n", tss.cs, tss.eip, tss.ss, tss.esp, tss.eflags, tss.cr3);
-#endif
-    current->set_state(Thread::State::Skip1SchedulerPass);
-    Scheduler::yield();
-    kprintf("sys$sigreturn failed in %s(%u)\n", name().characters(), pid());
-    ASSERT_NOT_REACHED();
+    //Here, we restore the state pushed by dispatch signal and asm_signal_trampoline.
+    u32* stack_ptr = (u32*)registers.esp_if_crossRing;
+    u32 smuggled_eax = *stack_ptr;
+
+    //pop the stored eax, ebp, return address, handler and signal code
+    stack_ptr += 5;
+
+    current->m_signal_mask = *stack_ptr;
+    stack_ptr++;
+
+    //pop edi, esi, ebp, esp, ebx, edx, ecx, eax and eip
+    memcpy(&registers.edi, stack_ptr, 9 * sizeof(u32));
+    stack_ptr += 9;
+
+    registers.eflags = *stack_ptr;
+    stack_ptr++;
+
+    registers.esp_if_crossRing = registers.esp;
+    return smuggled_eax;
 }
 
 void Process::crash(int signal, u32 eip)
@@ -1532,6 +1554,9 @@ pid_t Process::sys$waitpid(pid_t waitee, int* wstatus, int options)
 
     // NOTE: If waitee was -1, m_waitee_pid will have been filled in by the scheduler.
     Process* waitee_process = Process::from_pid(waitee_pid);
+    if (!waitee_process)
+        return -ECHILD;
+
     ASSERT(waitee_process);
     if (waitee_process->is_dead()) {
         exit_status = reap(*waitee_process);
@@ -2665,7 +2690,7 @@ int Process::sys$create_thread(int (*entry)(void*), void* argument)
     tss.eflags = 0x0202;
     tss.cr3 = page_directory().cr3();
     thread->make_userspace_stack_for_secondary_thread(argument);
-
+    thread->make_thread_specific_region({});
     thread->set_state(Thread::State::Runnable);
     return thread->tid();
 }

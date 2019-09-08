@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/InlineLinkedList.h>
 #include <AK/NonnullRefPtrVector.h>
 #include <AK/Types.h>
@@ -183,7 +183,7 @@ public:
     int sys$lseek(int fd, off_t, int whence);
     int sys$kill(pid_t pid, int sig);
     [[noreturn]] void sys$exit(int status);
-    [[noreturn]] void sys$sigreturn();
+    int sys$sigreturn(RegisterDump& registers);
     pid_t sys$waitpid(pid_t, int* wstatus, int options);
     void* sys$mmap(const Syscall::SC_mmap_params*);
     int sys$munmap(void*, size_t size);
@@ -444,6 +444,10 @@ private:
 
     RefPtr<ProcessTracer> m_tracer;
     OwnPtr<ELFLoader> m_elf_loader;
+
+    RefPtr<Region> m_master_tls_region;
+    size_t m_master_tls_size { 0 };
+    size_t m_master_tls_alignment { 0 };
 
     Lock m_big_lock { "Process" };
 

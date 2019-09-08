@@ -4,14 +4,16 @@
 #include "Point.h"
 #include "Rect.h"
 #include "Size.h"
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <LibDraw/TextAlignment.h>
 #include <LibDraw/TextElision.h>
+#include <AK/Utf8View.h>
 
 class CharacterBitmap;
 class GlyphBitmap;
 class GraphicsBitmap;
 class Font;
+class Emoji;
 
 class Painter {
 public:
@@ -34,29 +36,51 @@ public:
     void draw_text(const Rect&, const StringView&, TextAlignment = TextAlignment::TopLeft, Color = Color::Black, TextElision = TextElision::None);
     void draw_glyph(const Point&, char, Color);
     void draw_glyph(const Point&, char, const Font&, Color);
+    void draw_emoji(const Point&, const Emoji&, const Font&);
+    void draw_glyph_or_emoji(const Point&, u32 codepoint, const Font&, Color);
 
-    const Font& font() const { return *state().font; }
-    void set_font(const Font& font) { state().font = &font; }
+    const Font& font() const {
+        return *state().font;
+    }
+    void set_font(const Font& font) {
+        state().font = &font;
+    }
 
     enum class DrawOp {
         Copy,
         Xor
     };
-    void set_draw_op(DrawOp op) { state().draw_op = op; }
-    DrawOp draw_op() const { return state().draw_op; }
+    void set_draw_op(DrawOp op) {
+        state().draw_op = op;
+    }
+    DrawOp draw_op() const {
+        return state().draw_op;
+    }
 
     void add_clip_rect(const Rect& rect);
     void clear_clip_rect();
-    Rect clip_rect() const { return state().clip_rect; }
+    Rect clip_rect() const {
+        return state().clip_rect;
+    }
 
-    void translate(int dx, int dy) { state().translation.move_by(dx, dy); }
-    void translate(const Point& delta) { state().translation.move_by(delta); }
+    void translate(int dx, int dy) {
+        state().translation.move_by(dx, dy);
+    }
+    void translate(const Point& delta) {
+        state().translation.move_by(delta);
+    }
 
-    Point translation() const { return state().translation; }
+    Point translation() const {
+        return state().translation;
+    }
 
-    GraphicsBitmap* target() { return m_target.ptr(); }
+    GraphicsBitmap* target() {
+        return m_target.ptr();
+    }
 
-    void save() { m_state_stack.append(m_state_stack.last()); }
+    void save() {
+        m_state_stack.append(m_state_stack.last());
+    }
     void restore()
     {
         ASSERT(m_state_stack.size() > 1);
@@ -70,7 +94,7 @@ protected:
     void blit_with_opacity(const Point&, const GraphicsBitmap&, const Rect& src_rect, float opacity);
     void draw_pixel(const Point&, Color, int thickness = 1);
 
-    void draw_text_line(const Rect&, const StringView&, const Font&, TextAlignment, Color, TextElision);
+    void draw_text_line(const Rect&, const Utf8View&, const Font&, TextAlignment, Color, TextElision);
 
     struct State {
         const Font* font;
@@ -79,8 +103,12 @@ protected:
         DrawOp draw_op;
     };
 
-    State& state() { return m_state_stack.last(); }
-    const State& state() const { return m_state_stack.last(); }
+    State& state() {
+        return m_state_stack.last();
+    }
+    const State& state() const {
+        return m_state_stack.last();
+    }
 
     Rect m_clip_origin;
     NonnullRefPtr<GraphicsBitmap> m_target;

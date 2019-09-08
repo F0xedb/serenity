@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <dirent.h>
 
 class CDirIterator {
@@ -13,9 +13,15 @@ public:
     CDirIterator(const StringView& path, Flags = Flags::NoFlags);
     ~CDirIterator();
 
-    bool has_error() const { return m_error != 0; }
-    int error() const { return m_error; }
-    const char* error_string() const { return strerror(m_error); }
+    bool has_error() const {
+        return m_error != 0;
+    }
+    int error() const {
+        return m_error;
+    }
+    const char* error_string() const {
+        return strerror(m_error);
+    }
     bool has_next();
     String next_path();
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/HashMap.h>
 #include <AK/NonnullRefPtr.h>
 #include <AK/Optional.h>
@@ -23,7 +23,9 @@ public:
     }
     ~StyledNode();
 
-    const Node* node() const { return m_node; }
+    const Node* node() const {
+        return m_node;
+    }
 
     template<typename Callback>
     inline void for_each_child(Callback callback) const

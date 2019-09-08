@@ -160,6 +160,19 @@ void handle_arp(const EthernetFrameHeader& eth, size_t frame_size)
             packet.target_protocol_address().to_string().characters());
 #endif
 
+    if (!packet.sender_hardware_address().is_zero() && !packet.sender_protocol_address().is_zero()) {
+        // Someone has this IPv4 address. I guess we can try to remember that.
+        // FIXME: Protect against ARP spamming.
+        // FIXME: Support static ARP table entries.
+        LOCKER(arp_table().lock());
+        arp_table().resource().set(packet.sender_protocol_address(), packet.sender_hardware_address());
+
+        kprintf("ARP table (%d entries):\n", arp_table().resource().size());
+        for (auto& it : arp_table().resource()) {
+            kprintf("%s :: %s\n", it.value.to_string().characters(), it.key.to_string().characters());
+        }
+    }
+
     if (packet.operation() == ARPOperation::Request) {
         // Who has this IP address?
         if (auto adapter = NetworkAdapter::from_ipv4_address(packet.target_protocol_address())) {
@@ -176,19 +189,6 @@ void handle_arp(const EthernetFrameHeader& eth, size_t frame_size)
             adapter->send(packet.sender_hardware_address(), response);
         }
         return;
-    }
-
-    if (packet.operation() == ARPOperation::Response) {
-        // Someone has this IPv4 address. I guess we can try to remember that.
-        // FIXME: Protect against ARP spamming.
-        // FIXME: Support static ARP table entries.
-        LOCKER(arp_table().lock());
-        arp_table().resource().set(packet.sender_protocol_address(), packet.sender_hardware_address());
-
-        kprintf("ARP table (%d entries):\n", arp_table().resource().size());
-        for (auto& it : arp_table().resource()) {
-            kprintf("%s :: %s\n", it.value.to_string().characters(), it.key.to_string().characters());
-        }
     }
 }
 
@@ -374,12 +374,7 @@ void handle_tcp(const IPv4Packet& ipv4_packet)
     kprintf("handle_tcp: got socket; state=%s\n", socket->tuple().to_string().characters(), TCPSocket::to_string(socket->state()));
 #endif
 
-    if (tcp_packet.ack_number() != socket->sequence_number()) {
-        kprintf("handle_tcp: ack/seq mismatch: got %u, wanted %u\n", tcp_packet.ack_number(), socket->sequence_number());
-        return;
-    }
-
-    socket->record_incoming_data(ipv4_packet.payload_size());
+    socket->receive_tcp_packet(tcp_packet, ipv4_packet.payload_size());
 
     switch (socket->state()) {
     case TCPSocket::State::Closed:
@@ -394,7 +389,9 @@ void handle_tcp(const IPv4Packet& ipv4_packet)
     case TCPSocket::State::Listen:
         switch (tcp_packet.flags()) {
         case TCPFlags::SYN: {
+#ifdef TCP_DEBUG
             kprintf("handle_tcp: incoming connection\n");
+#endif
             auto& local_address = ipv4_packet.destination();
             auto& peer_address = ipv4_packet.source();
             auto client = socket->create_client(local_address, tcp_packet.destination_port(), peer_address, tcp_packet.source_port());
@@ -402,11 +399,12 @@ void handle_tcp(const IPv4Packet& ipv4_packet)
                 kprintf("handle_tcp: couldn't create client socket\n");
                 return;
             }
+#ifdef TCP_DEBUG
             kprintf("handle_tcp: created new client socket with tuple %s\n", client->tuple().to_string().characters());
+#endif
             client->set_sequence_number(1000);
             client->set_ack_number(tcp_packet.sequence_number() + payload_size + 1);
             client->send_tcp_packet(TCPFlags::SYN | TCPFlags::ACK);
-            client->set_sequence_number(1001);
             client->set_state(TCPSocket::State::SynReceived);
             return;
         }
@@ -437,7 +435,7 @@ void handle_tcp(const IPv4Packet& ipv4_packet)
             socket->set_setup_state(Socket::SetupState::Completed);
             return;
         case TCPFlags::ACK | TCPFlags::RST:
-            socket->set_ack_number(tcp_packet.sequence_number() + payload_size + 1);
+            socket->set_ack_number(tcp_packet.sequence_number() + payload_size);
             socket->send_tcp_packet(TCPFlags::ACK);
             socket->set_state(TCPSocket::State::Closed);
             socket->set_error(TCPSocket::Error::RSTDuringConnect);
@@ -454,12 +452,33 @@ void handle_tcp(const IPv4Packet& ipv4_packet)
     case TCPSocket::State::SynReceived:
         switch (tcp_packet.flags()) {
         case TCPFlags::ACK:
-            socket->set_ack_number(tcp_packet.sequence_number() + payload_size + 1);
-            socket->set_state(TCPSocket::State::Established);
-            if (socket->direction() == TCPSocket::Direction::Outgoing) {
+            socket->set_ack_number(tcp_packet.sequence_number() + payload_size);
+
+            switch (socket->direction()) {
+            case TCPSocket::Direction::Incoming:
+                if (!socket->has_originator()) {
+                    kprintf("handle_tcp: connection doesn't have an originating socket; maybe it went away?\n");
+                    socket->send_tcp_packet(TCPFlags::RST);
+                    socket->set_state(TCPSocket::State::Closed);
+                    return;
+                }
+
+                socket->set_state(TCPSocket::State::Established);
+                socket->set_setup_state(Socket::SetupState::Completed);
+                socket->release_to_originator();
+                return;
+            case TCPSocket::Direction::Outgoing:
+                socket->set_state(TCPSocket::State::Established);
                 socket->set_setup_state(Socket::SetupState::Completed);
                 socket->set_connected(true);
+                return;
+            default:
+                kprintf("handle_tcp: got ACK in SynReceived state but direction is invalid (%s)\n", TCPSocket::to_string(socket->direction()));
+                socket->send_tcp_packet(TCPFlags::RST);
+                socket->set_state(TCPSocket::State::Closed);
+                return;
             }
+
             return;
         default:
             kprintf("handle_tcp: unexpected flags in SynReceived state\n");
@@ -478,7 +497,7 @@ void handle_tcp(const IPv4Packet& ipv4_packet)
     case TCPSocket::State::LastAck:
         switch (tcp_packet.flags()) {
         case TCPFlags::ACK:
-            socket->set_ack_number(tcp_packet.sequence_number() + payload_size + 1);
+            socket->set_ack_number(tcp_packet.sequence_number() + payload_size);
             socket->set_state(TCPSocket::State::Closed);
             return;
         default:
@@ -490,7 +509,7 @@ void handle_tcp(const IPv4Packet& ipv4_packet)
     case TCPSocket::State::FinWait1:
         switch (tcp_packet.flags()) {
         case TCPFlags::ACK:
-            socket->set_ack_number(tcp_packet.sequence_number() + payload_size + 1);
+            socket->set_ack_number(tcp_packet.sequence_number() + payload_size);
             socket->set_state(TCPSocket::State::FinWait2);
             return;
         case TCPFlags::FIN:
@@ -518,7 +537,7 @@ void handle_tcp(const IPv4Packet& ipv4_packet)
     case TCPSocket::State::Closing:
         switch (tcp_packet.flags()) {
         case TCPFlags::ACK:
-            socket->set_ack_number(tcp_packet.sequence_number() + payload_size + 1);
+            socket->set_ack_number(tcp_packet.sequence_number() + payload_size);
             socket->set_state(TCPSocket::State::TimeWait);
             return;
         default:
@@ -533,8 +552,12 @@ void handle_tcp(const IPv4Packet& ipv4_packet)
                 socket->did_receive(ipv4_packet.source(), tcp_packet.source_port(), KBuffer::copy(&ipv4_packet, sizeof(IPv4Packet) + ipv4_packet.payload_size()));
 
             socket->set_ack_number(tcp_packet.sequence_number() + payload_size + 1);
-            socket->send_tcp_packet(TCPFlags::ACK);
-            socket->set_state(TCPSocket::State::CloseWait);
+            // TODO: We should only send a FIN packet out once we're shutting
+            // down our side of the socket, so we should change this back to
+            // just being an ACK and a transition to CloseWait once we have a
+            // shutdown() implementation.
+            socket->send_tcp_packet(TCPFlags::FIN | TCPFlags::ACK);
+            socket->set_state(TCPSocket::State::Closing);
             socket->set_connected(false);
             return;
         }

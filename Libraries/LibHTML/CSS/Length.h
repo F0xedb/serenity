@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 
 class Length {
 public:
@@ -17,10 +17,16 @@ public:
     }
     ~Length() {}
 
-    bool is_auto() const { return m_type == Type::Auto; }
-    bool is_absolute() const { return m_type == Type::Absolute; }
+    bool is_auto() const {
+        return m_type == Type::Auto;
+    }
+    bool is_absolute() const {
+        return m_type == Type::Absolute;
+    }
 
-    int value() const { return m_value; }
+    int value() const {
+        return m_value;
+    }
 
     String to_string() const
     {

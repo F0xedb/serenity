@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/Vector.h>
 #include <LibHTML/CSS/Specificity.h>
 
@@ -20,7 +20,9 @@ public:
     explicit Selector(Vector<Component>&&);
     ~Selector();
 
-    const Vector<Component>& components() const { return m_components; }
+    const Vector<Component>& components() const {
+        return m_components;
+    }
 
     Specificity specificity() const;
 

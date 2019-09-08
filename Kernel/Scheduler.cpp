@@ -195,6 +195,11 @@ Thread::WaitBlocker::WaitBlocker(int wait_options, pid_t& waitee_pid)
 bool Thread::WaitBlocker::should_unblock(Thread& thread, time_t, long)
 {
     bool should_unblock = false;
+    if (m_waitee_pid != -1) {
+        auto* peer = Process::from_pid(m_waitee_pid);
+        if (!peer)
+            return true;
+    }
     thread.process().for_each_child([&](Process& child) {
         if (m_waitee_pid != -1 && m_waitee_pid != child.pid())
             return IterationDecision::Continue;
@@ -203,7 +208,7 @@ bool Thread::WaitBlocker::should_unblock(Thread& thread, time_t, long)
         bool child_stopped = child.main_thread().state() == Thread::State::Stopped;
 
         bool wait_finished = ((m_wait_options & WEXITED) && child_exited)
-            || ((m_wait_options & WSTOPPED) && child_stopped);
+                             || ((m_wait_options & WSTOPPED) && child_stopped);
 
         if (!wait_finished)
             return IterationDecision::Continue;
@@ -438,9 +443,9 @@ bool Scheduler::context_switch(Thread& thread)
 
 #ifdef LOG_EVERY_CONTEXT_SWITCH
         dbgprintf("Scheduler: %s(%u:%u) -> %s(%u:%u) %w:%x\n",
-            current->process().name().characters(), current->process().pid(), current->tid(),
-            thread.process().name().characters(), thread.process().pid(), thread.tid(),
-            thread.tss().cs, thread.tss().eip);
+                  current->process().name().characters(), current->process().pid(), current->tid(),
+                  thread.process().name().characters(), thread.process().pid(), thread.tid(),
+                  thread.tss().cs, thread.tss().eip);
 #endif
     }
 
@@ -458,6 +463,12 @@ bool Scheduler::context_switch(Thread& thread)
         descriptor.zero = 0;
         descriptor.operation_size = 1;
         descriptor.descriptor_type = 0;
+    }
+
+    if (!thread.thread_specific_data().is_null()) {
+        auto& descriptor = thread_specific_descriptor();
+        descriptor.set_base(thread.thread_specific_data().as_ptr());
+        descriptor.set_limit(sizeof(ThreadSpecificData*));
     }
 
     auto& descriptor = get_gdt_entry(thread.selector());

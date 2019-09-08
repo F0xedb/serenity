@@ -13,12 +13,18 @@ public:
     virtual ~DirectoryView() override;
 
     void open(const StringView& path);
-    String path() const { return model().path(); }
+    String path() const {
+        return model().path();
+    }
     void open_parent_directory();
     void open_previous_directory();
     void open_next_directory();
-    int path_history_size() const { return m_path_history.size(); }
-    int path_history_position() const { return m_path_history_position; }
+    int path_history_size() const {
+        return m_path_history.size();
+    }
+    int path_history_position() const {
+        return m_path_history_position;
+    }
 
     void refresh();
 
@@ -32,11 +38,36 @@ public:
         Icon
     };
     void set_view_mode(ViewMode);
-    ViewMode view_mode() const { return m_view_mode; }
+    ViewMode view_mode() const {
+        return m_view_mode;
+    }
+
+    const GAbstractView& current_view() const
+    {
+        switch (m_view_mode) {
+        case ViewMode::List:
+            return *m_table_view;
+        case ViewMode::Icon:
+            return *m_item_view;
+        default:
+            ASSERT_NOT_REACHED();
+        }
+    }
+
+    template<typename Callback>
+    void for_each_view_implementation(Callback callback)
+    {
+        callback(*m_table_view);
+        callback(*m_item_view);
+    }
 
 private:
-    GDirectoryModel& model() { return *m_model; }
-    const GDirectoryModel& model() const { return *m_model; }
+    GDirectoryModel& model() {
+        return *m_model;
+    }
+    const GDirectoryModel& model() const {
+        return *m_model;
+    }
 
     void handle_activation(const GModelIndex&);
 

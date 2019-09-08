@@ -86,6 +86,7 @@ cp ../Applications/SystemDialog/SystemDialog mnt/bin/SystemDialog
 cp ../Applications/ChanViewer/ChanViewer mnt/bin/ChanViewer
 cp ../Applications/Calculator/Calculator mnt/bin/Calculator
 cp ../Applications/SoundPlayer/SoundPlayer mnt/bin/SoundPlayer
+cp ../Applications/DisplayProperties/DisplayProperties mnt/bin/DisplayProperties
 cp ../Demos/HelloWorld/HelloWorld mnt/bin/HelloWorld
 cp ../Demos/HelloWorld2/HelloWorld2 mnt/bin/HelloWorld2
 cp ../Demos/RetroFetch/RetroFetch mnt/bin/RetroFetch
@@ -100,6 +101,7 @@ cp ../Servers/SystemServer/SystemServer mnt/bin/SystemServer
 cp ../Servers/WindowServer/WindowServer mnt/bin/WindowServer
 cp ../Servers/AudioServer/AudioServer mnt/bin/AudioServer
 cp ../Servers/TTYServer/TTYServer mnt/bin/TTYServer
+cp ../Servers/TelnetServer/TelnetServer mnt/bin/TelnetServer
 cp ../Shell/Shell mnt/bin/Shell
 cp ../Libraries/LibHTML/tho mnt/bin/tho
 echo "done"

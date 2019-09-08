@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/Bitmap.h>
 #include <AK/InlineLinkedList.h>
 #include <Kernel/VM/PageDirectory.h>
@@ -26,7 +26,7 @@ public:
     static NonnullRefPtr<Region> create_kernel_only(const Range&, const StringView& name, u8 access, bool cow = false);
 
     ~Region();
-
+    
     VirtualAddress vaddr() const {
         return m_range.base();
     }

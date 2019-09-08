@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/Badge.h>
 #include <AK/Function.h>
 #include <AK/HashTable.h>
@@ -24,8 +24,8 @@ public:
         int preferred_width { 0 };
         TextAlignment text_alignment { TextAlignment::CenterLeft };
         const Font* font { nullptr };
-	enum class Sortable { False, True };
-	Sortable sortable { Sortable::True };
+        enum class Sortable { False, True };
+        Sortable sortable { Sortable::True };
     };
 
     enum class Role {
@@ -41,15 +41,27 @@ public:
 
     virtual int row_count(const GModelIndex& = GModelIndex()) const = 0;
     virtual int column_count(const GModelIndex& = GModelIndex()) const = 0;
-    virtual String row_name(int) const { return {}; }
-    virtual String column_name(int) const { return {}; }
-    virtual ColumnMetadata column_metadata(int) const { return {}; }
+    virtual String row_name(int) const {
+        return {};
+    }
+    virtual String column_name(int) const {
+        return {};
+    }
+    virtual ColumnMetadata column_metadata(int) const {
+        return {};
+    }
     virtual GVariant data(const GModelIndex&, Role = Role::Display) const = 0;
     virtual void update() = 0;
-    virtual GModelIndex parent_index(const GModelIndex&) const { return {}; }
-    virtual GModelIndex index(int row, int column = 0, const GModelIndex& = GModelIndex()) const { return create_index(row, column); }
+    virtual GModelIndex parent_index(const GModelIndex&) const {
+        return {};
+    }
+    virtual GModelIndex index(int row, int column = 0, const GModelIndex& = GModelIndex()) const {
+        return create_index(row, column);
+    }
     virtual GModelIndex sibling(int row, int column, const GModelIndex& parent) const;
-    virtual bool is_editable(const GModelIndex&) const { return false; }
+    virtual bool is_editable(const GModelIndex&) const {
+        return false;
+    }
     virtual void set_data(const GModelIndex&, const GVariant&) {}
 
     bool is_valid(const GModelIndex& index) const
@@ -57,11 +69,12 @@ public:
         return index.row() >= 0 && index.row() < row_count() && index.column() >= 0 && index.column() < column_count();
     }
 
-    void set_selected_index(const GModelIndex&);
-    GModelIndex selected_index() const { return m_selected_index; }
-
-    virtual int key_column() const { return -1; }
-    virtual GSortOrder sort_order() const { return GSortOrder::None; }
+    virtual int key_column() const {
+        return -1;
+    }
+    virtual GSortOrder sort_order() const {
+        return GSortOrder::None;
+    }
     virtual void set_key_column_and_sort_order(int, GSortOrder) {}
 
     void register_view(Badge<GAbstractView>, GAbstractView&);
@@ -80,7 +93,6 @@ protected:
 
 private:
     HashTable<GAbstractView*> m_views;
-    GModelIndex m_selected_index;
 };
 
 inline GModelIndex GModelIndex::parent() const

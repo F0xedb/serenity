@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <Kernel/KBuffer.h>
 #include <stdarg.h>
 
@@ -21,7 +21,9 @@ public:
 
 private:
     bool can_append(size_t) const;
-    u8* insertion_ptr() { return m_buffer.data() + m_size; }
+    u8* insertion_ptr() {
+        return m_buffer.data() + m_size;
+    }
 
     KBuffer m_buffer;
     size_t m_size { 0 };

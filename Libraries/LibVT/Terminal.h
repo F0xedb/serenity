@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/NonnullOwnPtrVector.h>
 #include <AK/Vector.h>
 #include <LibVT/Position.h>
@@ -18,7 +18,9 @@ public:
 };
 
 struct Attribute {
-    Attribute() { reset(); }
+    Attribute() {
+        reset();
+    }
 
     static const u8 default_foreground_color = 7;
     static const u8 default_background_color = 0;
@@ -42,7 +44,9 @@ struct Attribute {
         Touched = 0x20,
     };
 
-    bool is_untouched() const { return !(flags & Touched); }
+    bool is_untouched() const {
+        return !(flags & Touched);
+    }
 
     // TODO: it would be really nice if we had a helper for enums that
     // exposed bit ops for class enums...
@@ -70,11 +74,19 @@ public:
 
     void clear();
     void set_size(u16 columns, u16 rows);
-    u16 columns() const { return m_columns; }
-    u16 rows() const { return m_rows; }
+    u16 columns() const {
+        return m_columns;
+    }
+    u16 rows() const {
+        return m_rows;
+    }
 
-    u16 cursor_column() const { return m_cursor_column; }
-    u16 cursor_row() const { return m_cursor_row; }
+    u16 cursor_column() const {
+        return m_cursor_column;
+    }
+    u16 cursor_row() const {
+        return m_cursor_row;
+    }
 
     struct Line {
         explicit Line(u16 columns);
@@ -82,6 +94,10 @@ public:
         void clear(Attribute);
         bool has_only_one_background_color() const;
         void set_length(u16);
+        StringView text() const {
+            return { characters, m_length };
+        }
+
         u8* characters { nullptr };
         Attribute* attributes { nullptr };
         bool dirty { false };
@@ -99,8 +115,12 @@ public:
         return m_lines[index];
     }
 
-    int max_history_size() const { return 500; }
-    const NonnullOwnPtrVector<Line>& history() const { return m_history; }
+    int max_history_size() const {
+        return 500;
+    }
+    const NonnullOwnPtrVector<Line>& history() const {
+        return m_history;
+    }
 
 private:
     typedef Vector<unsigned, 4> ParamVector;

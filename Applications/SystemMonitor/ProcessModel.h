@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/HashMap.h>
 #include <AK/Vector.h>
 #include <LibGUI/GModel.h>
@@ -24,7 +24,9 @@ public:
         __Count
     };
 
-    static NonnullRefPtr<ProcessModel> create(GraphWidget& graph) { return adopt(*new ProcessModel(graph)); }
+    static NonnullRefPtr<ProcessModel> create(GraphWidget& graph) {
+        return adopt(*new ProcessModel(graph));
+    }
     virtual ~ProcessModel() override;
 
     virtual int row_count(const GModelIndex&) const override;

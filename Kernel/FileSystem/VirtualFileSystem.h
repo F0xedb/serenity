@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/Badge.h>
 #include <AK/Function.h>
 #include <AK/HashMap.h>
@@ -38,9 +38,13 @@ public:
         Mount(RefPtr<Custody>&&, NonnullRefPtr<FS>&&);
 
         InodeIdentifier host() const;
-        InodeIdentifier guest() const { return m_guest; }
+        InodeIdentifier guest() const {
+            return m_guest;
+        }
 
-        const FS& guest_fs() const { return *m_guest_fs; }
+        const FS& guest_fs() const {
+            return *m_guest_fs;
+        }
 
         String absolute_path() const;
 
@@ -79,7 +83,9 @@ public:
     KResult mknod(StringView path, mode_t, dev_t, Custody& base);
     KResultOr<NonnullRefPtr<Custody>> open_directory(StringView path, Custody& base);
 
-    size_t mount_count() const { return m_mounts.size(); }
+    size_t mount_count() const {
+        return m_mounts.size();
+    }
     void for_each_mount(Function<void(const Mount&)>) const;
 
     InodeIdentifier root_inode_id() const;

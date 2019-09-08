@@ -1,7 +1,7 @@
 #pragma once
 
 #include <LibHTML/DOM/ParentNode.h>
-#include <AK/AKString.h>
+#include <AK/String.h>
 
 class Attribute {
 public:
@@ -11,10 +11,16 @@ public:
     {
     }
 
-    const String& name() const { return m_name; }
-    const String& value() const { return m_value; }
+    const String& name() const {
+        return m_name;
+    }
+    const String& value() const {
+        return m_value;
+    }
 
-    void set_value(const String& value) { m_value = value; }
+    void set_value(const String& value) {
+        m_value = value;
+    }
 
 private:
     String m_name;
@@ -26,7 +32,9 @@ public:
     explicit Element(const String& tag_name);
     virtual ~Element() override;
 
-    const String& tag_name() const { return m_tag_name; }
+    const String& tag_name() const {
+        return m_tag_name;
+    }
 
     String attribute(const String& name) const;
     void set_attribute(const String& name, const String& value);

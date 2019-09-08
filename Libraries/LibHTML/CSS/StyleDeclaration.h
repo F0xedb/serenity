@@ -1,6 +1,6 @@
 #pragma once
 
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <LibHTML/CSS/StyleValue.h>
 
 class StyleDeclaration : public RefCounted<StyleDeclaration> {
@@ -12,8 +12,12 @@ public:
 
     ~StyleDeclaration();
 
-    const String& property_name() const { return m_property_name; }
-    const StyleValue& value() const { return *m_value; }
+    const String& property_name() const {
+        return m_property_name;
+    }
+    const StyleValue& value() const {
+        return *m_value;
+    }
 
 public:
     StyleDeclaration(const String& property_name, NonnullRefPtr<StyleValue>&&);

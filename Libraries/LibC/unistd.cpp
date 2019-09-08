@@ -1,4 +1,4 @@
-#include <AK/AKString.h>
+#include <AK/String.h>
 #include <AK/ScopedValueRollback.h>
 #include <AK/Vector.h>
 #include <Kernel/Syscall.h>
@@ -591,7 +591,7 @@ extern "C" {
         syscall(SC_dump_backtrace);
     }
 
-  int get_process_name(char* buffer, int buffer_size)
+    int get_process_name(char* buffer, int buffer_size)
     {
         int rc = syscall(SC_get_process_name, buffer, buffer_size);
         __RETURN_WITH_ERRNO(rc, rc, -1);
