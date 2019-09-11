@@ -23,7 +23,9 @@ static void print_usage_and_exit(int ret)
 
 static void add_if_not_exists(Vector<Index>& indexes, Index data)
 {
-    auto find = [data](auto& other) { return other.m_from == data.m_from && other.m_to == data.m_to; };
+    auto find = [data](auto& other) {
+        return other.m_from == data.m_from && other.m_to == data.m_to;
+    };
     if (indexes.find(find) == indexes.end()) {
         indexes.append(data);
     }
@@ -168,7 +170,9 @@ int main(int argc, char** argv)
 
     Vector<Index> byte_vector;
     expand_list(tokens, byte_vector);
-    quick_sort(byte_vector.begin(), byte_vector.end(), [](auto& a, auto& b) { return a.m_from < b.m_from; });
+    quick_sort(byte_vector.begin(), byte_vector.end(), [](auto& a, auto& b) {
+        return a.m_from < b.m_from;
+    });
 
     char* line = nullptr;
     ssize_t line_length = 0;
@@ -187,7 +191,7 @@ int main(int argc, char** argv)
             else
                 break;
         }
-	printf("\n");
+        printf("\n");
     }
 
     if (line)

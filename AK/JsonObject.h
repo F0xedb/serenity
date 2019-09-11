@@ -37,8 +37,12 @@ public:
         return *this;
     }
 
-    int size() const { return m_members.size(); }
-    bool is_empty() const { return m_members.is_empty(); }
+    int size() const {
+        return m_members.size();
+    }
+    bool is_empty() const {
+        return m_members.is_empty();
+    }
 
     JsonValue get(const String& key) const
     {
@@ -71,7 +75,9 @@ public:
     template<typename Builder>
     void serialize(Builder&) const;
 
-    String to_string() const { return serialized<StringBuilder>(); }
+    String to_string() const {
+        return serialized<StringBuilder>();
+    }
 
 private:
     HashMap<String, JsonValue> m_members;
@@ -82,7 +88,7 @@ inline void JsonObject::serialize(Builder& builder) const
 {
     JsonObjectSerializer serializer { builder };
     for_each_member([&](auto& key, auto& value) {
-            serializer.add(key, value);
+        serializer.add(key, value);
     });
 }
 

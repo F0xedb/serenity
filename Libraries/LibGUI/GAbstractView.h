@@ -16,25 +16,45 @@ public:
     virtual ~GAbstractView() override;
 
     void set_model(RefPtr<GModel>&&);
-    GModel* model() { return m_model.ptr(); }
-    const GModel* model() const { return m_model.ptr(); }
+    GModel* model() {
+        return m_model.ptr();
+    }
+    const GModel* model() const {
+        return m_model.ptr();
+    }
 
-    GModelSelection& selection() { return m_selection; }
-    const GModelSelection& selection() const { return m_selection; }
+    GModelSelection& selection() {
+        return m_selection;
+    }
+    const GModelSelection& selection() const {
+        return m_selection;
+    }
 
-    bool is_editable() const { return m_editable; }
-    void set_editable(bool editable) { m_editable = editable; }
+    bool is_editable() const {
+        return m_editable;
+    }
+    void set_editable(bool editable) {
+        m_editable = editable;
+    }
 
-    virtual bool accepts_focus() const override { return true; }
+    virtual bool accepts_focus() const override {
+        return true;
+    }
     virtual void did_update_model();
     virtual void did_update_selection();
 
-    virtual Rect content_rect(const GModelIndex&) const { return {}; }
+    virtual Rect content_rect(const GModelIndex&) const {
+        return {};
+    }
     void begin_editing(const GModelIndex&);
     void stop_editing();
 
-    void set_activates_on_selection(bool b) { m_activates_on_selection = b; }
-    bool activates_on_selection() const { return m_activates_on_selection; }
+    void set_activates_on_selection(bool b) {
+        m_activates_on_selection = b;
+    }
+    bool activates_on_selection() const {
+        return m_activates_on_selection;
+    }
 
     Function<void()> on_selection_change;
     Function<void(const GModelIndex&)> on_activation;

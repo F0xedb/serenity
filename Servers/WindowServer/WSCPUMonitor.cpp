@@ -10,9 +10,9 @@
 
 WSCPUMonitor::WSCPUMonitor()
     : m_thread([this] {
-        monitor();
-        return 0;
-    })
+    monitor();
+    return 0;
+})
 {
     m_thread.start();
 }
@@ -57,9 +57,9 @@ void WSCPUMonitor::paint(Painter& painter, const Rect& rect)
     int i = m_cpu_history.capacity() - m_cpu_history.size();
     for (auto cpu_usage : m_cpu_history) {
         painter.draw_line(
-            { rect.x() + i, rect.bottom() },
-            { rect.x() + i, (int)(rect.y() + (rect.height() - (cpu_usage * (float)rect.height()))) },
-            Color::from_rgb(0xaa6d4b));
+        { rect.x() + i, rect.bottom() },
+        { rect.x() + i, (int)(rect.y() + (rect.height() - (cpu_usage * (float)rect.height()))) },
+        Color::from_rgb(0xaa6d4b));
         ++i;
     }
 }

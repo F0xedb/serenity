@@ -87,10 +87,10 @@ void GSortingProxyModel::resort()
         if (data1 == data2)
             return 0;
         bool is_less_than;
-	if (data1.is_string() && data2.is_string() && !m_sorting_case_sensitive)
-	    is_less_than = data1.as_string().to_lowercase() < data2.as_string().to_lowercase();
-	else
-	    is_less_than = data1 < data2;
+        if (data1.is_string() && data2.is_string() && !m_sorting_case_sensitive)
+            is_less_than = data1.as_string().to_lowercase() < data2.as_string().to_lowercase();
+        else
+            is_less_than = data1 < data2;
         return m_sort_order == GSortOrder::Ascending ? is_less_than : !is_less_than;
     });
     did_update();

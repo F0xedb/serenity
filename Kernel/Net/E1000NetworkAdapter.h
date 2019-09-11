@@ -18,7 +18,9 @@ public:
 
 private:
     virtual void handle_irq() override;
-    virtual const char* class_name() const override { return "E1000NetworkAdapter"; }
+    virtual const char* class_name() const override {
+        return "E1000NetworkAdapter";
+    }
 
     struct [[gnu::packed]] e1000_rx_desc
     {

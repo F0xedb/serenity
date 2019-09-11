@@ -334,6 +334,10 @@ public:
         return m_kernel_stack_top;
     }
 
+    u32 kernel_stack_for_signal_handler_base() const {
+        return m_kernel_stack_for_signal_handler_region ? m_kernel_stack_for_signal_handler_region->vaddr().get() : 0;
+    }
+
     void set_selector(u16 s) {
         m_far_ptr.selector = s;
     }

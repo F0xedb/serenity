@@ -180,12 +180,12 @@ int main(int argc, char** argv)
 
     auto app_menu = make<GMenu>("Terminal");
     app_menu->add_action(GAction::create("Settings...", load_png("/res/icons/gear16.png"),
-        [&settings_window, terminal, &config](const GAction&) {
-            if (!settings_window)
-                settings_window = create_settings_window(*terminal, config)->make_weak_ptr();
-            settings_window->show();
-            settings_window->move_to_front();
-        }));
+    [&settings_window, terminal, &config](const GAction&) {
+        if (!settings_window)
+            settings_window = create_settings_window(*terminal, config)->make_weak_ptr();
+        settings_window->show();
+        settings_window->move_to_front();
+    }));
     app_menu->add_separator();
     app_menu->add_action(GCommonActions::make_quit_action([] {
         dbgprintf("Terminal: Quit menu activated!\n");

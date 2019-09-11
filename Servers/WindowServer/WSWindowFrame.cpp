@@ -229,9 +229,9 @@ static Rect frame_rect_for_window(WSWindow& window, const Rect& rect)
     switch (type) {
     case WSWindowType::Normal:
         return { rect.x() - 3,
-            rect.y() - window_titlebar_height - 4 + offset,
-            rect.width() + 6,
-            rect.height() + 7 + window_titlebar_height - offset };
+                 rect.y() - window_titlebar_height - 4 + offset,
+                 rect.width() + 6,
+                 rect.height() + 7 + window_titlebar_height - offset };
     default:
         return rect;
     }

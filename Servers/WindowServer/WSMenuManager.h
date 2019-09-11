@@ -18,11 +18,17 @@ public:
 
     bool is_open(const WSMenu&) const;
 
-    Vector<WeakPtr<WSMenu>>& open_menu_stack() { return m_open_menu_stack; }
+    Vector<WeakPtr<WSMenu>>& open_menu_stack() {
+        return m_open_menu_stack;
+    }
 
 private:
-    WSWindow& window() { return *m_window; }
-    const WSWindow& window() const { return *m_window; }
+    WSWindow& window() {
+        return *m_window;
+    }
+    const WSWindow& window() const {
+        return *m_window;
+    }
 
     void handle_menu_mouse_event(WSMenu&, const WSMouseEvent&);
 

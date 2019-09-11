@@ -46,13 +46,25 @@ public:
     {
     }
 
-    static Color from_rgb(unsigned rgb) { return Color(rgb | 0xff000000); }
-    static Color from_rgba(unsigned rgba) { return Color(rgba); }
+    static Color from_rgb(unsigned rgb) {
+        return Color(rgb | 0xff000000);
+    }
+    static Color from_rgba(unsigned rgba) {
+        return Color(rgba);
+    }
 
-    u8 red() const { return (m_value >> 16) & 0xff; }
-    u8 green() const { return (m_value >> 8) & 0xff; }
-    u8 blue() const { return m_value & 0xff; }
-    u8 alpha() const { return (m_value >> 24) & 0xff; }
+    u8 red() const {
+        return (m_value >> 16) & 0xff;
+    }
+    u8 green() const {
+        return (m_value >> 8) & 0xff;
+    }
+    u8 blue() const {
+        return m_value & 0xff;
+    }
+    u8 alpha() const {
+        return (m_value >> 24) & 0xff;
+    }
 
     void set_alpha(u8 value)
     {
@@ -120,7 +132,9 @@ public:
         return Color(~red(), ~green(), ~blue());
     }
 
-    RGBA32 value() const { return m_value; }
+    RGBA32 value() const {
+        return m_value;
+    }
 
     bool operator==(const Color& other) const
     {

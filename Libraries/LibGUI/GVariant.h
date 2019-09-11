@@ -49,19 +49,45 @@ public:
         Rect,
     };
 
-    bool is_valid() const { return m_type != Type::Invalid; }
-    bool is_bool() const { return m_type == Type::Bool; }
-    bool is_int() const { return m_type == Type::Int; }
-    bool is_uint() const { return m_type == Type::UnsignedInt; }
-    bool is_float() const { return m_type == Type::Float; }
-    bool is_string() const { return m_type == Type::String; }
-    bool is_bitmap() const { return m_type == Type::Bitmap; }
-    bool is_color() const { return m_type == Type::Color; }
-    bool is_icon() const { return m_type == Type::Icon; }
-    bool is_point() const { return m_type == Type::Point; }
-    bool is_size() const { return m_type == Type::Size; }
-    bool is_rect() const { return m_type == Type::Rect; }
-    Type type() const { return m_type; }
+    bool is_valid() const {
+        return m_type != Type::Invalid;
+    }
+    bool is_bool() const {
+        return m_type == Type::Bool;
+    }
+    bool is_int() const {
+        return m_type == Type::Int;
+    }
+    bool is_uint() const {
+        return m_type == Type::UnsignedInt;
+    }
+    bool is_float() const {
+        return m_type == Type::Float;
+    }
+    bool is_string() const {
+        return m_type == Type::String;
+    }
+    bool is_bitmap() const {
+        return m_type == Type::Bitmap;
+    }
+    bool is_color() const {
+        return m_type == Type::Color;
+    }
+    bool is_icon() const {
+        return m_type == Type::Icon;
+    }
+    bool is_point() const {
+        return m_type == Type::Point;
+    }
+    bool is_size() const {
+        return m_type == Type::Size;
+    }
+    bool is_rect() const {
+        return m_type == Type::Rect;
+    }
+    Type type() const {
+        return m_type;
+    }
 
     bool as_bool() const
     {
