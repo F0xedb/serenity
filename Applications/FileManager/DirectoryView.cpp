@@ -70,10 +70,10 @@ DirectoryView::DirectoryView(GWidget* parent)
 
     m_table_view->model()->on_update = [this] {
         set_status_message(String::format("%d item%s (%u byte%s)",
-            model().row_count(),
-            model().row_count() != 1 ? "s" : "",
-            model().bytes_in_files(),
-            model().bytes_in_files() != 1 ? "s" : ""));
+                                          model().row_count(),
+                                          model().row_count() != 1 ? "s" : "",
+                                          model().bytes_in_files(),
+                                          model().bytes_in_files() != 1 ? "s" : ""));
 
         if (on_path_change)
             on_path_change(model().path());
