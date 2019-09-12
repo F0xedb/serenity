@@ -25,6 +25,8 @@ const char* CIODevice::error_string() const
 int CIODevice::read(u8* buffer, int length)
 {
     auto read_buffer = read(length);
+    if (read_buffer.is_null())
+        return 0;
     memcpy(buffer, read_buffer.data(), length);
     return read_buffer.size();
 }
@@ -127,7 +129,7 @@ ByteBuffer CIODevice::read_all()
         int nread = ::read(m_fd, read_buffer, sizeof(read_buffer));
         if (nread < 0) {
             set_error(errno);
-            return ByteBuffer::copy(data.data(), data.size());
+            break;
         }
         if (nread == 0) {
             set_eof(true);
@@ -135,6 +137,8 @@ ByteBuffer CIODevice::read_all()
         }
         data.append((const u8*)read_buffer, nread);
     }
+    if (data.is_empty())
+        return {};
     return ByteBuffer::copy(data.data(), data.size());
 }
 
@@ -251,7 +255,7 @@ int CIODevice::printf(const char* format, ...)
     int ret = printf_internal([this](char*&, char ch) {
         write((const u8*)&ch, 1);
     },
-        nullptr, format, ap);
+    nullptr, format, ap);
     va_end(ap);
     return ret;
 }

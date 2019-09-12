@@ -1,10 +1,11 @@
 #pragma once
 
-#include "StdLibExtras.h"
-#include "Types.h"
+#include <AK/LogStream.h>
 #include <AK/NonnullRefPtr.h>
 #include <AK/RefCounted.h>
 #include <AK/RefPtr.h>
+#include <AK/StdLibExtras.h>
+#include <AK/Types.h>
 #include <AK/kmalloc.h>
 
 namespace AK {
@@ -18,7 +19,9 @@ public:
     static NonnullRefPtr<ByteBufferImpl> wrap(const void*, int);
     static NonnullRefPtr<ByteBufferImpl> adopt(void*, int);
 
-    ~ByteBufferImpl() { clear(); }
+    ~ByteBufferImpl() {
+        clear();
+    }
 
     void clear()
     {
@@ -39,17 +42,33 @@ public:
         ASSERT(i < m_size);
         return m_data[i];
     }
-    bool is_empty() const { return !m_size; }
-    int size() const { return m_size; }
+    bool is_empty() const {
+        return !m_size;
+    }
+    int size() const {
+        return m_size;
+    }
 
-    u8* pointer() { return m_data; }
-    const u8* pointer() const { return m_data; }
+    u8* pointer() {
+        return m_data;
+    }
+    const u8* pointer() const {
+        return m_data;
+    }
 
-    u8* offset_pointer(int offset) { return m_data + offset; }
-    const u8* offset_pointer(int offset) const { return m_data + offset; }
+    u8* offset_pointer(int offset) {
+        return m_data + offset;
+    }
+    const u8* offset_pointer(int offset) const {
+        return m_data + offset;
+    }
 
-    void* end_pointer() { return m_data + m_size; }
-    const void* end_pointer() const { return m_data + m_size; }
+    void* end_pointer() {
+        return m_data + m_size;
+    }
+    const void* end_pointer() const {
+        return m_data + m_size;
+    }
 
     // NOTE: trim() does not reallocate.
     void trim(int size)
@@ -102,19 +121,41 @@ public:
         return *this;
     }
 
-    static ByteBuffer create_uninitialized(int size) { return ByteBuffer(ByteBufferImpl::create_uninitialized(size)); }
-    static ByteBuffer create_zeroed(int size) { return ByteBuffer(ByteBufferImpl::create_zeroed(size)); }
-    static ByteBuffer copy(const void* data, int size) { return ByteBuffer(ByteBufferImpl::copy(data, size)); }
-    static ByteBuffer wrap(const void* data, int size) { return ByteBuffer(ByteBufferImpl::wrap(data, size)); }
-    static ByteBuffer wrap(void* data, int size) { return ByteBuffer(ByteBufferImpl::wrap(data, size)); }
-    static ByteBuffer adopt(void* data, int size) { return ByteBuffer(ByteBufferImpl::adopt(data, size)); }
+    static ByteBuffer create_uninitialized(int size) {
+        return ByteBuffer(ByteBufferImpl::create_uninitialized(size));
+    }
+    static ByteBuffer create_zeroed(int size) {
+        return ByteBuffer(ByteBufferImpl::create_zeroed(size));
+    }
+    static ByteBuffer copy(const void* data, int size) {
+        return ByteBuffer(ByteBufferImpl::copy(data, size));
+    }
+    static ByteBuffer wrap(const void* data, int size) {
+        return ByteBuffer(ByteBufferImpl::wrap(data, size));
+    }
+    static ByteBuffer wrap(void* data, int size) {
+        return ByteBuffer(ByteBufferImpl::wrap(data, size));
+    }
+    static ByteBuffer adopt(void* data, int size) {
+        return ByteBuffer(ByteBufferImpl::adopt(data, size));
+    }
 
-    ~ByteBuffer() { clear(); }
-    void clear() { m_impl = nullptr; }
+    ~ByteBuffer() {
+        clear();
+    }
+    void clear() {
+        m_impl = nullptr;
+    }
 
-    operator bool() const { return !is_null(); }
-    bool operator!() const { return is_null(); }
-    bool is_null() const { return m_impl == nullptr; }
+    operator bool() const {
+        return !is_null();
+    }
+    bool operator!() const {
+        return is_null();
+    }
+    bool is_null() const {
+        return m_impl == nullptr;
+    }
 
     u8& operator[](int i)
     {
@@ -126,20 +167,40 @@ public:
         ASSERT(m_impl);
         return (*m_impl)[i];
     }
-    bool is_empty() const { return !m_impl || m_impl->is_empty(); }
-    int size() const { return m_impl ? m_impl->size() : 0; }
+    bool is_empty() const {
+        return !m_impl || m_impl->is_empty();
+    }
+    int size() const {
+        return m_impl ? m_impl->size() : 0;
+    }
 
-    u8* data() { return pointer(); }
-    const u8* data() const { return pointer(); }
+    u8* data() {
+        return pointer();
+    }
+    const u8* data() const {
+        return pointer();
+    }
 
-    u8* pointer() { return m_impl ? m_impl->pointer() : nullptr; }
-    const u8* pointer() const { return m_impl ? m_impl->pointer() : nullptr; }
+    u8* pointer() {
+        return m_impl ? m_impl->pointer() : nullptr;
+    }
+    const u8* pointer() const {
+        return m_impl ? m_impl->pointer() : nullptr;
+    }
 
-    u8* offset_pointer(int offset) { return m_impl ? m_impl->offset_pointer(offset) : nullptr; }
-    const u8* offset_pointer(int offset) const { return m_impl ? m_impl->offset_pointer(offset) : nullptr; }
+    u8* offset_pointer(int offset) {
+        return m_impl ? m_impl->offset_pointer(offset) : nullptr;
+    }
+    const u8* offset_pointer(int offset) const {
+        return m_impl ? m_impl->offset_pointer(offset) : nullptr;
+    }
 
-    void* end_pointer() { return m_impl ? m_impl->end_pointer() : nullptr; }
-    const void* end_pointer() const { return m_impl ? m_impl->end_pointer() : nullptr; }
+    void* end_pointer() {
+        return m_impl ? m_impl->end_pointer() : nullptr;
+    }
+    const void* end_pointer() const {
+        return m_impl ? m_impl->end_pointer() : nullptr;
+    }
 
     ByteBuffer isolated_copy() const
     {
@@ -270,6 +331,12 @@ inline NonnullRefPtr<ByteBufferImpl> ByteBufferImpl::wrap(const void* data, int 
 inline NonnullRefPtr<ByteBufferImpl> ByteBufferImpl::adopt(void* data, int size)
 {
     return ::adopt(*new ByteBufferImpl(data, size, Adopt));
+}
+
+inline const LogStream& operator<<(const LogStream& stream, const ByteBuffer& value)
+{
+    stream.write((const char*)value.data(), value.size());
+    return stream;
 }
 
 }
