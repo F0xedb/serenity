@@ -16,7 +16,9 @@ public:
     virtual KResultOr<Region*> mmap(Process&, FileDescription&, VirtualAddress preferred_vaddr, size_t offset, size_t, int prot) override;
 
 private:
-    virtual const char* class_name() const override { return "BXVGA"; }
+    virtual const char* class_name() const override {
+        return "BXVGA";
+    }
     virtual bool can_read(FileDescription&) const override;
     virtual bool can_write(FileDescription&) const override;
     virtual ssize_t read(FileDescription&, u8*, ssize_t) override;
@@ -24,7 +26,9 @@ private:
 
     void set_register(u16 index, u16 value);
     u32 find_framebuffer_address();
-    size_t framebuffer_size_in_bytes() const { return m_framebuffer_pitch * m_framebuffer_height * 2; }
+    size_t framebuffer_size_in_bytes() const {
+        return m_framebuffer_pitch * m_framebuffer_height * 2;
+    }
     void set_resolution(int width, int height);
     void set_y_offset(int);
 

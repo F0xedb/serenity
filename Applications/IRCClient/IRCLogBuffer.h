@@ -21,14 +21,22 @@ public:
         Color color { Color::Black };
     };
 
-    int count() const { return m_messages.size(); }
-    const Message& at(int index) const { return m_messages.at(index); }
+    int count() const {
+        return m_messages.size();
+    }
+    const Message& at(int index) const {
+        return m_messages.at(index);
+    }
     void add_message(char prefix, const String& name, const String& text, Color = Color::Black);
     void add_message(const String& text, Color = Color::Black);
     void dump() const;
 
-    const IRCLogBufferModel* model() const { return m_model.ptr(); }
-    IRCLogBufferModel* model() { return m_model.ptr(); }
+    const IRCLogBufferModel* model() const {
+        return m_model.ptr();
+    }
+    IRCLogBufferModel* model() {
+        return m_model.ptr();
+    }
 
 private:
     IRCLogBuffer();

@@ -11,11 +11,19 @@ class GModelIndex {
 public:
     GModelIndex() {}
 
-    bool is_valid() const { return m_row != -1 && m_column != -1; }
-    int row() const { return m_row; }
-    int column() const { return m_column; }
+    bool is_valid() const {
+        return m_row != -1 && m_column != -1;
+    }
+    int row() const {
+        return m_row;
+    }
+    int column() const {
+        return m_column;
+    }
 
-    void* internal_data() const { return m_internal_data; }
+    void* internal_data() const {
+        return m_internal_data;
+    }
 
     GModelIndex parent() const;
 
@@ -52,6 +60,8 @@ inline const LogStream& operator<<(const LogStream& stream, const GModelIndex& v
 namespace AK {
 template<>
 struct Traits<GModelIndex> : public GenericTraits<GModelIndex> {
-    static unsigned hash(const GModelIndex& index) { return pair_int_hash(index.row(), index.column()); }
+    static unsigned hash(const GModelIndex& index) {
+        return pair_int_hash(index.row(), index.column());
+    }
 };
 }

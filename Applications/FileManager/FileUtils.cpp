@@ -49,8 +49,8 @@ bool copy_directory(const String& src_path, const String& dst_path)
     while (di.has_next()) {
         String filename = di.next_path();
         bool is_copied = copy_file_or_directory(
-            String::format("%s/%s", src_path.characters(), filename.characters()),
-            String::format("%s/%s", dst_path.characters(), filename.characters()));
+                             String::format("%s/%s", src_path.characters(), filename.characters()),
+                             String::format("%s/%s", dst_path.characters(), filename.characters()));
         if (!is_copied) {
             return false;
         }

@@ -60,10 +60,10 @@ NonnullRefPtr<Region> Region::clone()
     if (m_shared || (is_readable() && !is_writable())) {
 #ifdef MM_DEBUG
         dbgprintf("%s<%u> Region::clone(): sharing %s (V%p)\n",
-            current->process().name().characters(),
-            current->pid(),
-            m_name.characters(),
-            vaddr().get());
+                  current->process().name().characters(),
+                  current->pid(),
+                  m_name.characters(),
+                  vaddr().get());
 #endif
         // Create a new region backed by the same VMObject.
         return Region::create_user_accessible(m_range, m_vmobject, m_offset_in_vmo, m_name, m_access);
@@ -71,10 +71,10 @@ NonnullRefPtr<Region> Region::clone()
 
 #ifdef MM_DEBUG
     dbgprintf("%s<%u> Region::clone(): cowing %s (V%p)\n",
-        current->process().name().characters(),
-        current->pid(),
-        m_name.characters(),
-        vaddr().get());
+              current->process().name().characters(),
+              current->pid(),
+              m_name.characters(),
+              vaddr().get());
 #endif
     // Set up a COW region. The parent (this) region becomes COW as well!
     m_cow_map.fill(true);

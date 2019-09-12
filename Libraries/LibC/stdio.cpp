@@ -105,22 +105,24 @@ extern "C" {
 
     char* fgets(char* buffer, int size, FILE* stream)
     {
-        ASSERT(stream);
-        ASSERT(size);
+        assert(stream);
         ssize_t nread = 0;
-        while (nread < (size + 1)) {
+        for (;;) {
+            if (nread >= size)
+                break;
             int ch = fgetc(stream);
-            if (ch == EOF)
+            if (ch == EOF) {
+                if (nread == 0)
+                    return nullptr;
                 break;
+            }
             buffer[nread++] = ch;
-            if (ch == '\n')
+            if (!ch || ch == '\n')
                 break;
         }
-        if (nread) {
+        if (nread < size)
             buffer[nread] = '\0';
-            return buffer;
-        }
-        return nullptr;
+        return buffer;
     }
 
     int fgetc(FILE* stream)

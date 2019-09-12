@@ -12,8 +12,12 @@ public:
     {
     }
 
-    bool is_empty() const { return m_indexes.is_empty(); }
-    bool contains(const GModelIndex& index) const { return m_indexes.contains(index); }
+    bool is_empty() const {
+        return m_indexes.is_empty();
+    }
+    bool contains(const GModelIndex& index) const {
+        return m_indexes.contains(index);
+    }
     bool contains_row(int row) const
     {
         for (auto& index : m_indexes) {

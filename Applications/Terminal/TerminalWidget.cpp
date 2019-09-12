@@ -37,8 +37,8 @@ TerminalWidget::TerminalWidget(int ptm_fd, RefPtr<CConfigFile> config)
 
     dbgprintf("Terminal: Load config file from %s\n", m_config->file_name().characters());
     m_cursor_blink_timer.set_interval(m_config->read_num_entry("Text",
-        "CursorBlinkInterval",
-        500));
+                                      "CursorBlinkInterval",
+                                      500));
     m_cursor_blink_timer.on_timeout = [this] {
         m_cursor_blink_state = !m_cursor_blink_state;
         update_cursor();
@@ -226,45 +226,15 @@ void TerminalWidget::paint_event(GPaintEvent& event)
         else if (has_only_one_background_color)
             painter.fill_rect(row_rect, lookup_color(line.attributes[0].background_color).with_alpha(m_opacity));
 
-
-        // The terminal insists on thinking characters and
-        // bytes are the same thing. We want to still draw
-        // emojis in *some* way, but it won't be completely
-        // perfect. So what we do is we make multi-byte
-        // characters take up multiple columns, and render
-        // the character itself in the center of the columns
-        // its bytes take up as far as the terminal is concerned.
-
-        ASSERT(line.text().length() == m_terminal.columns());
-        Utf8View utf8_view { line.text() };
-
-        for (auto it = utf8_view.begin(); it != utf8_view.end(); ++it) {
-            u32 codepoint = *it;
-            int this_char_column = utf8_view.byte_offset_of(it);
-            AK::Utf8CodepointIterator it_copy = it;
-            int next_char_column = utf8_view.byte_offset_of(++it_copy);
-
-            // Columns from this_char_column up until next_char_column
-            // are logically taken up by this (possibly multi-byte)
-            // character. Iterate over these columns and draw background
-            // for each one of them separately.
-
-            bool should_reverse_fill_for_cursor_or_selection = false;
-            VT::Attribute attribute;
-
-            for (u16 column = this_char_column; column < next_char_column; ++column) {
-                should_reverse_fill_for_cursor_or_selection |=
-                    m_cursor_blink_state
-                    && m_in_active_window
-                    && row == row_with_cursor
-                    && column == m_terminal.cursor_column();
-                should_reverse_fill_for_cursor_or_selection |= selection_contains({ row, column });
-                attribute = line.attributes[column];
-                auto character_rect = glyph_rect(row, column);
-                if (!has_only_one_background_color || should_reverse_fill_for_cursor_or_selection) {
-                    auto cell_rect = character_rect.inflated(0, m_line_spacing);
-                    painter.fill_rect(cell_rect, lookup_color(should_reverse_fill_for_cursor_or_selection ? attribute.foreground_color : attribute.background_color).with_alpha(m_opacity));
-                }
+        for (u16 column = 0; column < m_terminal.columns(); ++column) {
+            char ch = line.characters[column];
+            bool should_reverse_fill_for_cursor_or_selection = (m_cursor_blink_state && m_in_active_window && row == row_with_cursor && column == m_terminal.cursor_column())
+                    || selection_contains({ row, column });
+            auto& attribute = line.attributes[column];
+            auto character_rect = glyph_rect(row, column);
+            if (!has_only_one_background_color || should_reverse_fill_for_cursor_or_selection) {
+                auto cell_rect = character_rect.inflated(0, m_line_spacing);
+                painter.fill_rect(cell_rect, lookup_color(should_reverse_fill_for_cursor_or_selection ? attribute.foreground_color : attribute.background_color).with_alpha(m_opacity));
             }
 
             if (codepoint == ' ')

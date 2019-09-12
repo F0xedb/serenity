@@ -15,18 +15,28 @@ public:
     static NonnullRefPtr<IRCQuery> create(IRCClient&, const String& name);
     ~IRCQuery();
 
-    String name() const { return m_name; }
+    String name() const {
+        return m_name;
+    }
     void add_message(char prefix, const String& name, const String& text, Color = Color::Black);
 
     void dump() const;
 
-    const IRCLogBuffer& log() const { return *m_log; }
-    IRCLogBuffer& log() { return *m_log; }
+    const IRCLogBuffer& log() const {
+        return *m_log;
+    }
+    IRCLogBuffer& log() {
+        return *m_log;
+    }
 
     void say(const String&);
 
-    IRCWindow& window() { return *m_window; }
-    const IRCWindow& window() const { return *m_window; }
+    IRCWindow& window() {
+        return *m_window;
+    }
+    const IRCWindow& window() const {
+        return *m_window;
+    }
 
 private:
     IRCQuery(IRCClient&, const String& name);

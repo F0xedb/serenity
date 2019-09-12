@@ -23,7 +23,9 @@ public:
     }
     ~StyledNode();
 
-    const Node* node() const { return m_node; }
+    const Node* node() const {
+        return m_node;
+    }
 
     template<typename Callback>
     inline void for_each_child(Callback callback) const

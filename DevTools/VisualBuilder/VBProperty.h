@@ -15,12 +15,20 @@ public:
     VBProperty(VBWidget&, const String& name, Function<GVariant(const GWidget&)>&& getter, Function<void(GWidget&, const GVariant&)>&& setter);
     ~VBProperty();
 
-    String name() const { return m_name; }
-    const GVariant& value() const { return m_value; }
+    String name() const {
+        return m_name;
+    }
+    const GVariant& value() const {
+        return m_value;
+    }
     void set_value(const GVariant&);
 
-    bool is_readonly() const { return m_readonly; }
-    void set_readonly(bool b) { m_readonly = b; }
+    bool is_readonly() const {
+        return m_readonly;
+    }
+    void set_readonly(bool b) {
+        m_readonly = b;
+    }
 
     void sync();
 

@@ -16,10 +16,16 @@ public:
     static NonnullRefPtr<IRCChannel> create(IRCClient&, const String&);
     ~IRCChannel();
 
-    bool is_open() const { return m_open; }
-    void set_open(bool b) { m_open = b; }
+    bool is_open() const {
+        return m_open;
+    }
+    void set_open(bool b) {
+        m_open = b;
+    }
 
-    String name() const { return m_name; }
+    String name() const {
+        return m_name;
+    }
 
     void add_member(const String& name, char prefix);
     void remove_member(const String& name);
@@ -31,23 +37,41 @@ public:
 
     void say(const String&);
 
-    const IRCLogBuffer& log() const { return *m_log; }
-    IRCLogBuffer& log() { return *m_log; }
+    const IRCLogBuffer& log() const {
+        return *m_log;
+    }
+    IRCLogBuffer& log() {
+        return *m_log;
+    }
 
-    IRCChannelMemberListModel* member_model() { return m_member_model.ptr(); }
-    const IRCChannelMemberListModel* member_model() const { return m_member_model.ptr(); }
+    IRCChannelMemberListModel* member_model() {
+        return m_member_model.ptr();
+    }
+    const IRCChannelMemberListModel* member_model() const {
+        return m_member_model.ptr();
+    }
 
-    int member_count() const { return m_members.size(); }
-    String member_at(int i) { return m_members[i].name; }
+    int member_count() const {
+        return m_members.size();
+    }
+    String member_at(int i) {
+        return m_members[i].name;
+    }
 
     void handle_join(const String& nick, const String& hostmask);
     void handle_part(const String& nick, const String& hostmask);
     void handle_topic(const String& nick, const String& topic);
 
-    IRCWindow& window() { return *m_window; }
-    const IRCWindow& window() const { return *m_window; }
+    IRCWindow& window() {
+        return *m_window;
+    }
+    const IRCWindow& window() const {
+        return *m_window;
+    }
 
-    String topic() const { return m_topic; }
+    String topic() const {
+        return m_topic;
+    }
 
     void notify_nick_changed(const String& old_nick, const String& new_nick);
 

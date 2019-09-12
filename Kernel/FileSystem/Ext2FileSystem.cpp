@@ -136,10 +136,10 @@ bool Ext2FS::initialize()
     for (unsigned i = 1; i <= m_block_group_count; ++i) {
         auto& group = group_descriptor(i);
         kprintf("ext2fs: group[%u] { block_bitmap: %u, inode_bitmap: %u, inode_table: %u }\n",
-            i,
-            group.bg_block_bitmap,
-            group.bg_inode_bitmap,
-            group.bg_inode_table);
+                i,
+                group.bg_block_bitmap,
+                group.bg_inode_bitmap,
+                group.bg_inode_table);
     }
 #endif
 
@@ -1266,7 +1266,9 @@ InodeIdentifier Ext2FSInode::lookup(StringView name)
     ASSERT(is_directory());
     populate_lookup_cache();
     LOCKER(m_lock);
-    auto it = m_lookup_cache.find(name.hash(), [&](auto& entry) { return entry.key == name; });
+    auto it = m_lookup_cache.find(name.hash(), [&](auto& entry) {
+        return entry.key == name;
+    });
     if (it != m_lookup_cache.end())
         return { fsid(), (*it).value };
     return {};

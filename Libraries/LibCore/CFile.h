@@ -13,8 +13,12 @@ public:
     explicit CFile(const StringView&, CObject* parent = nullptr);
     virtual ~CFile() override;
 
-    String filename() const { return m_filename; }
-    void set_filename(const StringView& filename) { m_filename = filename; }
+    String filename() const {
+        return m_filename;
+    }
+    void set_filename(const StringView& filename) {
+        m_filename = filename;
+    }
 
     virtual bool open(CIODevice::OpenMode) override;
 
