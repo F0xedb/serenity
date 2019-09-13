@@ -174,10 +174,10 @@ void DirectoryView::update_statusbar()
 {
     if (current_view().selection().is_empty()) {
         set_status_message(String::format("%d item%s (%u byte%s)",
-            model().row_count(),
-            model().row_count() != 1 ? "s" : "",
-            model().bytes_in_files(),
-            model().bytes_in_files() != 1 ? "s" : ""));
+                                          model().row_count(),
+                                          model().row_count() != 1 ? "s" : "",
+                                          model().bytes_in_files(),
+                                          model().bytes_in_files() != 1 ? "s" : ""));
         return;
     }
 
@@ -191,8 +191,8 @@ void DirectoryView::update_statusbar()
     });
 
     set_status_message(String::format("%d item%s selected (%u byte%s)",
-        selected_item_count,
-        selected_item_count != 1 ? "s" : "",
-        selected_byte_count,
-        selected_byte_count != 1 ? "s" : ""));
+                                      selected_item_count,
+                                      selected_item_count != 1 ? "s" : "",
+                                      selected_byte_count,
+                                      selected_byte_count != 1 ? "s" : ""));
 }

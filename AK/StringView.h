@@ -33,11 +33,21 @@ public:
     StringView(const ByteBuffer&);
     StringView(const String&);
 
-    bool is_null() const { return !m_characters; }
-    bool is_empty() const { return m_length == 0; }
-    const char* characters_without_null_termination() const { return m_characters; }
-    int length() const { return m_length; }
-    char operator[](int index) const { return m_characters[index]; }
+    bool is_null() const {
+        return !m_characters;
+    }
+    bool is_empty() const {
+        return m_length == 0;
+    }
+    const char* characters_without_null_termination() const {
+        return m_characters;
+    }
+    int length() const {
+        return m_length;
+    }
+    char operator[](int index) const {
+        return m_characters[index];
+    }
 
     unsigned hash() const;
 
