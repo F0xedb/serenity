@@ -35,10 +35,18 @@ public:
     void set_drive_geometry(u16, u16, u16);
 
     // ^BlockDevice
-    virtual ssize_t read(FileDescription&, u8*, ssize_t) override { return 0; }
-    virtual bool can_read(FileDescription&) const override { return true; }
-    virtual ssize_t write(FileDescription&, const u8*, ssize_t) override { return 0; }
-    virtual bool can_write(FileDescription&) const override { return true; }
+    virtual ssize_t read(FileDescription&, u8*, ssize_t) override {
+        return 0;
+    }
+    virtual bool can_read(FileDescription&) const override {
+        return true;
+    }
+    virtual ssize_t write(FileDescription&, const u8*, ssize_t) override {
+        return 0;
+    }
+    virtual bool can_write(FileDescription&) const override {
+        return true;
+    }
 
 protected:
     explicit PATADiskDevice(PATAChannel&, DriveType, int, int);

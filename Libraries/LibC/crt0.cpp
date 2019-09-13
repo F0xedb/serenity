@@ -4,7 +4,7 @@
 
 extern "C" {
 
-    int main(int, char**, char**);
+    int main(int, char**);
 
     __thread int errno;
     char** environ;
@@ -36,8 +36,7 @@ extern "C" {
         for (size_t i = 0; i < size; i++)
             (*__init_array_start[i])(argc, argv, env);
 
-        int status = main(argc, argv, environ);
-
+        int status = main(argc, argv);
         exit(status);
 
         return 20150614;

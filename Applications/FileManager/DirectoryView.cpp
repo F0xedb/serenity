@@ -69,7 +69,12 @@ DirectoryView::DirectoryView(GWidget* parent)
     m_item_view->set_model_column(GDirectoryModel::Column::Name);
 
     m_table_view->model()->on_update = [this] {
-        update_statusbar();
+        set_status_message(String::format("%d item%s (%u byte%s)",
+                                          model().row_count(),
+                                          model().row_count() != 1 ? "s" : "",
+                                          model().bytes_in_files(),
+                                          model().bytes_in_files() != 1 ? "s" : ""));
+
         if (on_path_change)
             on_path_change(model().path());
     };

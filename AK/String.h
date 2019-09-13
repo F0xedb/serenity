@@ -268,6 +268,7 @@ struct CaseInsensitiveStringTraits : public AK::Traits<String> {
     static bool equals(const String& a, const String& b) {
         return a.to_lowercase() == b.to_lowercase();
     }
+
 };
 
 inline bool operator<(const char* characters, const String& string)

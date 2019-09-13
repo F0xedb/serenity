@@ -7,7 +7,9 @@
 template<typename T>
 class ItemListModel final : public GModel {
 public:
-    static NonnullRefPtr<ItemListModel> create(Vector<T>& data) { return adopt(*new ItemListModel<T>(data)); }
+    static NonnullRefPtr<ItemListModel> create(Vector<T>& data) {
+        return adopt(*new ItemListModel<T>(data));
+    }
 
     virtual ~ItemListModel() override {}
 

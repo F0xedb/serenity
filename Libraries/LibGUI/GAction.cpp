@@ -7,28 +7,28 @@
 NonnullRefPtr<GAction> GCommonActions::make_cut_action(Function<void()> callback, GWidget* widget)
 {
     return GAction::create(
-        "Cut", { Mod_Ctrl, Key_X }, GraphicsBitmap::load_from_file("/res/icons/cut16.png"), [callback = move(callback)](const GAction&) {
-            callback();
-        },
-        widget);
+    "Cut", { Mod_Ctrl, Key_X }, GraphicsBitmap::load_from_file("/res/icons/cut16.png"), [callback = move(callback)](const GAction&) {
+        callback();
+    },
+    widget);
 }
 
 NonnullRefPtr<GAction> GCommonActions::make_copy_action(Function<void()> callback, GWidget* widget)
 {
     return GAction::create(
-        "Copy", { Mod_Ctrl, Key_C }, GraphicsBitmap::load_from_file("/res/icons/16x16/edit-copy.png"), [callback = move(callback)](const GAction&) {
-            callback();
-        },
-        widget);
+    "Copy", { Mod_Ctrl, Key_C }, GraphicsBitmap::load_from_file("/res/icons/16x16/edit-copy.png"), [callback = move(callback)](const GAction&) {
+        callback();
+    },
+    widget);
 }
 
 NonnullRefPtr<GAction> GCommonActions::make_paste_action(Function<void()> callback, GWidget* widget)
 {
     return GAction::create(
-        "Paste", { Mod_Ctrl, Key_V }, GraphicsBitmap::load_from_file("/res/icons/paste16.png"), [callback = move(callback)](const GAction&) {
-            callback();
-        },
-        widget);
+    "Paste", { Mod_Ctrl, Key_V }, GraphicsBitmap::load_from_file("/res/icons/paste16.png"), [callback = move(callback)](const GAction&) {
+        callback();
+    },
+    widget);
 }
 
 NonnullRefPtr<GAction> GCommonActions::make_quit_action(Function<void()> callback)

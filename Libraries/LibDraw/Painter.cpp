@@ -104,10 +104,10 @@ void Painter::fill_rect_with_gradient(const Rect& a_rect, Color gradient_start, 
         float c = x_offset * increment;
         for (int j = 0; j < clipped_rect.width(); ++j) {
             dst[j] = Color(
-                r1 / 255.0 * c + r2 / 255.0 * (255 - c),
-                g1 / 255.0 * c + g2 / 255.0 * (255 - c),
-                b1 / 255.0 * c + b2 / 255.0 * (255 - c))
-                         .value();
+                         r1 / 255.0 * c + r2 / 255.0 * (255 - c),
+                         g1 / 255.0 * c + g2 / 255.0 * (255 - c),
+                         b1 / 255.0 * c + b2 / 255.0 * (255 - c))
+                     .value();
             c += increment;
         }
         dst += dst_skip;
@@ -321,7 +321,7 @@ void Painter::blit_tiled(const Point& position, const GraphicsBitmap& source, co
         int x_start = first_column + src_rect.left();
         for (int row = first_row; row <= last_row; ++row) {
             const RGBA32* sl = source.scanline((row + src_rect.top())
-                % source.size().height());
+                                               % source.size().height());
             for (int x = x_start; x < clipped_rect.width() + x_start; ++x) {
                 dst[x - x_start] = sl[x % source.size().width()];
             }
@@ -334,9 +334,9 @@ void Painter::blit_tiled(const Point& position, const GraphicsBitmap& source, co
 }
 
 void Painter::blit_offset(const Point& position,
-    const GraphicsBitmap& source,
-    const Rect& src_rect,
-    const Point& offset)
+                          const GraphicsBitmap& source,
+                          const Rect& src_rect,
+                          const Point& offset)
 {
     auto dst_rect = Rect(position, src_rect.size()).translated(translation());
     auto clipped_rect = dst_rect.intersected(clip_rect());

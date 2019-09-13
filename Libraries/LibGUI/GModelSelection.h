@@ -12,9 +12,6 @@ public:
     {
     }
 
-    int size() const {
-        return m_indexes.size();
-    }
     bool is_empty() const {
         return m_indexes.is_empty();
     }

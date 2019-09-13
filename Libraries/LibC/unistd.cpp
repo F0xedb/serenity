@@ -265,12 +265,6 @@ extern "C" {
         __RETURN_WITH_ERRNO(rc, rc, -1);
     }
 
-    int fchdir(int fd)
-    {
-        int rc = syscall(SC_fchdir, fd);
-        __RETURN_WITH_ERRNO(rc, rc, -1);
-    }
-
     char* getcwd(char* buffer, size_t size)
     {
         if (!buffer) {
@@ -419,12 +413,6 @@ extern "C" {
     {
         (void)fd;
         (void)name;
-
-        switch (name) {
-        case _PC_PATH_MAX:
-            return PATH_MAX;
-        }
-
         ASSERT_NOT_REACHED();
     }
 
@@ -432,12 +420,6 @@ extern "C" {
     {
         (void)path;
         (void)name;
-
-        switch (name) {
-        case _PC_PATH_MAX:
-            return PATH_MAX;
-        }
-
         ASSERT_NOT_REACHED();
     }
 

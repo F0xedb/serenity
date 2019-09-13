@@ -208,7 +208,7 @@ bool Thread::WaitBlocker::should_unblock(Thread& thread, time_t, long)
         bool child_stopped = child.main_thread().state() == Thread::State::Stopped;
 
         bool wait_finished = ((m_wait_options & WEXITED) && child_exited)
-            || ((m_wait_options & WSTOPPED) && child_stopped);
+                             || ((m_wait_options & WSTOPPED) && child_stopped);
 
         if (!wait_finished)
             return IterationDecision::Continue;
@@ -443,9 +443,9 @@ bool Scheduler::context_switch(Thread& thread)
 
 #ifdef LOG_EVERY_CONTEXT_SWITCH
         dbgprintf("Scheduler: %s(%u:%u) -> %s(%u:%u) %w:%x\n",
-            current->process().name().characters(), current->process().pid(), current->tid(),
-            thread.process().name().characters(), thread.process().pid(), thread.tid(),
-            thread.tss().cs, thread.tss().eip);
+                  current->process().name().characters(), current->process().pid(), current->tid(),
+                  thread.process().name().characters(), thread.process().pid(), thread.tid(),
+                  thread.tss().cs, thread.tss().eip);
 #endif
     }
 
