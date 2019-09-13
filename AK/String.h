@@ -110,6 +110,13 @@ public:
         return m_impl->to_uppercase();
     }
 
+    String reversed() const
+    {
+        if (!m_impl)
+            return String();
+        return m_impl->reversed();
+    }
+
     Vector<String> split_limit(char separator, int limit) const;
     Vector<String> split(char separator) const;
     String substring(int start, int length) const;
@@ -298,5 +305,5 @@ inline bool operator<=(const char* characters, const String& string)
 
 }
 
-using AK::String;
 using AK::CaseInsensitiveStringTraits;
+using AK::String;

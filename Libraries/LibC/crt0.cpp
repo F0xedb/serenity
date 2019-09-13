@@ -37,7 +37,6 @@ extern "C" {
             (*__init_array_start[i])(argc, argv, env);
 
         int status = main(argc, argv);
-
         exit(status);
 
         return 20150614;

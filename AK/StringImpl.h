@@ -1,7 +1,7 @@
 #pragma once
 
-#include <AK/RefPtr.h>
 #include <AK/RefCounted.h>
+#include <AK/RefPtr.h>
 #include <AK/Types.h>
 #include <AK/kmalloc.h>
 
@@ -29,8 +29,12 @@ public:
 
     ~StringImpl();
 
-    int length() const { return m_length; }
-    const char* characters() const { return &m_inline_buffer[0]; }
+    int length() const {
+        return m_length;
+    }
+    const char* characters() const {
+        return &m_inline_buffer[0];
+    }
     char operator[](int i) const
     {
         ASSERT(i >= 0 && i < m_length);
@@ -43,6 +47,8 @@ public:
             compute_hash();
         return m_hash;
     }
+
+    NonnullRefPtr<StringImpl> reversed() const;
 
 private:
     enum ConstructTheEmptyStringImplTag {

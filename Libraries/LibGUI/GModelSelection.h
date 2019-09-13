@@ -40,6 +40,13 @@ public:
             callback(index);
     }
 
+    template<typename Callback>
+    void for_each_index(Callback callback) const
+    {
+        for (auto& index : m_indexes)
+            callback(index);
+    }
+
     // FIXME: This doesn't guarantee that what you get is the lowest or "first" index selected..
     GModelIndex first() const
     {

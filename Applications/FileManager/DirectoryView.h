@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 
 class DirectoryView final : public GStackWidget {
+    C_OBJECT(DirectoryView)
 public:
     explicit DirectoryView(GWidget* parent);
     virtual ~DirectoryView() override;
@@ -29,7 +30,7 @@ public:
     void refresh();
 
     Function<void(const StringView&)> on_path_change;
-    Function<void(GAbstractView&)> on_selection;
+    Function<void(GAbstractView&)> on_selection_change;
     Function<void(const StringView&)> on_status_message;
     Function<void(int done, int total)> on_thumbnail_progress;
 
@@ -73,6 +74,7 @@ private:
     void handle_activation(const GModelIndex&);
 
     void set_status_message(const StringView&);
+    void update_statusbar();
 
     ViewMode m_view_mode { Invalid };
 

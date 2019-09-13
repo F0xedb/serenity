@@ -238,6 +238,10 @@ GVariant GDirectoryModel::data(const GModelIndex& index, Role role) const
 {
     ASSERT(is_valid(index));
     auto& entry = this->entry(index.row());
+    if (role == Role::Custom) {
+        ASSERT(index.column() == Column::Name);
+        return entry.full_path(*this);
+    }
     if (role == Role::Sort) {
         switch (index.column()) {
         case Column::Icon:
@@ -317,8 +321,7 @@ void GDirectoryModel::update()
         auto& entries = S_ISDIR(st.st_mode) ? m_directories : m_files;
         entries.append(move(entry));
 
-        if (S_ISREG(entry.mode))
-            m_bytes_in_files += st.st_size;
+        m_bytes_in_files += st.st_size;
     }
 
     did_update();
