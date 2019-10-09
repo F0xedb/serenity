@@ -4,7 +4,7 @@ if [ -z "$SERENITY_ROOT" ]; then
     exit 1
 fi
 set -eu
-prefix=$(pwd)/..
+prefix=$PWD/..
 
 export CC=i686-pc-serenity-gcc
 export CXX=i686-pc-serenity-g++
@@ -30,7 +30,7 @@ run() {
     (cd "$workdir" && "$@")
 }
 run_replace_in_file(){
-    run perl -p -i -e "$1" $2
+    run perl -p -i -e "$1" "$2"
 }
 # Checks if a function is defined. In this case, if the function is not defined in the port's script, then we will use our defaults. This way, ports don't need to include these functions every time, but they can override our defaults if needed.
 func_defined() {
@@ -39,10 +39,10 @@ func_defined() {
 func_defined fetch || fetch() {
     OLDIFS=$IFS
     IFS=$'\n'
-    for f in $files; do
+    for f in "$files"; do
         IFS=$OLDIFS
-        read url filename <<< $(echo "$f")
-        run_nocd curl ${curlopts:-} "$url" -o "$filename"
+        read url filename <<< "$(echo "$f")"
+        run_nocd curl "${curlopts:-}" "$url" -o "$filename"
         case "$filename" in
             *.tar*|.tbz*|*.txz|*.tgz)
                 run_nocd tar xf "$filename"
@@ -62,13 +62,13 @@ func_defined fetch || fetch() {
     fi
 }
 func_defined configure || configure() {
-    run ./"$configscript" --host=i686-pc-serenity $configopts
+    run ./"$configscript" --host=i686-pc-serenity "$configopts"
 }
 func_defined build || build() {
-    run make $makeopts
+    run make "$makeopts"
 }
 func_defined install || install() {
-    run make DESTDIR="$SERENITY_ROOT"/Root $installopts install
+    run make DESTDIR="$SERENITY_ROOT"/Root "$installopts" install
 }
 func_defined clean || clean() {
     rm -rf "$workdir" *.out
@@ -76,9 +76,9 @@ func_defined clean || clean() {
 func_defined clean_dist || clean_dist() {
     OLDIFS=$IFS
     IFS=$'\n'
-    for f in $files; do
+    for f in "$files"; do
         IFS=$OLDIFS
-        read url filename hash <<< $(echo "$f")
+        read url filename hash <<< "$(echo "$f")"
         rm -f "$filename"
     done
 }
@@ -86,9 +86,9 @@ func_defined clean_all || clean_all() {
     rm -rf "$workdir" *.out
     OLDIFS=$IFS
     IFS=$'\n'
-    for f in $files; do
+    for f in "$files"; do
         IFS=$OLDIFS
-        read url filename hash <<< $(echo "$f")
+        read url filename hash <<< "$(echo "$f")"
         rm -f "$filename"
     done
 }
@@ -112,10 +112,10 @@ addtodb() {
     fi
 }
 installdepends() {
-    for depend in $depends; do
+    for depend in "$depends"; do
         dependlist="${dependlist:-} $depend"
     done
-    for depend in $depends; do
+    for depend in "$depends"; do
         if ! grep "$depend" "$prefix"/packages.db > /dev/null; then
             (cd "../$depend" && ./package.sh --auto)
         fi
@@ -124,7 +124,7 @@ installdepends() {
 uninstall() {
     if grep "^manual $port " "$prefix"/packages.db > /dev/null; then
         if [ -f plist ]; then
-            for f in `cat plist`; do
+            for f in "$(cat plist)"; do
                 case $f in
                     */)
                         run rmdir "$SERENITY_ROOT/Root/$f" || true
@@ -194,10 +194,10 @@ if [ -z "${1:-}" ]; then
 else
     case "$1" in
         fetch|configure|build|install|clean|clean_dist|clean_all|uninstall)
-            do_$1
+            do_"$1"
             ;;
         --auto)
-            do_all $1
+            do_all "$1"
             ;;
         *)
             >&2 echo "I don't understand $1! Supported arguments: fetch, configure, build, install, clean, clean_dist, clean_all, uninstall."

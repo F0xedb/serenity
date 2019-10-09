@@ -8,5 +8,5 @@ workdir=libexpat-R_2_2_9/expat/
 configure() {
     run ./buildconf.sh
     run patch -p 0 < fix-autoconf.patch
-    run ./"$configscript" --host=i686-pc-serenity $configopts
+    run ./"$configscript" --host=i686-pc-serenity "$configopts"
 }

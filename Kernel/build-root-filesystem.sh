@@ -10,7 +10,7 @@ die() {
     exit 1
 }
 
-if [ $(id -u) != 0 ]; then
+if [ "$(id -u)" != 0 ]; then
     die "this script needs to run as root"
 fi
 

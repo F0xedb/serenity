@@ -2,8 +2,8 @@
 set -e
 
 # Get user and group details for setting qemu disk image ownership
-export build_user=$(id -u)
-export build_group=$(id -g)
+export build_user="$(id -u)"
+export build_group="$(id -g)"
 
 sudo id
 
@@ -85,17 +85,17 @@ build_targets="$build_targets ../Userland"
 
 build_targets="$build_targets ." # the kernel
 
-(cd ../AK/Tests && $make_cmd clean)
-(cd ../AK/Tests && $make_cmd clean && $make_cmd)
-(cd ../AK/Tests && $make_cmd clean)
+(cd ../AK/Tests && "$make_cmd" clean)
+(cd ../AK/Tests && "$make_cmd" clean && "$make_cmd")
+(cd ../AK/Tests && "$make_cmd" clean)
 
-for targ in $build_targets; do
+for targ in "$build_targets"; do
     #(cd "$targ" && find . -name "*.c" -o -name "*.cpp" -o -name "*.h" -exec clang-format -i {} \;)
 
     if [ -f "$targ/Makefile" ]; then
         echo "Building $targ"
-        $make_cmd -C "$targ" clean
-        $make_cmd -C "$targ"
+        "$make_cmd" -C "$targ" clean
+        "$make_cmd" -C "$targ"
     fi
 
     if [ -f "$targ/install.sh" ]; then
