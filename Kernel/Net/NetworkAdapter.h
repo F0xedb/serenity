@@ -4,8 +4,8 @@
 #include <AK/Function.h>
 #include <AK/SinglyLinkedList.h>
 #include <AK/Types.h>
-#include <AK/Weakable.h>
 #include <AK/WeakPtr.h>
+#include <AK/Weakable.h>
 #include <Kernel/KBuffer.h>
 #include <Kernel/Net/ARP.h>
 #include <Kernel/Net/ICMP.h>
@@ -23,22 +23,28 @@ public:
 
     virtual const char* class_name() const = 0;
 
-    const String& name() const {
+    const String& name() const
+    {
         return m_name;
     }
-    MACAddress mac_address() {
+    MACAddress mac_address()
+    {
         return m_mac_address;
     }
-    IPv4Address ipv4_address() const {
+    IPv4Address ipv4_address() const
+    {
         return m_ipv4_address;
     }
-    IPv4Address ipv4_netmask() const {
+    IPv4Address ipv4_netmask() const
+    {
         return m_ipv4_netmask;
     }
-    IPv4Address ipv4_gateway() const {
+    IPv4Address ipv4_gateway() const
+    {
         return m_ipv4_gateway;
     }
-    virtual bool link_up() {
+    virtual bool link_up()
+    {
         return false;
     }
 
@@ -51,20 +57,25 @@ public:
 
     Optional<KBuffer> dequeue_packet();
 
-    bool has_queued_packets() const {
+    bool has_queued_packets() const
+    {
         return !m_packet_queue.is_empty();
     }
 
-    u32 packets_in() const {
+    u32 packets_in() const
+    {
         return m_packets_in;
     }
-    u32 bytes_in() const {
+    u32 bytes_in() const
+    {
         return m_bytes_in;
     }
-    u32 packets_out() const {
+    u32 packets_out() const
+    {
         return m_packets_out;
     }
-    u32 bytes_out() const {
+    u32 bytes_out() const
+    {
         return m_bytes_out;
     }
 
@@ -73,7 +84,8 @@ public:
 protected:
     NetworkAdapter();
     void set_interface_name(const StringView& basename);
-    void set_mac_address(const MACAddress& mac_address) {
+    void set_mac_address(const MACAddress& mac_address)
+    {
         m_mac_address = mac_address;
     }
     virtual void send_raw(const u8*, int) = 0;

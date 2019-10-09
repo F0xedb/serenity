@@ -10,9 +10,9 @@
 #include <LibHTML/DOM/HTMLHeadingElement.h>
 #include <LibHTML/DOM/HTMLHtmlElement.h>
 #include <LibHTML/DOM/HTMLImageElement.h>
+#include <LibHTML/DOM/HTMLLinkElement.h>
 #include <LibHTML/DOM/HTMLStyleElement.h>
 #include <LibHTML/DOM/HTMLTitleElement.h>
-#include <LibHTML/DOM/HTMLLinkElement.h>
 #include <LibHTML/DOM/Text.h>
 #include <LibHTML/Parser/HTMLParser.h>
 #include <ctype.h>
@@ -42,11 +42,11 @@ static NonnullRefPtr<Element> create_element(Document& document, const String& t
     if (lowercase_tag_name == "img")
         return adopt(*new HTMLImageElement(document, tag_name));
     if (lowercase_tag_name == "h1"
-            || lowercase_tag_name == "h2"
-            || lowercase_tag_name == "h3"
-            || lowercase_tag_name == "h4"
-            || lowercase_tag_name == "h5"
-            || lowercase_tag_name == "h6") {
+        || lowercase_tag_name == "h2"
+        || lowercase_tag_name == "h3"
+        || lowercase_tag_name == "h4"
+        || lowercase_tag_name == "h5"
+        || lowercase_tag_name == "h6") {
         return adopt(*new HTMLHeadingElement(document, tag_name));
     }
     return adopt(*new Element(document, tag_name));
@@ -60,19 +60,19 @@ static bool is_valid_in_attribute_name(char ch)
 static bool is_self_closing_tag(const StringView& tag_name)
 {
     return tag_name == "area"
-           || tag_name == "base"
-           || tag_name == "br"
-           || tag_name == "col"
-           || tag_name == "embed"
-           || tag_name == "hr"
-           || tag_name == "img"
-           || tag_name == "input"
-           || tag_name == "link"
-           || tag_name == "meta"
-           || tag_name == "param"
-           || tag_name == "source"
-           || tag_name == "track"
-           || tag_name == "wbr";
+        || tag_name == "base"
+        || tag_name == "br"
+        || tag_name == "col"
+        || tag_name == "embed"
+        || tag_name == "hr"
+        || tag_name == "img"
+        || tag_name == "input"
+        || tag_name == "link"
+        || tag_name == "meta"
+        || tag_name == "param"
+        || tag_name == "source"
+        || tag_name == "track"
+        || tag_name == "wbr";
 }
 
 NonnullRefPtr<Document> parse_html(const StringView& html, const URL& url)

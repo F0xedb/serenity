@@ -12,21 +12,25 @@ class Frame
     : public TreeNode<Frame>
     , public Weakable<Frame> {
 public:
-    static NonnullRefPtr<Frame> create() {
+    static NonnullRefPtr<Frame> create()
+    {
         return adopt(*new Frame);
     }
     ~Frame();
 
-    const Document* document() const {
+    const Document* document() const
+    {
         return m_document;
     }
-    Document* document() {
+    Document* document()
+    {
         return m_document;
     }
 
     void set_document(Document*);
 
-    const Size& size() const {
+    const Size& size() const
+    {
         return m_size;
     }
     void set_size(const Size&);

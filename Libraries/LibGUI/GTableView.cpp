@@ -165,8 +165,8 @@ void GTableView::mousedown_event(GMouseEvent& event)
                 auto new_sort_order = GSortOrder::Ascending;
                 if (model()->key_column() == i)
                     new_sort_order = model()->sort_order() == GSortOrder::Ascending
-                                     ? GSortOrder::Descending
-                                     : GSortOrder::Ascending;
+                        ? GSortOrder::Descending
+                        : GSortOrder::Ascending;
                 model()->set_key_column_and_sort_order(i, new_sort_order);
                 return;
             }

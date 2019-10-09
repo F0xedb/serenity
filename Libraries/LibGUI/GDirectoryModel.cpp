@@ -129,27 +129,27 @@ bool GDirectoryModel::fetch_thumbnail_for(const Entry& entry)
     auto directory_model = make_weak_ptr();
 
     LibThread::BackgroundAction<RefPtr<GraphicsBitmap>>::create(
-    [path] {
-        return render_thumbnail(path);
-    },
+        [path] {
+            return render_thumbnail(path);
+        },
 
-    [this, path, directory_model](auto thumbnail) {
-        s_thumbnail_cache.set(path, move(thumbnail));
+        [this, path, directory_model](auto thumbnail) {
+            s_thumbnail_cache.set(path, move(thumbnail));
 
-        // class was destroyed, no need to update progress or call any event handlers.
-        if (directory_model.is_null())
-            return;
+            // class was destroyed, no need to update progress or call any event handlers.
+            if (directory_model.is_null())
+                return;
 
-        m_thumbnail_progress++;
-        if (on_thumbnail_progress)
-            on_thumbnail_progress(m_thumbnail_progress, m_thumbnail_progress_total);
-        if (m_thumbnail_progress == m_thumbnail_progress_total) {
-            m_thumbnail_progress = 0;
-            m_thumbnail_progress_total = 0;
-        }
+            m_thumbnail_progress++;
+            if (on_thumbnail_progress)
+                on_thumbnail_progress(m_thumbnail_progress, m_thumbnail_progress_total);
+            if (m_thumbnail_progress == m_thumbnail_progress_total) {
+                m_thumbnail_progress = 0;
+                m_thumbnail_progress_total = 0;
+            }
 
-        did_update();
-    });
+            did_update();
+        });
 
     return false;
 }
@@ -182,12 +182,12 @@ static String timestamp_string(time_t timestamp)
 {
     auto* tm = localtime(&timestamp);
     return String::format("%4u-%02u-%02u %02u:%02u:%02u",
-                          tm->tm_year + 1900,
-                          tm->tm_mon + 1,
-                          tm->tm_mday,
-                          tm->tm_hour,
-                          tm->tm_min,
-                          tm->tm_sec);
+        tm->tm_year + 1900,
+        tm->tm_mon + 1,
+        tm->tm_mday,
+        tm->tm_hour,
+        tm->tm_min,
+        tm->tm_sec);
 }
 
 static String permission_string(mode_t mode)
@@ -211,14 +211,14 @@ static String permission_string(mode_t mode)
         builder.append("?");
 
     builder.appendf("%c%c%c%c%c%c%c%c",
-                    mode & S_IRUSR ? 'r' : '-',
-                    mode & S_IWUSR ? 'w' : '-',
-                    mode & S_ISUID ? 's' : (mode & S_IXUSR ? 'x' : '-'),
-                    mode & S_IRGRP ? 'r' : '-',
-                    mode & S_IWGRP ? 'w' : '-',
-                    mode & S_ISGID ? 's' : (mode & S_IXGRP ? 'x' : '-'),
-                    mode & S_IROTH ? 'r' : '-',
-                    mode & S_IWOTH ? 'w' : '-');
+        mode & S_IRUSR ? 'r' : '-',
+        mode & S_IWUSR ? 'w' : '-',
+        mode & S_ISUID ? 's' : (mode & S_IXUSR ? 'x' : '-'),
+        mode & S_IRGRP ? 'r' : '-',
+        mode & S_IWGRP ? 'w' : '-',
+        mode & S_ISGID ? 's' : (mode & S_IXGRP ? 'x' : '-'),
+        mode & S_IROTH ? 'r' : '-',
+        mode & S_IWOTH ? 'w' : '-');
 
     if (mode & S_ISVTX)
         builder.append("t");

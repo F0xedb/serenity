@@ -116,9 +116,9 @@ void WSCompositor::compose()
                 m_back_painter->blit(dirty_rect.location(), *m_wallpaper, dirty_rect);
             } else if (m_wallpaper_mode == WallpaperMode::Center) {
                 Point offset { ws.size().width() / 2 - m_wallpaper->size().width() / 2,
-                               ws.size().height() / 2 - m_wallpaper->size().height() / 2 };
+                    ws.size().height() / 2 - m_wallpaper->size().height() / 2 };
                 m_back_painter->blit_offset(dirty_rect.location(), *m_wallpaper,
-                                            dirty_rect, offset);
+                    dirty_rect, offset);
             } else if (m_wallpaper_mode == WallpaperMode::Tile) {
                 m_back_painter->blit_tiled(dirty_rect.location(), *m_wallpaper, dirty_rect);
             } else {
@@ -265,20 +265,20 @@ void WSCompositor::invalidate(const Rect& a_rect)
 bool WSCompositor::set_wallpaper(const String& path, Function<void(bool)>&& callback)
 {
     LibThread::BackgroundAction<RefPtr<GraphicsBitmap>>::create(
-    [path] {
-        return load_png(path);
-    },
+        [path] {
+            return load_png(path);
+        },
 
-    [this, path, callback = move(callback)](RefPtr<GraphicsBitmap> bitmap) {
-        if (!bitmap) {
-            callback(false);
-            return;
-        }
-        m_wallpaper_path = path;
-        m_wallpaper = move(bitmap);
-        invalidate();
-        callback(true);
-    });
+        [this, path, callback = move(callback)](RefPtr<GraphicsBitmap> bitmap) {
+            if (!bitmap) {
+                callback(false);
+                return;
+            }
+            m_wallpaper_path = path;
+            m_wallpaper = move(bitmap);
+            invalidate();
+            callback(true);
+        });
     return true;
 }
 

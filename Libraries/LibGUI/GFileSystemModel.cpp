@@ -33,7 +33,7 @@ struct GFileSystemModel::Node {
 
     void cleanup()
     {
-        for (auto& child: children) {
+        for (auto& child : children) {
             child->cleanup();
             delete child;
         }

@@ -105,9 +105,9 @@ GFilePicker::GFilePicker(Mode mode, const StringView& file_name, const StringVie
         auto input_box = GInputBox::construct("Enter name:", "New directory", this);
         if (input_box->exec() == GInputBox::ExecOK && !input_box->text_value().is_empty()) {
             auto new_dir_path = FileSystemPath(String::format("%s/%s",
-                                               m_model->path().characters(),
-                                               input_box->text_value().characters()))
-                                .string();
+                                                   m_model->path().characters(),
+                                                   input_box->text_value().characters()))
+                                    .string();
             int rc = mkdir(new_dir_path.characters(), 0777);
             if (rc < 0) {
                 GMessageBox::show(String::format("mkdir(\"%s\") failed: %s", new_dir_path.characters(), strerror(errno)), "Error", GMessageBox::Type::Error, GMessageBox::InputType::OK, this);

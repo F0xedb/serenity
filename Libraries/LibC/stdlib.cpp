@@ -1,7 +1,7 @@
-#include <AK/String.h>
 #include <AK/Assertions.h>
 #include <AK/HashMap.h>
 #include <AK/StdLibExtras.h>
+#include <AK/String.h>
 #include <AK/Types.h>
 #include <Kernel/Syscall.h>
 #include <alloca.h>
@@ -19,154 +19,153 @@
 
 extern "C" {
 
-    typedef void (*__atexit_handler)();
-    static int __atexit_handler_count = 0;
-    static __atexit_handler __atexit_handlers[32];
+typedef void (*__atexit_handler)();
+static int __atexit_handler_count = 0;
+static __atexit_handler __atexit_handlers[32];
 
-    void exit(int status)
-    {
-        for (int i = 0; i < __atexit_handler_count; ++i)
-            __atexit_handlers[i]();
-        extern void _fini();
-        _fini();
-        fflush(stdout);
-        fflush(stderr);
-        _exit(status);
-        ASSERT_NOT_REACHED();
-    }
+void exit(int status)
+{
+    for (int i = 0; i < __atexit_handler_count; ++i)
+        __atexit_handlers[i]();
+    extern void _fini();
+    _fini();
+    fflush(stdout);
+    fflush(stderr);
+    _exit(status);
+    ASSERT_NOT_REACHED();
+}
 
-    int atexit(void (*handler)())
-    {
-        ASSERT(__atexit_handler_count < 32);
-        __atexit_handlers[__atexit_handler_count++] = handler;
-        return 0;
-    }
+int atexit(void (*handler)())
+{
+    ASSERT(__atexit_handler_count < 32);
+    __atexit_handlers[__atexit_handler_count++] = handler;
+    return 0;
+}
 
-    void abort()
-    {
-        raise(SIGABRT);
-        ASSERT_NOT_REACHED();
-    }
+void abort()
+{
+    raise(SIGABRT);
+    ASSERT_NOT_REACHED();
+}
 
-    static HashTable<const char*> s_malloced_environment_variables;
+static HashTable<const char*> s_malloced_environment_variables;
 
-    static void free_environment_variable_if_needed(const char* var)
-    {
-        if (!s_malloced_environment_variables.contains(var))
-            return;
-        free(const_cast<char*>(var));
-        s_malloced_environment_variables.remove(var);
-    }
+static void free_environment_variable_if_needed(const char* var)
+{
+    if (!s_malloced_environment_variables.contains(var))
+        return;
+    free(const_cast<char*>(var));
+    s_malloced_environment_variables.remove(var);
+}
 
-    char* getenv(const char* name)
-    {
-        size_t vl = strlen(name);
-        for (size_t i = 0; environ[i]; ++i) {
-            const char* decl = environ[i];
-            char* eq = strchr(decl, '=');
-            if (!eq)
-                continue;
-            size_t varLength = eq - decl;
-            if (vl != varLength)
-                continue;
-            if (strncmp(decl, name, varLength) == 0) {
-                return eq + 1;
-            }
+char* getenv(const char* name)
+{
+    size_t vl = strlen(name);
+    for (size_t i = 0; environ[i]; ++i) {
+        const char* decl = environ[i];
+        char* eq = strchr(decl, '=');
+        if (!eq)
+            continue;
+        size_t varLength = eq - decl;
+        if (vl != varLength)
+            continue;
+        if (strncmp(decl, name, varLength) == 0) {
+            return eq + 1;
         }
-        return nullptr;
+    }
+    return nullptr;
+}
+
+int unsetenv(const char* name)
+{
+    auto new_var_len = strlen(name);
+    size_t environ_size = 0;
+    int skip = -1;
+
+    for (; environ[environ_size]; ++environ_size) {
+        char* old_var = environ[environ_size];
+        char* old_eq = strchr(old_var, '=');
+        ASSERT(old_eq);
+        size_t old_var_len = old_eq - old_var;
+
+        if (new_var_len != old_var_len)
+            continue; // can't match
+
+        if (strncmp(name, old_var, new_var_len) == 0)
+            skip = environ_size;
     }
 
-    int unsetenv(const char* name)
-    {
-        auto new_var_len = strlen(name);
-        size_t environ_size = 0;
-        int skip = -1;
+    if (skip == -1)
+        return 0; // not found: no failure.
 
-        for (; environ[environ_size]; ++environ_size) {
-            char* old_var = environ[environ_size];
-            char* old_eq = strchr(old_var, '=');
-            ASSERT(old_eq);
-            size_t old_var_len = old_eq - old_var;
+    // Shuffle the existing array down by one.
+    memmove(&environ[skip], &environ[skip + 1], ((environ_size - 1) - skip) * sizeof(environ[0]));
+    environ[environ_size - 1] = nullptr;
 
-            if (new_var_len != old_var_len)
-                continue; // can't match
+    free_environment_variable_if_needed(name);
+    return 0;
+}
 
-            if (strncmp(name, old_var, new_var_len) == 0)
-                skip = environ_size;
-        }
-
-        if (skip == -1)
-            return 0; // not found: no failure.
-
-        // Shuffle the existing array down by one.
-        memmove(&environ[skip], &environ[skip + 1], ((environ_size - 1) - skip) * sizeof(environ[0]));
-        environ[environ_size - 1] = nullptr;
-
-        free_environment_variable_if_needed(name);
+int setenv(const char* name, const char* value, int overwrite)
+{
+    if (!overwrite && !getenv(name))
         return 0;
-    }
+    auto length = strlen(name) + strlen(value) + 2;
+    auto* var = (char*)malloc(length);
+    snprintf(var, length, "%s=%s", name, value);
+    s_malloced_environment_variables.set(var);
+    return putenv(var);
+}
 
-    int setenv(const char* name, const char* value, int overwrite)
-    {
-        if (!overwrite && !getenv(name))
+int putenv(char* new_var)
+{
+    char* new_eq = strchr(new_var, '=');
+
+    if (!new_eq)
+        return unsetenv(new_var);
+
+    auto new_var_len = new_eq - new_var;
+    int environ_size = 0;
+    for (; environ[environ_size]; ++environ_size) {
+        char* old_var = environ[environ_size];
+        char* old_eq = strchr(old_var, '=');
+        ASSERT(old_eq);
+        auto old_var_len = old_eq - old_var;
+
+        if (new_var_len != old_var_len)
+            continue; // can't match
+
+        if (strncmp(new_var, old_var, new_var_len) == 0) {
+            free_environment_variable_if_needed(old_var);
+            environ[environ_size] = new_var;
             return 0;
-        auto length = strlen(name) + strlen(value) + 2;
-        auto* var = (char*)malloc(length);
-        snprintf(var, length, "%s=%s", name, value);
-        s_malloced_environment_variables.set(var);
-        return putenv(var);
+        }
     }
 
-    int putenv(char* new_var)
-    {
-        char* new_eq = strchr(new_var, '=');
-
-        if (!new_eq)
-            return unsetenv(new_var);
-
-        auto new_var_len = new_eq - new_var;
-        int environ_size = 0;
-        for (; environ[environ_size]; ++environ_size) {
-            char* old_var = environ[environ_size];
-            char* old_eq = strchr(old_var, '=');
-            ASSERT(old_eq);
-            auto old_var_len = old_eq - old_var;
-
-            if (new_var_len != old_var_len)
-                continue; // can't match
-
-            if (strncmp(new_var, old_var, new_var_len) == 0) {
-                free_environment_variable_if_needed(old_var);
-                environ[environ_size] = new_var;
-                return 0;
-            }
-        }
-
-        // At this point, we need to append the new var.
-        // 2 here: one for the new var, one for the sentinel value.
-        char** new_environ = (char**)malloc((environ_size + 2) * sizeof(char*));
-        if (new_environ == nullptr) {
-            errno = ENOMEM;
-            return -1;
-        }
-
-        for (int i = 0; environ[i]; ++i) {
-            new_environ[i] = environ[i];
-        }
-
-        new_environ[environ_size] = new_var;
-        new_environ[environ_size + 1] = nullptr;
-
-        // swap new and old
-        // note that the initial environ is not heap allocated!
-        extern bool __environ_is_malloced;
-        if (__environ_is_malloced)
-            free(environ);
-        __environ_is_malloced = true;
-        environ = new_environ;
-        return 0;
+    // At this point, we need to append the new var.
+    // 2 here: one for the new var, one for the sentinel value.
+    char** new_environ = (char**)malloc((environ_size + 2) * sizeof(char*));
+    if (new_environ == nullptr) {
+        errno = ENOMEM;
+        return -1;
     }
 
+    for (int i = 0; environ[i]; ++i) {
+        new_environ[i] = environ[i];
+    }
+
+    new_environ[environ_size] = new_var;
+    new_environ[environ_size + 1] = nullptr;
+
+    // swap new and old
+    // note that the initial environ is not heap allocated!
+    extern bool __environ_is_malloced;
+    if (__environ_is_malloced)
+        free(environ);
+    __environ_is_malloced = true;
+    environ = new_environ;
+    return 0;
+}
 }
 
 double strtod(const char* str, char** endptr)
@@ -184,7 +183,6 @@ long double strtold(const char* str, char** endptr)
     dbgprintf("LibC: strtold: '%s'\n", str);
     ASSERT_NOT_REACHED();
 }
-
 
 float strtof(const char* str, char** endptr)
 {
@@ -494,4 +492,3 @@ unsigned long long strtoull(const char* str, char** endptr, int base)
     ASSERT(value >= 0);
     return value;
 }
-

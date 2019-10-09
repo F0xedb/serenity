@@ -9,13 +9,16 @@ public:
 
     virtual void inserted_into(Node&) override;
 
-    String rel() const {
+    String rel() const
+    {
         return attribute("rel");
     }
-    String type() const {
+    String type() const
+    {
         return attribute("type");
     }
-    String href() const {
+    String href() const
+    {
         return attribute("href");
     }
 };

@@ -22,10 +22,12 @@ extern u32 g_kmalloc_call_count;
 extern u32 g_kfree_call_count;
 extern bool g_dump_kmalloc_stacks;
 
-inline void* operator new(size_t, void* p) {
+inline void* operator new(size_t, void* p)
+{
     return p;
 }
-inline void* operator new[](size_t, void* p) {
+inline void* operator new[](size_t, void* p)
+{
     return p;
 }
 

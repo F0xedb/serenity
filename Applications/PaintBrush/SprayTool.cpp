@@ -2,12 +2,12 @@
 #include "PaintableWidget.h"
 #include <AK/Queue.h>
 #include <AK/SinglyLinkedList.h>
-#include <LibGUI/GPainter.h>
+#include <LibDraw/GraphicsBitmap.h>
 #include <LibGUI/GAction.h>
 #include <LibGUI/GMenu.h>
-#include <LibDraw/GraphicsBitmap.h>
-#include <stdio.h>
+#include <LibGUI/GPainter.h>
 #include <LibM/math.h>
+#include <stdio.h>
 
 SprayTool::SprayTool()
 {
@@ -92,4 +92,3 @@ void SprayTool::on_contextmenu(GContextMenuEvent& event)
     }
     m_context_menu->popup(event.screen_position());
 }
-

@@ -93,8 +93,14 @@ Optional<Color> Color::from_string(const StringView& string)
     };
 
     const ColorAndWebName web_colors[] = {
-        { 0x800000, "maroon", },
-        { 0xff0000, "red", },
+        {
+            0x800000,
+            "maroon",
+        },
+        {
+            0xff0000,
+            "red",
+        },
         { 0xffa500, "orange" },
         { 0xffff00, "yellow" },
         { 0x808000, "olive" },

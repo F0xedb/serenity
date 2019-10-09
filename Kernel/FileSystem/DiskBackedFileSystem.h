@@ -9,14 +9,17 @@ class DiskBackedFS : public FS {
 public:
     virtual ~DiskBackedFS() override;
 
-    virtual bool is_disk_backed() const override {
+    virtual bool is_disk_backed() const override
+    {
         return true;
     }
 
-    DiskDevice& device() {
+    DiskDevice& device()
+    {
         return *m_device;
     }
-    const DiskDevice& device() const {
+    const DiskDevice& device() const
+    {
         return *m_device;
     }
 

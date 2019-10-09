@@ -27,10 +27,12 @@ public:
 
     ~DiskCache() {}
 
-    bool is_dirty() const {
+    bool is_dirty() const
+    {
         return m_dirty;
     }
-    void set_dirty(bool b) {
+    void set_dirty(bool b)
+    {
         m_dirty = b;
     }
 
@@ -67,10 +69,12 @@ public:
         return new_entry;
     }
 
-    const CacheEntry* entries() const {
+    const CacheEntry* entries() const
+    {
         return (const CacheEntry*)m_entries.data();
     }
-    CacheEntry* entries() {
+    CacheEntry* entries()
+    {
         return (CacheEntry*)m_entries.data();
     }
 

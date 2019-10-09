@@ -14,7 +14,8 @@ public:
         return m_shared_buffer;
     }
 
-    const String& data_type() const {
+    const String& data_type() const
+    {
         return m_data_type;
     }
     const u8* data() const;

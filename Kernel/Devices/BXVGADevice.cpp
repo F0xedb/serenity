@@ -90,15 +90,15 @@ KResultOr<Region*> BXVGADevice::mmap(Process& process, FileDescription&, Virtual
     ASSERT(size == framebuffer_size_in_bytes());
     auto vmo = AnonymousVMObject::create_for_physical_range(m_framebuffer_address, framebuffer_size_in_bytes());
     auto* region = process.allocate_region_with_vmo(
-                       preferred_vaddr,
-                       framebuffer_size_in_bytes(),
-                       move(vmo),
-                       0,
-                       "BXVGA Framebuffer",
-                       prot);
+        preferred_vaddr,
+        framebuffer_size_in_bytes(),
+        move(vmo),
+        0,
+        "BXVGA Framebuffer",
+        prot);
     kprintf("BXVGA: %s(%u) created Region{%p} with size %u for framebuffer P%x with vaddr V%p\n",
-            process.name().characters(), process.pid(),
-            region, region->size(), m_framebuffer_address.as_ptr(), region->vaddr().get());
+        process.name().characters(), process.pid(),
+        region, region->size(), m_framebuffer_address.as_ptr(), region->vaddr().get());
     ASSERT(region);
     return region;
 }

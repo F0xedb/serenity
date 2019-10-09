@@ -284,7 +284,7 @@ String LineEditor::get_line(const String& prompt)
                     do_backspace();
                 continue;
             }
-            if (ch == 0xc) { // ^L
+            if (ch == 0xc) {                    // ^L
                 printf("\033[3J\033[H\033[2J"); // Clear screen.
                 fputs(prompt.characters(), stdout);
                 for (int i = 0; i < m_buffer.size(); ++i)

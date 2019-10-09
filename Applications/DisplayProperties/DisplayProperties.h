@@ -6,8 +6,8 @@
 #include <LibCore/CConfigFile.h>
 #include <LibDraw/Color.h>
 #include <LibDraw/Size.h>
-#include <LibGUI/GWidget.h>
 #include <LibGUI/GLabel.h>
+#include <LibGUI/GWidget.h>
 
 class DisplayPropertiesWidget final {
 public:
@@ -29,10 +29,12 @@ public:
     void send_settings_to_window_server(int tabIndex);
     void create_frame();
 
-    const GWidget* root_widget() const {
+    const GWidget* root_widget() const
+    {
         return m_root_widget;
     }
-    GWidget* root_widget() {
+    GWidget* root_widget()
+    {
         return m_root_widget;
     }
 

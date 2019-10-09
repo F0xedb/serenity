@@ -19,7 +19,8 @@ public:
     void appendf(const char*, ...);
     void appendvf(const char*, va_list);
 
-    String build() {
+    String build()
+    {
         return to_string();
     }
 
@@ -29,10 +30,12 @@ public:
     StringView string_view() const;
     void clear();
 
-    int length() const {
+    int length() const
+    {
         return m_length;
     }
-    void trim(int count) {
+    void trim(int count)
+    {
         m_length -= count;
     }
 

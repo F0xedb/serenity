@@ -15,7 +15,8 @@ public:
 
     static GMenu* from_menu_id(int);
 
-    const String& name() const {
+    const String& name() const
+    {
         return m_name;
     }
 
@@ -33,7 +34,8 @@ public:
 private:
     friend class GMenuBar;
 
-    int menu_id() const {
+    int menu_id() const
+    {
         return m_menu_id;
     }
     int realize_menu();

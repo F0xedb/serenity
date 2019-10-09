@@ -6,6 +6,7 @@ class GTableView;
 
 class ProcessMemoryMapWidget final : public GWidget {
     C_OBJECT(ProcessMemoryMapWidget);
+
 public:
     virtual ~ProcessMemoryMapWidget() override;
 

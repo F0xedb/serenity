@@ -46,7 +46,7 @@ void StringBuilder::appendvf(const char* fmt, va_list ap)
     printf_internal([this](char*&, char ch) {
         append(ch);
     },
-    nullptr, fmt, ap);
+        nullptr, fmt, ap);
 }
 
 void StringBuilder::appendf(const char* fmt, ...)

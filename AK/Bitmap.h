@@ -53,7 +53,8 @@ public:
         m_data = nullptr;
     }
 
-    int size() const {
+    int size() const
+    {
         return m_size;
     }
     bool get(int index) const
@@ -70,10 +71,12 @@ public:
             m_data[index / 8] &= static_cast<u8>(~(1u << (index % 8)));
     }
 
-    u8* data() {
+    u8* data()
+    {
         return m_data;
     }
-    const u8* data() const {
+    const u8* data() const
+    {
         return m_data;
     }
 
@@ -161,8 +164,8 @@ public:
     }
 
 private:
-
-    int size_in_bytes() const {
+    int size_in_bytes() const
+    {
         return ceil_div(m_size, 8);
     }
 

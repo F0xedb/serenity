@@ -4,7 +4,7 @@
 #include "kmalloc.h"
 
 #ifndef __serenity__
-#include <new>
+#    include <new>
 #endif
 
 //#define DEBUG_STRINGIMPL

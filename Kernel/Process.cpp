@@ -18,6 +18,7 @@
 #include <Kernel/FileSystem/SharedMemory.h>
 #include <Kernel/FileSystem/TmpFS.h>
 #include <Kernel/FileSystem/VirtualFileSystem.h>
+#include <Kernel/Heap/kmalloc.h>
 #include <Kernel/IO.h>
 #include <Kernel/KBufferBuilder.h>
 #include <Kernel/KSyms.h>
@@ -32,7 +33,6 @@
 #include <Kernel/Syscall.h>
 #include <Kernel/TTY/MasterPTY.h>
 #include <Kernel/VM/InodeVMObject.h>
-#include <Kernel/Heap/kmalloc.h>
 #include <LibC/errno_numbers.h>
 #include <LibC/signal_numbers.h>
 
@@ -775,13 +775,13 @@ void Process::dump_regions()
     kprintf("BEGIN       END         SIZE        ACCESS  NAME\n");
     for (auto& region : m_regions) {
         kprintf("%08x -- %08x    %08x    %c%c%c     %s\n",
-                region.vaddr().get(),
-                region.vaddr().offset(region.size() - 1).get(),
-                region.size(),
-                region.is_readable() ? 'R' : ' ',
-                region.is_writable() ? 'W' : ' ',
-                region.is_executable() ? 'X' : ' ',
-                region.name().characters());
+            region.vaddr().get(),
+            region.vaddr().offset(region.size() - 1).get(),
+            region.size(),
+            region.is_readable() ? 'R' : ' ',
+            region.is_writable() ? 'W' : ' ',
+            region.is_executable() ? 'X' : ' ',
+            region.name().characters());
     }
 }
 

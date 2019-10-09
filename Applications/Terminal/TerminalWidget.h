@@ -26,17 +26,21 @@ public:
     void apply_size_increments_to_window(GWindow&);
 
     void set_opacity(u8);
-    float opacity() {
+    float opacity()
+    {
         return m_opacity;
     };
-    bool should_beep() {
+    bool should_beep()
+    {
         return m_should_beep;
     }
-    void set_should_beep(bool sb) {
+    void set_should_beep(bool sb)
+    {
         m_should_beep = sb;
     };
 
-    RefPtr<CConfigFile> config() const {
+    RefPtr<CConfigFile> config() const
+    {
         return m_config;
     }
 

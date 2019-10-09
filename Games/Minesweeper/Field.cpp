@@ -45,8 +45,7 @@ public:
     virtual void mousedown_event(GMouseEvent& event) override
     {
         if (event.button() == GMouseButton::Right || event.button() == GMouseButton::Left) {
-            if (event.buttons() == (GMouseButton::Right | GMouseButton::Left) ||
-                    m_square.field->is_single_chording()) {
+            if (event.buttons() == (GMouseButton::Right | GMouseButton::Left) || m_square.field->is_single_chording()) {
                 m_chord = true;
                 m_square.field->set_chord_preview(m_square, true);
             }
@@ -487,7 +486,8 @@ void Field::set_field_size(int rows, int columns, int mine_count)
     m_on_size_changed(preferred_size());
 }
 
-void Field::set_single_chording(bool enabled) {
+void Field::set_single_chording(bool enabled)
+{
     auto config = CConfigFile::get_for_app("Minesweeper");
     m_single_chording = enabled;
     config->write_bool_entry("Minesweeper", "SingleChording", m_single_chording);

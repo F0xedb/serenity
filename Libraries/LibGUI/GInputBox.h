@@ -11,7 +11,8 @@ public:
     explicit GInputBox(const StringView& prompt, const StringView& title, CObject* parent = nullptr);
     virtual ~GInputBox() override;
 
-    String text_value() const {
+    String text_value() const
+    {
         return m_text_value;
     }
 

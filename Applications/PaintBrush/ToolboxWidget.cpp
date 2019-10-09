@@ -1,13 +1,13 @@
 #include "ToolboxWidget.h"
 #include "BucketTool.h"
-#include "SprayTool.h"
+#include "EraseTool.h"
 #include "PaintableWidget.h"
 #include "PenTool.h"
 #include "PickerTool.h"
-#include "EraseTool.h"
+#include "SprayTool.h"
+#include <LibDraw/PNGLoader.h>
 #include <LibGUI/GBoxLayout.h>
 #include <LibGUI/GButton.h>
-#include <LibDraw/PNGLoader.h>
 
 class ToolButton final : public GButton {
     C_OBJECT(ToolButton)
@@ -19,10 +19,12 @@ public:
         set_tooltip(name);
     }
 
-    const Tool& tool() const {
+    const Tool& tool() const
+    {
         return *m_tool;
     }
-    Tool& tool() {
+    Tool& tool()
+    {
         return *m_tool;
     }
 

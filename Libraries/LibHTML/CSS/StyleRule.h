@@ -13,10 +13,12 @@ public:
 
     ~StyleRule();
 
-    const Vector<Selector>& selectors() const {
+    const Vector<Selector>& selectors() const
+    {
         return m_selectors;
     }
-    const StyleDeclaration& declaration() const {
+    const StyleDeclaration& declaration() const
+    {
         return m_declaration;
     }
 

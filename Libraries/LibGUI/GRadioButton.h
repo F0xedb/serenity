@@ -18,7 +18,8 @@ private:
     using GAbstractButton::auto_repeat_interval;
     using GAbstractButton::set_auto_repeat_interval;
 
-    virtual bool is_radio_button() const final {
+    virtual bool is_radio_button() const final
+    {
         return true;
     }
 

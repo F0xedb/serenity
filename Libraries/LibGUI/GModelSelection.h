@@ -12,13 +12,16 @@ public:
     {
     }
 
-    int size() const {
+    int size() const
+    {
         return m_indexes.size();
     }
-    bool is_empty() const {
+    bool is_empty() const
+    {
         return m_indexes.is_empty();
     }
-    bool contains(const GModelIndex& index) const {
+    bool contains(const GModelIndex& index) const
+    {
         return m_indexes.contains(index);
     }
     bool contains_row(int row) const

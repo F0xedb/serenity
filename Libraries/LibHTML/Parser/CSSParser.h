@@ -5,4 +5,3 @@
 
 NonnullRefPtr<StyleSheet> parse_css(const StringView&);
 NonnullRefPtr<StyleDeclaration> parse_css_declaration(const StringView&);
-

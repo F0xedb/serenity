@@ -18,32 +18,41 @@ public:
     {
     }
 
-    bool is_valid() const {
+    bool is_valid() const
+    {
         return m_valid;
     }
-    String protocol() const {
+    String protocol() const
+    {
         return m_protocol;
     }
-    String host() const {
+    String host() const
+    {
         return m_host;
     }
-    String path() const {
+    String path() const
+    {
         return m_path;
     }
-    u16 port() const {
+    u16 port() const
+    {
         return m_port;
     }
 
-    void set_protocol(const String& protocol) {
+    void set_protocol(const String& protocol)
+    {
         m_protocol = protocol;
     }
-    void set_host(const String& host) {
+    void set_host(const String& host)
+    {
         m_host = host;
     }
-    void set_path(const String& path) {
+    void set_path(const String& path)
+    {
         m_path = path;
     }
-    void set_port(u16 port) {
+    void set_port(u16 port)
+    {
         m_port = port;
     }
 

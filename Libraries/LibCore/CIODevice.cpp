@@ -255,7 +255,7 @@ int CIODevice::printf(const char* format, ...)
     int ret = printf_internal([this](char*&, char ch) {
         write((const u8*)&ch, 1);
     },
-    nullptr, format, ap);
+        nullptr, format, ap);
     va_end(ap);
     return ret;
 }

@@ -9,42 +9,53 @@ class GScrollBar final : public GWidget {
 public:
     virtual ~GScrollBar() override;
 
-    Orientation orientation() const {
+    Orientation orientation() const
+    {
         return m_orientation;
     }
 
-    bool is_scrollable() const {
+    bool is_scrollable() const
+    {
         return max() != min();
     }
 
-    int value() const {
+    int value() const
+    {
         return m_value;
     }
-    int min() const {
+    int min() const
+    {
         return m_min;
     }
-    int max() const {
+    int max() const
+    {
         return m_max;
     }
-    int step() const {
+    int step() const
+    {
         return m_step;
     }
-    int big_step() const {
+    int big_step() const
+    {
         return m_big_step;
     }
 
-    void set_min(int min) {
+    void set_min(int min)
+    {
         set_range(min, max());
     }
-    void set_max(int max) {
+    void set_max(int max)
+    {
         set_range(min(), max);
     }
     void set_range(int min, int max);
     void set_value(int value);
-    void set_step(int step) {
+    void set_step(int step)
+    {
         m_step = step;
     }
-    void set_big_step(int big_step) {
+    void set_big_step(int big_step)
+    {
         m_big_step = big_step;
     }
     bool has_scrubber() const;
@@ -70,16 +81,20 @@ private:
     virtual void leave_event(CEvent&) override;
     virtual void change_event(GEvent&) override;
 
-    int default_button_size() const {
+    int default_button_size() const
+    {
         return 16;
     }
-    int button_size() const {
+    int button_size() const
+    {
         return length(orientation()) <= (default_button_size() * 2) ? length(orientation()) / 2 : default_button_size();
     }
-    int button_width() const {
+    int button_width() const
+    {
         return orientation() == Orientation::Vertical ? width() : button_size();
     }
-    int button_height() const {
+    int button_height() const
+    {
         return orientation() == Orientation::Horizontal ? height() : button_size();
     }
     Rect decrement_button_rect() const;

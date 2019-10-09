@@ -20,12 +20,11 @@ __BEGIN_DECLS
 #define STDERR_FILENO 2
 
 /* lseek whence values */
-#ifndef _STDIO_H /* also defined in stdio.h */
-#define SEEK_SET 0 /* from beginning of file.  */
-#define SEEK_CUR 1 /* from current position in file.  */
-#define SEEK_END 2 /* from the end of the file.  */
+#ifndef _STDIO_H       /* also defined in stdio.h */
+#    define SEEK_SET 0 /* from beginning of file.  */
+#    define SEEK_CUR 1 /* from current position in file.  */
+#    define SEEK_END 2 /* from the end of the file.  */
 #endif
-
 
 extern char** environ;
 
@@ -47,7 +46,8 @@ int seal_shared_buffer(int shared_buffer_id);
 int get_shared_buffer_size(int shared_buffer_id);
 int set_process_icon(int icon_id);
 int read_tsc(unsigned* lsw, unsigned* msw);
-inline int getpagesize() {
+inline int getpagesize()
+{
     return 4096;
 }
 pid_t fork();

@@ -35,23 +35,29 @@ class Field final : public GFrame {
     C_OBJECT(Field)
     friend class Square;
     friend class SquareLabel;
+
 public:
     Field(GLabel& flag_label, GLabel& time_label, GButton& face_button, GWidget* parent, Function<void(Size)> on_size_changed);
     virtual ~Field() override;
 
-    int rows() const {
+    int rows() const
+    {
         return m_rows;
     }
-    int columns() const {
+    int columns() const
+    {
         return m_columns;
     }
-    int mine_count() const {
+    int mine_count() const
+    {
         return m_mine_count;
     }
-    int square_size() const {
+    int square_size() const
+    {
         return 15;
     }
-    bool is_single_chording() const {
+    bool is_single_chording() const
+    {
         return m_single_chording;
     }
 
@@ -73,10 +79,12 @@ private:
     void set_chord_preview(Square&, bool);
     void set_flag(Square&, bool);
 
-    Square& square(int row, int column) {
+    Square& square(int row, int column)
+    {
         return *m_squares[row * columns() + column];
     }
-    const Square& square(int row, int column) const {
+    const Square& square(int row, int column) const
+    {
         return *m_squares[row * columns() + column];
     }
 

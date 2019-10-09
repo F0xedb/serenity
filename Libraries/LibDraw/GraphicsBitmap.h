@@ -3,10 +3,10 @@
 #include "Color.h"
 #include "Rect.h"
 #include "Size.h"
-#include <AK/String.h>
 #include <AK/MappedFile.h>
 #include <AK/RefCounted.h>
 #include <AK/RefPtr.h>
+#include <AK/String.h>
 #include <AK/StringView.h>
 #include <SharedBuffer.h>
 
@@ -32,22 +32,28 @@ public:
     u8* bits(int y);
     const u8* bits(int y) const;
 
-    Rect rect() const {
+    Rect rect() const
+    {
         return { {}, m_size };
     }
-    Size size() const {
+    Size size() const
+    {
         return m_size;
     }
-    int width() const {
+    int width() const
+    {
         return m_size.width();
     }
-    int height() const {
+    int height() const
+    {
         return m_size.height();
     }
-    size_t pitch() const {
+    size_t pitch() const
+    {
         return m_pitch;
     }
-    int shared_buffer_id() const {
+    int shared_buffer_id() const
+    {
         return m_shared_buffer ? m_shared_buffer->shared_buffer_id() : -1;
     }
 
@@ -68,23 +74,28 @@ public:
 
     void fill(Color);
 
-    bool has_alpha_channel() const {
+    bool has_alpha_channel() const
+    {
         return m_format == Format::RGBA32;
     }
-    Format format() const {
+    Format format() const
+    {
         return m_format;
     }
 
     void set_mmap_name(const StringView&);
 
-    size_t size_in_bytes() const {
+    size_t size_in_bytes() const
+    {
         return m_pitch * m_size.height();
     }
 
-    Color palette_color(u8 index) const {
+    Color palette_color(u8 index) const
+    {
         return Color::from_rgba(m_palette[index]);
     }
-    void set_palette_color(u8 index, Color color) {
+    void set_palette_color(u8 index, Color color)
+    {
         m_palette[index] = color.value();
     }
 
@@ -179,7 +190,7 @@ inline Color GraphicsBitmap::get_pixel(int x, int y) const
         return get_pixel<Format::Indexed8>(x, y);
     default:
         ASSERT_NOT_REACHED();
-        return { };
+        return {};
     }
 }
 

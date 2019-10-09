@@ -14,7 +14,8 @@ int main(int argc, char* argv[])
         else
             file_name = argv[i];
 
-    auto file = CFile::construct();;
+    auto file = CFile::construct();
+    ;
     bool success;
     if (file_name == nullptr) {
         success = file->open(STDIN_FILENO, CIODevice::OpenMode::ReadOnly, CFile::ShouldCloseFileDescription::No);

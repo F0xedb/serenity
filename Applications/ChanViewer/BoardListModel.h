@@ -11,13 +11,15 @@ public:
         __Count,
     };
 
-    static NonnullRefPtr<BoardListModel> create() {
+    static NonnullRefPtr<BoardListModel> create()
+    {
         return adopt(*new BoardListModel);
     }
     virtual ~BoardListModel() override;
 
     virtual int row_count(const GModelIndex& = GModelIndex()) const override;
-    virtual int column_count(const GModelIndex& = GModelIndex()) const override {
+    virtual int column_count(const GModelIndex& = GModelIndex()) const override
+    {
         return Column::__Count;
     }
     virtual String column_name(int) const override;

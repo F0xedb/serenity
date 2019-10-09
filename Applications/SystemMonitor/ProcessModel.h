@@ -1,7 +1,7 @@
 #pragma once
 
-#include <AK/String.h>
 #include <AK/HashMap.h>
+#include <AK/String.h>
 #include <AK/Vector.h>
 #include <LibGUI/GModel.h>
 #include <unistd.h>
@@ -29,7 +29,8 @@ public:
 
     static ProcessModel& the();
 
-    static NonnullRefPtr<ProcessModel> create() {
+    static NonnullRefPtr<ProcessModel> create()
+    {
         return adopt(*new ProcessModel);
     }
     virtual ~ProcessModel() override;

@@ -214,9 +214,9 @@ void IRCClient::handle(const Message& msg)
 {
 #ifdef IRC_DEBUG
     printf("IRCClient::execute: prefix='%s', command='%s', arguments=%d\n",
-           msg.prefix.characters(),
-           msg.command.characters(),
-           msg.arguments.size());
+        msg.prefix.characters(),
+        msg.command.characters(),
+        msg.arguments.size());
 
     int i = 0;
     for (auto& arg : msg.arguments) {
@@ -352,10 +352,10 @@ void IRCClient::handle_privmsg_or_notice(const Message& msg, PrivmsgOrNotice typ
 
 #ifdef IRC_DEBUG
     printf("handle_privmsg_or_notice: type='%s'%s, sender_nick='%s', target='%s'\n",
-           type == PrivmsgOrNotice::Privmsg ? "privmsg" : "notice",
-           is_ctcp ? " (ctcp)" : "",
-           sender_nick.characters(),
-           target.characters());
+        type == PrivmsgOrNotice::Privmsg ? "privmsg" : "notice",
+        is_ctcp ? " (ctcp)" : "",
+        sender_nick.characters(),
+        target.characters());
 #endif
 
     if (sender_nick.is_empty())
@@ -560,10 +560,10 @@ void IRCClient::handle_rpl_whoisuser(const Message& msg)
     auto& realname = msg.arguments[5];
     (void)asterisk;
     add_server_message(String::format("* %s is %s@%s, real name: %s",
-                                      nick.characters(),
-                                      username.characters(),
-                                      host.characters(),
-                                      realname.characters()));
+        nick.characters(),
+        username.characters(),
+        host.characters(),
+        realname.characters()));
 }
 
 void IRCClient::handle_rpl_whoisidle(const Message& msg)
@@ -596,12 +596,12 @@ void IRCClient::handle_rpl_topicwhotime(const Message& msg)
     if (ok) {
         auto* tm = localtime(&setat_time);
         setat = String::format("%4u-%02u-%02u %02u:%02u:%02u",
-                               tm->tm_year + 1900,
-                               tm->tm_mon + 1,
-                               tm->tm_mday,
-                               tm->tm_hour,
-                               tm->tm_min,
-                               tm->tm_sec);
+            tm->tm_year + 1900,
+            tm->tm_mon + 1,
+            tm->tm_mday,
+            tm->tm_hour,
+            tm->tm_min,
+            tm->tm_sec);
     }
     ensure_channel(channel_name).add_message(String::format("*** (set by %s at %s)", nick.characters(), setat.characters()), Color::Blue);
 }

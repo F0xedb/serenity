@@ -12,44 +12,55 @@ public:
 
     virtual ~GSlider() override;
 
-    Orientation orientation() const {
+    Orientation orientation() const
+    {
         return m_orientation;
     }
 
-    int value() const {
+    int value() const
+    {
         return m_value;
     }
-    int min() const {
+    int min() const
+    {
         return m_min;
     }
-    int max() const {
+    int max() const
+    {
         return m_max;
     }
 
     void set_range(int min, int max);
     void set_value(int);
 
-    void set_min(int min) {
+    void set_min(int min)
+    {
         set_range(min, max());
     }
-    void set_max(int max) {
+    void set_max(int max)
+    {
         set_range(min(), max);
     }
 
-    void set_knob_size_mode(KnobSizeMode mode) {
+    void set_knob_size_mode(KnobSizeMode mode)
+    {
         m_knob_size_mode = mode;
     }
-    KnobSizeMode knob_size_mode() const {
+    KnobSizeMode knob_size_mode() const
+    {
         return m_knob_size_mode;
     }
 
-    int track_size() const {
+    int track_size() const
+    {
         return 2;
     }
-    int knob_fixed_primary_size() const {
+    int knob_fixed_primary_size() const
+    {
         return 8;
     }
-    int knob_secondary_size() const {
+    int knob_secondary_size() const
+    {
         return 20;
     }
 

@@ -54,7 +54,8 @@ public:
     WSWindowManager();
     virtual ~WSWindowManager() override;
 
-    RefPtr<CConfigFile> wm_config() const {
+    RefPtr<CConfigFile> wm_config() const
+    {
         return m_wm_config;
     }
     void reload_config(bool);
@@ -69,15 +70,18 @@ public:
 
     Rect maximized_window_rect(const WSWindow&) const;
 
-    WSWindow* active_window() {
+    WSWindow* active_window()
+    {
         return m_active_window.ptr();
     }
     const WSClientConnection* active_client() const;
-    bool active_window_is_modal() const {
+    bool active_window_is_modal() const
+    {
         return m_active_window && m_active_window->is_modal();
     }
 
-    WSWindow* highlight_window() {
+    WSWindow* highlight_window()
+    {
         return m_highlight_window.ptr();
     }
     void set_highlight_window(WSWindow*);
@@ -86,49 +90,62 @@ public:
 
     void draw_window_switcher();
 
-    WSMenuManager& menu_manager() {
+    WSMenuManager& menu_manager()
+    {
         return m_menu_manager;
     }
-    const WSMenuManager& menu_manager() const {
+    const WSMenuManager& menu_manager() const
+    {
         return m_menu_manager;
     }
 
     Rect menubar_rect() const;
-    WSMenuBar* current_menubar() {
+    WSMenuBar* current_menubar()
+    {
         return m_current_menubar.ptr();
     }
     void set_current_menubar(WSMenuBar*);
-    WSMenu* current_menu() {
+    WSMenu* current_menu()
+    {
         return m_current_menu.ptr();
     }
     void set_current_menu(WSMenu*, bool is_submenu = false);
-    WSMenu* system_menu() {
+    WSMenu* system_menu()
+    {
         return m_system_menu.ptr();
     }
 
     const WSCursor& active_cursor() const;
-    const WSCursor& arrow_cursor() const {
+    const WSCursor& arrow_cursor() const
+    {
         return *m_arrow_cursor;
     }
-    const WSCursor& resize_horizontally_cursor() const {
+    const WSCursor& resize_horizontally_cursor() const
+    {
         return *m_resize_horizontally_cursor;
     }
-    const WSCursor& resize_vertically_cursor() const {
+    const WSCursor& resize_vertically_cursor() const
+    {
         return *m_resize_vertically_cursor;
     }
-    const WSCursor& resize_diagonally_tlbr_cursor() const {
+    const WSCursor& resize_diagonally_tlbr_cursor() const
+    {
         return *m_resize_diagonally_tlbr_cursor;
     }
-    const WSCursor& resize_diagonally_bltr_cursor() const {
+    const WSCursor& resize_diagonally_bltr_cursor() const
+    {
         return *m_resize_diagonally_bltr_cursor;
     }
-    const WSCursor& i_beam_cursor() const {
+    const WSCursor& i_beam_cursor() const
+    {
         return *m_i_beam_cursor;
     }
-    const WSCursor& disallowed_cursor() const {
+    const WSCursor& disallowed_cursor() const
+    {
         return *m_disallowed_cursor;
     }
-    const WSCursor& move_cursor() const {
+    const WSCursor& move_cursor() const
+    {
         return *m_move_cursor;
     }
 
@@ -145,7 +162,8 @@ public:
 
     void close_menu(WSMenu&);
     void close_menubar(WSMenuBar&);
-    Color menu_selection_color() const {
+    Color menu_selection_color() const
+    {
         return m_menu_selection_color;
     }
     int menubar_menu_margin() const;
@@ -156,7 +174,8 @@ public:
     void set_active_window(WSWindow*);
     void set_hovered_button(WSButton*);
 
-    WSButton* cursor_tracking_button() {
+    WSButton* cursor_tracking_button()
+    {
         return m_cursor_tracking_button.ptr();
     }
     void set_cursor_tracking_button(WSButton*);
@@ -174,10 +193,12 @@ public:
     void start_window_resize(WSWindow&, const Point&, MouseButton);
     void start_window_resize(WSWindow&, const WSMouseEvent&);
 
-    const WSWindow* active_fullscreen_window() const {
+    const WSWindow* active_fullscreen_window() const
+    {
         return (m_active_window && m_active_window->is_fullscreen()) ? m_active_window : nullptr;
     }
-    WSWindow* active_fullscreen_window() {
+    WSWindow* active_fullscreen_window()
+    {
         return (m_active_window && m_active_window->is_fullscreen()) ? m_active_window : nullptr;
     }
 

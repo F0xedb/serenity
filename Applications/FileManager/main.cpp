@@ -95,9 +95,9 @@ int main(int argc, char** argv)
         auto input_box = GInputBox::construct("Enter name:", "New directory", window);
         if (input_box->exec() == GInputBox::ExecOK && !input_box->text_value().is_empty()) {
             auto new_dir_path = canonicalized_path(
-                                    String::format("%s/%s",
-                                                   directory_view->path().characters(),
-                                                   input_box->text_value().characters()));
+                String::format("%s/%s",
+                    directory_view->path().characters(),
+                    input_box->text_value().characters()));
             int rc = mkdir(new_dir_path.characters(), 0777);
             if (rc < 0) {
                 GMessageBox::show(String::format("mkdir(\"%s\") failed: %s", new_dir_path.characters(), strerror(errno)), "Error", GMessageBox::Type::Error, GMessageBox::InputType::OK, window);
@@ -183,11 +183,11 @@ int main(int argc, char** argv)
                 continue;
             auto current_directory = directory_view->path();
             auto new_path = String::format("%s/%s",
-                                           current_directory.characters(),
-                                           FileSystemPath(current_path).basename().characters());
+                current_directory.characters(),
+                FileSystemPath(current_path).basename().characters());
             if (!FileUtils::copy_file_or_directory(current_path, new_path)) {
                 auto error_message = String::format("Could not paste %s.",
-                                                    current_path.characters());
+                    current_path.characters());
                 GMessageBox::show(error_message, "File Manager", GMessageBox::Type::Error);
             }
         }
@@ -199,9 +199,10 @@ int main(int argc, char** argv)
     };
 
     auto properties_action
-    = GAction::create("Properties...", { Mod_Alt, Key_Return }, GraphicsBitmap::load_from_file("/res/icons/16x16/properties.png"), [](auto&) {});
+        = GAction::create("Properties...", { Mod_Alt, Key_Return }, GraphicsBitmap::load_from_file("/res/icons/16x16/properties.png"), [](auto&) {});
 
-    enum class ConfirmBeforeDelete { No, Yes };
+    enum class ConfirmBeforeDelete { No,
+        Yes };
 
     auto do_delete = [&](ConfirmBeforeDelete confirm) {
         auto paths = selected_file_paths();
@@ -217,11 +218,11 @@ int main(int argc, char** argv)
 
             if (confirm == ConfirmBeforeDelete::Yes) {
                 auto result = GMessageBox::show(
-                                  message,
-                                  "Confirm deletion",
-                                  GMessageBox::Type::Warning,
-                                  GMessageBox::InputType::OKCancel,
-                                  window);
+                    message,
+                    "Confirm deletion",
+                    GMessageBox::Type::Warning,
+                    GMessageBox::InputType::OKCancel,
+                    window);
                 if (result == GMessageBox::ExecCancel)
                     return;
             }
@@ -318,7 +319,7 @@ int main(int argc, char** argv)
         tree_view->update();
 
         go_forward_action->set_enabled(directory_view->path_history_position()
-                                       < directory_view->path_history_size() - 1);
+            < directory_view->path_history_size() - 1);
         go_back_action->set_enabled(directory_view->path_history_position() > 0);
     };
 

@@ -45,7 +45,8 @@ class VBWidget : public RefCounted<VBWidget>
     friend class VBWidgetPropertyModel;
 
 public:
-    static NonnullRefPtr<VBWidget> create(VBWidgetType type, VBForm& form, VBWidget* parent) {
+    static NonnullRefPtr<VBWidget> create(VBWidgetType type, VBForm& form, VBWidget* parent)
+    {
         return adopt(*new VBWidget(type, form, parent));
     }
     ~VBWidget();
@@ -58,7 +59,8 @@ public:
     Rect grabber_rect(Direction) const;
     Direction grabber_at(const Point&) const;
 
-    GWidget* gwidget() {
+    GWidget* gwidget()
+    {
         return m_gwidget;
     }
 
@@ -66,7 +68,8 @@ public:
 
     void for_each_property(Function<void(VBProperty&)>);
 
-    VBWidgetPropertyModel& property_model() {
+    VBWidgetPropertyModel& property_model()
+    {
         return *m_property_model;
     }
 
@@ -75,7 +78,8 @@ public:
 
     void property_did_change();
 
-    Rect transform_origin_rect() const {
+    Rect transform_origin_rect() const
+    {
         return m_transform_origin_rect;
     }
     void capture_transform_origin_rect();

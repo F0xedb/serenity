@@ -326,7 +326,7 @@ KResult IPv4Socket::setsockopt(int level, int option, const void* value, socklen
             return KResult(-EINVAL);
         if (*(const int*)value < 0 || *(const int*)value > 255)
             return KResult(-EINVAL);
-        m_ttl = (u8)*(const int*)value;
+        m_ttl = (u8) * (const int*)value;
         return KSuccess;
     default:
         return KResult(-ENOPROTOOPT);

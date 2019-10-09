@@ -28,50 +28,64 @@ public:
 
     ~Region();
 
-    const Range& range() const {
+    const Range& range() const
+    {
         return m_range;
     }
-    VirtualAddress vaddr() const {
+    VirtualAddress vaddr() const
+    {
         return m_range.base();
     }
-    size_t size() const {
+    size_t size() const
+    {
         return m_range.size();
     }
-    bool is_readable() const {
+    bool is_readable() const
+    {
         return m_access & Access::Read;
     }
-    bool is_writable() const {
+    bool is_writable() const
+    {
         return m_access & Access::Write;
     }
-    bool is_executable() const {
+    bool is_executable() const
+    {
         return m_access & Access::Execute;
     }
-    const String& name() const {
+    const String& name() const
+    {
         return m_name;
     }
-    unsigned access() const {
+    unsigned access() const
+    {
         return m_access;
     }
 
-    void set_name(const String& name) {
+    void set_name(const String& name)
+    {
         m_name = name;
     }
 
-    const VMObject& vmobject() const {
+    const VMObject& vmobject() const
+    {
         return *m_vmobject;
     }
-    VMObject& vmobject() {
+    VMObject& vmobject()
+    {
         return *m_vmobject;
     }
 
-    bool is_shared() const {
+    bool is_shared() const
+    {
         return m_shared;
     }
-    void set_shared(bool shared) {
+    void set_shared(bool shared)
+    {
         m_shared = shared;
     }
 
-    bool is_user_accessible() const {
+    bool is_user_accessible() const
+    {
         return m_user_accessible;
     }
 
@@ -117,7 +131,8 @@ public:
     size_t amount_resident() const;
     size_t amount_shared() const;
 
-    PageDirectory* page_directory() {
+    PageDirectory* page_directory()
+    {
         return m_page_directory.ptr();
     }
 

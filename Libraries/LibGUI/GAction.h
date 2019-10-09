@@ -1,11 +1,11 @@
 #pragma once
 
-#include <AK/String.h>
 #include <AK/Badge.h>
 #include <AK/Function.h>
 #include <AK/HashTable.h>
 #include <AK/NonnullRefPtr.h>
 #include <AK/RefCounted.h>
+#include <AK/String.h>
 #include <AK/WeakPtr.h>
 #include <AK/Weakable.h>
 #include <LibDraw/GraphicsBitmap.h>
@@ -61,23 +61,29 @@ public:
         return adopt(*new GAction(text, shortcut, move(icon), move(callback), widget));
     }
     ~GAction();
-    GWidget* widget() {
+    GWidget* widget()
+    {
         return m_widget.ptr();
     }
-    const GWidget* widget() const {
+    const GWidget* widget() const
+    {
         return m_widget.ptr();
     }
 
-    String text() const {
+    String text() const
+    {
         return m_text;
     }
-    GShortcut shortcut() const {
+    GShortcut shortcut() const
+    {
         return m_shortcut;
     }
-    const GraphicsBitmap* icon() const {
+    const GraphicsBitmap* icon() const
+    {
         return m_icon.ptr();
     }
-    void set_icon(const GraphicsBitmap* icon) {
+    void set_icon(const GraphicsBitmap* icon)
+    {
         m_icon = icon;
     }
 
@@ -85,15 +91,18 @@ public:
 
     void activate();
 
-    bool is_enabled() const {
+    bool is_enabled() const
+    {
         return m_enabled;
     }
     void set_enabled(bool);
 
-    bool is_checkable() const {
+    bool is_checkable() const
+    {
         return m_checkable;
     }
-    void set_checkable(bool checkable) {
+    void set_checkable(bool checkable)
+    {
         m_checkable = checkable;
     }
 
@@ -109,7 +118,8 @@ public:
     void register_menu_item(Badge<GMenuItem>, GMenuItem&);
     void unregister_menu_item(Badge<GMenuItem>, GMenuItem&);
 
-    const GActionGroup* group() const {
+    const GActionGroup* group() const
+    {
         return m_action_group.ptr();
     }
     void set_group(Badge<GActionGroup>, GActionGroup*);

@@ -9,7 +9,8 @@ class Color;
 
 class StyleProperties : public RefCounted<StyleProperties> {
 public:
-    static NonnullRefPtr<StyleProperties> create() {
+    static NonnullRefPtr<StyleProperties> create()
+    {
         return adopt(*new StyleProperties);
     }
 

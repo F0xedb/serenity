@@ -130,14 +130,14 @@ void PATAChannel::initialize()
 static void print_ide_status(u8 status)
 {
     kprintf("PATAChannel: print_ide_status: DRQ=%u BSY=%u DRDY=%u DSC=%u DF=%u CORR=%u IDX=%u ERR=%u\n",
-            (status & ATA_SR_DRQ) != 0,
-            (status & ATA_SR_BSY) != 0,
-            (status & ATA_SR_DRDY) != 0,
-            (status & ATA_SR_DSC) != 0,
-            (status & ATA_SR_DF) != 0,
-            (status & ATA_SR_CORR) != 0,
-            (status & ATA_SR_IDX) != 0,
-            (status & ATA_SR_ERR) != 0);
+        (status & ATA_SR_DRQ) != 0,
+        (status & ATA_SR_BSY) != 0,
+        (status & ATA_SR_DRDY) != 0,
+        (status & ATA_SR_DSC) != 0,
+        (status & ATA_SR_DF) != 0,
+        (status & ATA_SR_CORR) != 0,
+        (status & ATA_SR_IDX) != 0,
+        (status & ATA_SR_ERR) != 0);
 }
 
 bool PATAChannel::wait_for_irq()
@@ -249,8 +249,8 @@ bool PATAChannel::ata_read_sectors_with_dma(u32 lba, u16 count, u8* outbuf, bool
     LOCKER(s_lock());
 #ifdef PATA_DEBUG
     kprintf("%s(%u): PATAChannel::ata_read_sectors_with_dma (%u x%u) -> %p\n",
-            current->process().name().characters(),
-            current->pid(), lba, count, outbuf);
+        current->process().name().characters(),
+        current->pid(), lba, count, outbuf);
 #endif
 
     disable_irq();
@@ -328,8 +328,8 @@ bool PATAChannel::ata_write_sectors_with_dma(u32 lba, u16 count, const u8* inbuf
     LOCKER(s_lock());
 #ifdef PATA_DEBUG
     kprintf("%s(%u): PATAChannel::ata_write_sectors_with_dma (%u x%u) <- %p\n",
-            current->process().name().characters(),
-            current->pid(), lba, count, inbuf);
+        current->process().name().characters(),
+        current->pid(), lba, count, inbuf);
 #endif
 
     disable_irq();
@@ -405,11 +405,11 @@ bool PATAChannel::ata_read_sectors(u32 start_sector, u16 count, u8* outbuf, bool
     LOCKER(s_lock());
 #ifdef PATA_DEBUG
     kprintf("%s(%u): PATAChannel::ata_read_sectors request (%u sector(s) @ %u into %p)\n",
-            current->process().name().characters(),
-            current->pid(),
-            count,
-            start_sector,
-            outbuf);
+        current->process().name().characters(),
+        current->pid(),
+        count,
+        start_sector,
+        outbuf);
 #endif
     disable_irq();
 
@@ -466,10 +466,10 @@ bool PATAChannel::ata_write_sectors(u32 start_sector, u16 count, const u8* inbuf
     LOCKER(s_lock());
 #ifdef PATA_DEBUG
     kprintf("%s(%u): PATAChannel::ata_write_sectors request (%u sector(s) @ %u)\n",
-            current->process().name().characters(),
-            current->pid(),
-            count,
-            start_sector);
+        current->process().name().characters(),
+        current->pid(),
+        count,
+        start_sector);
 #endif
     disable_irq();
 

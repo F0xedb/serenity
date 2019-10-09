@@ -8,7 +8,8 @@
 class ASEventLoop {
 public:
     ASEventLoop();
-    int exec() {
+    int exec()
+    {
         return m_event_loop.exec();
     }
 

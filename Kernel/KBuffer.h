@@ -31,16 +31,20 @@ public:
         return buffer;
     }
 
-    u8* data() {
+    u8* data()
+    {
         return m_region->vaddr().as_ptr();
     }
-    const u8* data() const {
+    const u8* data() const
+    {
         return m_region->vaddr().as_ptr();
     }
-    size_t size() const {
+    size_t size() const
+    {
         return m_size;
     }
-    size_t capacity() const {
+    size_t capacity() const
+    {
         return m_region->size();
     }
 
@@ -73,24 +77,30 @@ public:
         return KBuffer(KBufferImpl::copy(data, size));
     }
 
-    u8* data() {
+    u8* data()
+    {
         return m_impl->data();
     }
-    const u8* data() const {
+    const u8* data() const
+    {
         return m_impl->data();
     }
-    size_t size() const {
+    size_t size() const
+    {
         return m_impl->size();
     }
-    size_t capacity() const {
+    size_t capacity() const
+    {
         return m_impl->capacity();
     }
 
-    void set_size(size_t size) {
+    void set_size(size_t size)
+    {
         m_impl->set_size(size);
     }
 
-    const KBufferImpl& impl() const {
+    const KBufferImpl& impl() const
+    {
         return m_impl;
     }
 

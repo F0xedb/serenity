@@ -1,7 +1,7 @@
 #pragma once
 
-#include <AK/String.h>
 #include <AK/RefPtr.h>
+#include <AK/String.h>
 #include <AK/StringView.h>
 #include <LibCore/CFile.h>
 
@@ -16,28 +16,35 @@ class AWavLoader {
 public:
     explicit AWavLoader(const StringView& path);
 
-    bool has_error() const {
+    bool has_error() const
+    {
         return !m_error_string.is_null();
     }
-    const char* error_string() {
+    const char* error_string()
+    {
         return m_error_string.characters();
     }
 
     RefPtr<ABuffer> get_more_samples(size_t max_bytes_to_read_from_input = 128 * KB);
 
-    int loaded_samples() const {
+    int loaded_samples() const
+    {
         return m_loaded_samples;
     }
-    int total_samples() const {
+    int total_samples() const
+    {
         return m_total_samples;
     }
-    u32 sample_rate() const {
+    u32 sample_rate() const
+    {
         return m_sample_rate;
     }
-    u16 num_channels() const {
+    u16 num_channels() const
+    {
         return m_num_channels;
     }
-    u16 bits_per_sample() const {
+    u16 bits_per_sample() const
+    {
         return m_bits_per_sample;
     }
 

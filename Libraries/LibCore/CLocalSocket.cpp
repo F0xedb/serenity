@@ -1,6 +1,6 @@
 #include <LibCore/CLocalSocket.h>
-#include <sys/socket.h>
 #include <errno.h>
+#include <sys/socket.h>
 
 CLocalSocket::CLocalSocket(int fd, CObject* parent)
     : CSocket(CSocket::Type::Local, parent)

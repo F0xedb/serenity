@@ -16,10 +16,12 @@ public:
 
     virtual NonnullOwnPtrVector<ManualNode>& children() const override;
     virtual const ManualNode* parent() const override;
-    virtual String name() const override {
+    virtual String name() const override
+    {
         return m_page;
     };
-    virtual bool is_page() const override {
+    virtual bool is_page() const override
+    {
         return true;
     }
 

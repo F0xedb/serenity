@@ -1,13 +1,13 @@
 #pragma once
 
+#include <AK/ELF/ELFImage.h>
 #include <AK/Function.h>
 #include <AK/HashMap.h>
 #include <AK/OwnPtr.h>
 #include <AK/Vector.h>
-#include <AK/ELF/ELFImage.h>
 
 #ifdef KERNEL
-#include <Kernel/VM/VirtualAddress.h>
+#    include <Kernel/VM/VirtualAddress.h>
 class Region;
 #endif
 
@@ -21,13 +21,15 @@ public:
     Function<void*(VirtualAddress, size_t, size_t, bool, bool, const String&)> alloc_section_hook;
     Function<void*(size_t, size_t)> tls_section_hook;
     Function<void*(VirtualAddress, size_t, size_t, size_t, bool r, bool w, bool x, const String&)> map_section_hook;
-    VirtualAddress entry() const {
+    VirtualAddress entry() const
+    {
         return m_image.entry();
     }
 #endif
     char* symbol_ptr(const char* name);
 
-    bool has_symbols() const {
+    bool has_symbols() const
+    {
         return m_image.symbol_count();
     }
 

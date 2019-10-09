@@ -21,13 +21,16 @@ public:
     static KResultOr<NonnullRefPtr<Socket>> create(int domain, int type, int protocol);
     virtual ~Socket() override;
 
-    int domain() const {
+    int domain() const
+    {
         return m_domain;
     }
-    int type() const {
+    int type() const
+    {
         return m_type;
     }
-    int protocol() const {
+    int protocol() const
+    {
         return m_protocol;
     }
 
@@ -59,23 +62,28 @@ public:
         }
     }
 
-    SetupState setup_state() const {
+    SetupState setup_state() const
+    {
         return m_setup_state;
     }
     void set_setup_state(SetupState setup_state);
 
-    virtual Role role(const FileDescription&) const {
+    virtual Role role(const FileDescription&) const
+    {
         return m_role;
     }
 
-    bool is_connected() const {
+    bool is_connected() const
+    {
         return m_connected;
     }
-    void set_connected(bool connected) {
+    void set_connected(bool connected)
+    {
         m_connected = connected;
     }
 
-    bool can_accept() const {
+    bool can_accept() const
+    {
         return !m_pending.is_empty();
     }
     RefPtr<Socket> accept();
@@ -85,10 +93,12 @@ public:
     virtual KResult listen(int) = 0;
     virtual bool get_local_address(sockaddr*, socklen_t*) = 0;
     virtual bool get_peer_address(sockaddr*, socklen_t*) = 0;
-    virtual bool is_local() const {
+    virtual bool is_local() const
+    {
         return false;
     }
-    virtual bool is_ipv4() const {
+    virtual bool is_ipv4() const
+    {
         return false;
     }
     virtual void attach(FileDescription&) = 0;
@@ -99,21 +109,26 @@ public:
     virtual KResult setsockopt(int level, int option, const void*, socklen_t);
     virtual KResult getsockopt(int level, int option, void*, socklen_t*);
 
-    pid_t origin_pid() const {
+    pid_t origin_pid() const
+    {
         return m_origin_pid;
     }
-    pid_t acceptor_pid() const {
+    pid_t acceptor_pid() const
+    {
         return m_acceptor_pid;
     }
 
-    timeval receive_deadline() const {
+    timeval receive_deadline() const
+    {
         return m_receive_deadline;
     }
-    timeval send_deadline() const {
+    timeval send_deadline() const
+    {
         return m_send_deadline;
     }
 
-    Lock& lock() {
+    Lock& lock()
+    {
         return m_lock;
     }
 
@@ -130,21 +145,25 @@ protected:
     void load_receive_deadline();
     void load_send_deadline();
 
-    int backlog() const {
+    int backlog() const
+    {
         return m_backlog;
     }
-    void set_backlog(int backlog) {
+    void set_backlog(int backlog)
+    {
         m_backlog = backlog;
     }
 
-    virtual const char* class_name() const override {
+    virtual const char* class_name() const override
+    {
         return "Socket";
     }
 
     Role m_role { Role::None };
 
 private:
-    virtual bool is_socket() const final {
+    virtual bool is_socket() const final
+    {
         return true;
     }
 
@@ -193,21 +212,26 @@ public:
     SocketHandle(const SocketHandle&) = delete;
     SocketHandle& operator=(const SocketHandle&) = delete;
 
-    operator bool() const {
+    operator bool() const
+    {
         return m_socket;
     }
 
-    SocketType* operator->() {
+    SocketType* operator->()
+    {
         return &socket();
     }
-    const SocketType* operator->() const {
+    const SocketType* operator->() const
+    {
         return &socket();
     }
 
-    SocketType& socket() {
+    SocketType& socket()
+    {
         return *m_socket;
     }
-    const SocketType& socket() const {
+    const SocketType& socket() const
+    {
         return *m_socket;
     }
 

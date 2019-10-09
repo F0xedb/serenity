@@ -1,7 +1,7 @@
 #pragma once
 
-#include <AK/String.h>
 #include <AK/HashMap.h>
+#include <AK/String.h>
 #include <AK/WeakPtr.h>
 #include <LibCore/CObject.h>
 #include <LibDraw/GraphicsBitmap.h>
@@ -28,20 +28,24 @@ public:
 
     static GWindow* from_window_id(int);
 
-    bool is_modal() const {
+    bool is_modal() const
+    {
         return m_modal;
     }
     void set_modal(bool);
 
-    bool is_fullscreen() const {
+    bool is_fullscreen() const
+    {
         return m_fullscreen;
     }
     void set_fullscreen(bool);
 
-    bool is_resizable() const {
+    bool is_resizable() const
+    {
         return m_resizable;
     }
-    void set_resizable(bool resizable) {
+    void set_resizable(bool resizable)
+    {
         m_resizable = resizable;
     }
 
@@ -50,24 +54,29 @@ public:
     void set_opacity(float);
     void set_window_type(GWindowType);
 
-    int window_id() const {
+    int window_id() const
+    {
         return m_window_id;
     }
 
     String title() const;
     void set_title(const StringView&);
 
-    bool show_titlebar() const {
+    bool show_titlebar() const
+    {
         return m_show_titlebar;
     };
-    void set_show_titlebar(bool show) {
+    void set_show_titlebar(bool show)
+    {
         m_show_titlebar = show;
     };
 
-    Color background_color() const {
+    Color background_color() const
+    {
         return m_background_color;
     }
-    void set_background_color(Color color) {
+    void set_background_color(Color color)
+    {
         m_background_color = color;
     }
 
@@ -78,50 +87,62 @@ public:
 
     Function<CloseRequestDecision()> on_close_request;
 
-    int x() const {
+    int x() const
+    {
         return rect().x();
     }
-    int y() const {
+    int y() const
+    {
         return rect().y();
     }
-    int width() const {
+    int width() const
+    {
         return rect().width();
     }
-    int height() const {
+    int height() const
+    {
         return rect().height();
     }
 
     Rect rect() const;
-    Size size() const {
+    Size size() const
+    {
         return rect().size();
     }
     void set_rect(const Rect&);
-    void set_rect(int x, int y, int width, int height) {
+    void set_rect(int x, int y, int width, int height)
+    {
         set_rect({ x, y, width, height });
     }
 
-    Point position() const {
+    Point position() const
+    {
         return rect().location();
     }
 
-    void move_to(int x, int y) {
+    void move_to(int x, int y)
+    {
         move_to({ x, y });
     }
-    void move_to(const Point& point) {
+    void move_to(const Point& point)
+    {
         set_rect({ point, size() });
     }
 
-    void resize(int width, int height) {
+    void resize(int width, int height)
+    {
         resize({ width, height });
     }
-    void resize(const Size& size) {
+    void resize(const Size& size)
+    {
         set_rect({ position(), size });
     }
 
     virtual void event(CEvent&) override;
 
     bool is_visible() const;
-    bool is_active() const {
+    bool is_active() const
+    {
         return m_is_active;
     }
 
@@ -132,18 +153,22 @@ public:
 
     void start_wm_resize();
 
-    GWidget* main_widget() {
+    GWidget* main_widget()
+    {
         return m_main_widget;
     }
-    const GWidget* main_widget() const {
+    const GWidget* main_widget() const
+    {
         return m_main_widget;
     }
     void set_main_widget(GWidget*);
 
-    GWidget* focused_widget() {
+    GWidget* focused_widget()
+    {
         return m_focused_widget;
     }
-    const GWidget* focused_widget() const {
+    const GWidget* focused_widget() const
+    {
         return m_focused_widget;
     }
     void set_focused_widget(GWidget*);
@@ -151,46 +176,58 @@ public:
     void update(const Rect& = Rect());
 
     void set_global_cursor_tracking_widget(GWidget*);
-    GWidget* global_cursor_tracking_widget() {
+    GWidget* global_cursor_tracking_widget()
+    {
         return m_global_cursor_tracking_widget.ptr();
     }
-    const GWidget* global_cursor_tracking_widget() const {
+    const GWidget* global_cursor_tracking_widget() const
+    {
         return m_global_cursor_tracking_widget.ptr();
     }
 
     void set_automatic_cursor_tracking_widget(GWidget*);
-    GWidget* automatic_cursor_tracking_widget() {
+    GWidget* automatic_cursor_tracking_widget()
+    {
         return m_automatic_cursor_tracking_widget.ptr();
     }
-    const GWidget* automatic_cursor_tracking_widget() const {
+    const GWidget* automatic_cursor_tracking_widget() const
+    {
         return m_automatic_cursor_tracking_widget.ptr();
     }
 
-    GWidget* hovered_widget() {
+    GWidget* hovered_widget()
+    {
         return m_hovered_widget.ptr();
     }
-    const GWidget* hovered_widget() const {
+    const GWidget* hovered_widget() const
+    {
         return m_hovered_widget.ptr();
     }
     void set_hovered_widget(GWidget*);
 
-    GraphicsBitmap* front_bitmap() {
+    GraphicsBitmap* front_bitmap()
+    {
         return m_front_bitmap.ptr();
     }
-    GraphicsBitmap* back_bitmap() {
+    GraphicsBitmap* back_bitmap()
+    {
         return m_back_bitmap.ptr();
     }
 
-    Size size_increment() const {
+    Size size_increment() const
+    {
         return m_size_increment;
     }
-    void set_size_increment(const Size& increment) {
+    void set_size_increment(const Size& increment)
+    {
         m_size_increment = increment;
     }
-    Size base_size() const {
+    Size base_size() const
+    {
         return m_base_size;
     }
-    void set_base_size(const Size& size) {
+    void set_base_size(const Size& size)
+    {
         m_base_size = size;
     }
 
@@ -198,7 +235,8 @@ public:
 
     void set_icon(const GraphicsBitmap*);
     void apply_icon();
-    const GraphicsBitmap* icon() const {
+    const GraphicsBitmap* icon() const
+    {
         return m_icon.ptr();
     }
 
@@ -211,7 +249,8 @@ protected:
     virtual void wm_event(GWMEvent&);
 
 private:
-    virtual bool is_window() const override final {
+    virtual bool is_window() const override final
+    {
         return true;
     }
 

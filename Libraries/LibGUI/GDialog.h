@@ -16,7 +16,8 @@ public:
 
     int exec();
 
-    int result() const {
+    int result() const
+    {
         return m_result;
     }
     void done(int result);

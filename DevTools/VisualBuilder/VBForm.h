@@ -7,26 +7,31 @@
 class VBForm : public GWidget {
     C_OBJECT(VBForm)
     friend class VBWidget;
+
 public:
     explicit VBForm(const String& name, GWidget* parent = nullptr);
     virtual ~VBForm() override;
 
     static VBForm* current();
 
-    String name() const {
+    String name() const
+    {
         return m_name;
     }
-    void set_name(const String& name) {
+    void set_name(const String& name)
+    {
         m_name = name;
     }
 
     bool is_selected(const VBWidget&) const;
     VBWidget* widget_at(const Point&);
 
-    void set_should_snap_to_grip(bool snap) {
+    void set_should_snap_to_grip(bool snap)
+    {
         m_should_snap_to_grid = snap;
     }
-    bool should_snap_to_grid() const {
+    bool should_snap_to_grid() const
+    {
         return m_should_snap_to_grid;
     }
 

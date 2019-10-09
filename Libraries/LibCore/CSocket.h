@@ -16,7 +16,8 @@ public:
     };
     virtual ~CSocket() override;
 
-    Type type() const {
+    Type type() const
+    {
         return m_type;
     }
 
@@ -27,22 +28,27 @@ public:
     ByteBuffer receive(int max_size);
     bool send(const ByteBuffer&);
 
-    bool is_connected() const {
+    bool is_connected() const
+    {
         return m_connected;
     }
     void set_blocking(bool blocking);
 
-    CSocketAddress source_address() const {
+    CSocketAddress source_address() const
+    {
         return m_source_address;
     }
-    int source_port() const {
+    int source_port() const
+    {
         return m_source_port;
     }
 
-    CSocketAddress destination_address() const {
+    CSocketAddress destination_address() const
+    {
         return m_source_address;
     }
-    int destination_port() const {
+    int destination_port() const
+    {
         return m_destination_port;
     }
 
@@ -61,7 +67,8 @@ protected:
     virtual void did_update_fd(int) override;
 
 private:
-    virtual bool open(CIODevice::OpenMode) override {
+    virtual bool open(CIODevice::OpenMode) override
+    {
         ASSERT_NOT_REACHED();
     }
     bool common_connect(const struct sockaddr*, socklen_t);

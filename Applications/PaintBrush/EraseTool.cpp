@@ -64,4 +64,3 @@ void EraseTool::on_contextmenu(GContextMenuEvent& event)
     }
     m_context_menu->popup(event.screen_position());
 }
-

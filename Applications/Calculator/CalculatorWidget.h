@@ -46,5 +46,4 @@ private:
     RefPtr<GButton> m_inverse_button;
     RefPtr<GButton> m_percent_button;
     RefPtr<GButton> m_equals_button;
-
 };

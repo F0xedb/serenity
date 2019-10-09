@@ -6,8 +6,8 @@
 #include <LibCore/CEvent.h>
 #include <LibDraw/Point.h>
 #include <LibDraw/Rect.h>
-#include <WindowServer/WSCursor.h>
 #include <WindowServer/WSAPITypes.h>
+#include <WindowServer/WSCursor.h>
 #include <WindowServer/WSWindowType.h>
 
 class WSEvent : public CEvent {
@@ -82,13 +82,16 @@ public:
     }
     virtual ~WSEvent() {}
 
-    bool is_client_request() const {
+    bool is_client_request() const
+    {
         return type() > __Begin_API_Client_Requests && type() < __End_API_Client_Requests;
     }
-    bool is_mouse_event() const {
+    bool is_mouse_event() const
+    {
         return type() == MouseMove || type() == MouseDown || type() == MouseDoubleClick || type() == MouseUp || type() == MouseWheel;
     }
-    bool is_key_event() const {
+    bool is_key_event() const
+    {
         return type() == KeyUp || type() == KeyDown;
     }
 };
@@ -101,7 +104,8 @@ public:
     {
     }
 
-    int client_id() const {
+    int client_id() const
+    {
         return m_client_id;
     }
 
@@ -118,10 +122,12 @@ public:
     {
     }
 
-    int target_client_id() const {
+    int target_client_id() const
+    {
         return m_target_client_id;
     }
-    int target_window_id() const {
+    int target_window_id() const
+    {
         return m_target_window_id;
     }
 
@@ -140,13 +146,16 @@ public:
     {
     }
 
-    int target_client_id() const {
+    int target_client_id() const
+    {
         return m_target_client_id;
     }
-    int target_window_id() const {
+    int target_window_id() const
+    {
         return m_target_window_id;
     }
-    Point position() const {
+    Point position() const
+    {
         return m_position;
     }
 
@@ -165,10 +174,12 @@ public:
     {
     }
 
-    int target_client_id() const {
+    int target_client_id() const
+    {
         return m_target_client_id;
     }
-    int target_window_id() const {
+    int target_window_id() const
+    {
         return m_target_window_id;
     }
 
@@ -187,13 +198,16 @@ public:
     {
     }
 
-    int target_client_id() const {
+    int target_client_id() const
+    {
         return m_target_client_id;
     }
-    int target_window_id() const {
+    int target_window_id() const
+    {
         return m_target_window_id;
     }
-    bool is_minimized() const {
+    bool is_minimized() const
+    {
         return m_minimized;
     }
 
@@ -212,10 +226,12 @@ public:
     {
     }
 
-    int window_id() const {
+    int window_id() const
+    {
         return m_window_id;
     }
-    bool value() const {
+    bool value() const
+    {
         return m_value;
     }
 
@@ -240,7 +256,8 @@ public:
     {
     }
 
-    int menubar_id() const {
+    int menubar_id() const
+    {
         return m_menubar_id;
     }
 
@@ -256,7 +273,8 @@ public:
     {
     }
 
-    int menubar_id() const {
+    int menubar_id() const
+    {
         return m_menubar_id;
     }
 
@@ -273,10 +291,12 @@ public:
     {
     }
 
-    int menubar_id() const {
+    int menubar_id() const
+    {
         return m_menubar_id;
     }
-    int menu_id() const {
+    int menu_id() const
+    {
         return m_menu_id;
     }
 
@@ -294,10 +314,12 @@ public:
     {
     }
 
-    int menu_id() const {
+    int menu_id() const
+    {
         return m_menu_id;
     }
-    Point position() const {
+    Point position() const
+    {
         return m_position;
     }
 
@@ -314,7 +336,8 @@ public:
     {
     }
 
-    int menu_id() const {
+    int menu_id() const
+    {
         return m_menu_id;
     }
 
@@ -330,7 +353,8 @@ public:
     {
     }
 
-    String text() const {
+    String text() const
+    {
         return m_text;
     }
 
@@ -346,7 +370,8 @@ public:
     {
     }
 
-    int menu_id() const {
+    int menu_id() const
+    {
         return m_menu_id;
     }
 
@@ -370,31 +395,40 @@ public:
     {
     }
 
-    int menu_id() const {
+    int menu_id() const
+    {
         return m_menu_id;
     }
-    unsigned identifier() const {
+    unsigned identifier() const
+    {
         return m_identifier;
     }
-    String text() const {
+    String text() const
+    {
         return m_text;
     }
-    String shortcut_text() const {
+    String shortcut_text() const
+    {
         return m_shortcut_text;
     }
-    bool is_enabled() const {
+    bool is_enabled() const
+    {
         return m_enabled;
     }
-    bool is_checkable() const {
+    bool is_checkable() const
+    {
         return m_checkable;
     }
-    bool is_checked() const {
+    bool is_checked() const
+    {
         return m_checked;
     }
-    int icon_buffer_id() const {
+    int icon_buffer_id() const
+    {
         return m_icon_buffer_id;
     }
-    int submenu_id() const {
+    int submenu_id() const
+    {
         return m_submenu_id;
     }
 
@@ -424,25 +458,32 @@ public:
     {
     }
 
-    int menu_id() const {
+    int menu_id() const
+    {
         return m_menu_id;
     }
-    unsigned identifier() const {
+    unsigned identifier() const
+    {
         return m_identifier;
     }
-    String text() const {
+    String text() const
+    {
         return m_text;
     }
-    String shortcut_text() const {
+    String shortcut_text() const
+    {
         return m_shortcut_text;
     }
-    bool is_enabled() const {
+    bool is_enabled() const
+    {
         return m_enabled;
     }
-    bool is_checkable() const {
+    bool is_checkable() const
+    {
         return m_checkable;
     }
-    bool is_checked() const {
+    bool is_checked() const
+    {
         return m_checked;
     }
 
@@ -464,7 +505,8 @@ public:
     {
     }
 
-    int menu_id() const {
+    int menu_id() const
+    {
         return m_menu_id;
     }
 
@@ -481,10 +523,12 @@ public:
     {
     }
 
-    int window_id() const {
+    int window_id() const
+    {
         return m_window_id;
     }
-    WSStandardCursor cursor() const {
+    WSStandardCursor cursor() const
+    {
         return m_cursor;
     }
 
@@ -502,10 +546,12 @@ public:
     {
     }
 
-    int window_id() const {
+    int window_id() const
+    {
         return m_window_id;
     }
-    bool value() const {
+    bool value() const
+    {
         return m_value;
     }
 
@@ -522,7 +568,8 @@ public:
     {
     }
 
-    String wallpaper() const {
+    String wallpaper() const
+    {
         return m_wallpaper;
     }
 
@@ -541,12 +588,13 @@ public:
 class WSAPISetResolutionRequest final : public WSAPIClientRequest {
 public:
     explicit WSAPISetResolutionRequest(int client_id, int width, int height)
-        : WSAPIClientRequest(WSEvent::APISetResolutionRequest, client_id),
-          m_resolution(width, height)
+        : WSAPIClientRequest(WSEvent::APISetResolutionRequest, client_id)
+        , m_resolution(width, height)
     {
     }
 
-    Size resolution() const {
+    Size resolution() const
+    {
         return m_resolution;
     }
 
@@ -563,10 +611,12 @@ public:
     {
     }
 
-    int window_id() const {
+    int window_id() const
+    {
         return m_window_id;
     }
-    String title() const {
+    String title() const
+    {
         return m_title;
     }
 
@@ -583,7 +633,8 @@ public:
     {
     }
 
-    int window_id() const {
+    int window_id() const
+    {
         return m_window_id;
     }
 
@@ -599,7 +650,8 @@ public:
     {
     }
 
-    int window_id() const {
+    int window_id() const
+    {
         return m_window_id;
     }
 
@@ -616,10 +668,12 @@ public:
     {
     }
 
-    int window_id() const {
+    int window_id() const
+    {
         return m_window_id;
     }
-    bool fullscreen() const {
+    bool fullscreen() const
+    {
         return m_fullscreen;
     }
 
@@ -638,13 +692,16 @@ public:
     {
     }
 
-    int shared_buffer_id() const {
+    int shared_buffer_id() const
+    {
         return m_shared_buffer_id;
     }
-    int size() const {
+    int size() const
+    {
         return m_size;
     }
-    const String& data_type() const {
+    const String& data_type() const
+    {
         return m_data_type;
     }
 
@@ -671,10 +728,12 @@ public:
     {
     }
 
-    int window_id() const {
+    int window_id() const
+    {
         return m_window_id;
     }
-    float opacity() const {
+    float opacity() const
+    {
         return m_opacity;
     }
 
@@ -697,25 +756,32 @@ public:
     {
     }
 
-    int window_id() const {
+    int window_id() const
+    {
         return m_window_id;
     }
-    int shared_buffer_id() const {
+    int shared_buffer_id() const
+    {
         return m_shared_buffer_id;
     }
-    Size size() const {
+    Size size() const
+    {
         return m_size;
     }
-    size_t bpp() const {
+    size_t bpp() const
+    {
         return m_bpp;
     }
-    size_t pitch() const {
+    size_t pitch() const
+    {
         return m_pitch;
     }
-    bool has_alpha_channel() const {
+    bool has_alpha_channel() const
+    {
         return m_has_alpha_channel;
     }
-    bool flush_immediately() const {
+    bool flush_immediately() const
+    {
         return m_flush_immediately;
     }
 
@@ -738,10 +804,12 @@ public:
     {
     }
 
-    int window_id() const {
+    int window_id() const
+    {
         return m_window_id;
     }
-    Rect rect() const {
+    Rect rect() const
+    {
         return m_rect;
     }
 
@@ -760,13 +828,16 @@ public:
     {
     }
 
-    int window_id() const {
+    int window_id() const
+    {
         return m_window_id;
     }
-    int icon_buffer_id() const {
+    int icon_buffer_id() const
+    {
         return m_icon_buffer_id;
     }
-    const Size& icon_size() const {
+    const Size& icon_size() const
+    {
         return m_icon_size;
     }
 
@@ -784,7 +855,8 @@ public:
     {
     }
 
-    int window_id() const {
+    int window_id() const
+    {
         return m_window_id;
     }
 
@@ -811,40 +883,52 @@ public:
     {
     }
 
-    Rect rect() const {
+    Rect rect() const
+    {
         return m_rect;
     }
-    String title() const {
+    String title() const
+    {
         return m_title;
     }
-    bool has_alpha_channel() const {
+    bool has_alpha_channel() const
+    {
         return m_has_alpha_channel;
     }
-    bool is_modal() const {
+    bool is_modal() const
+    {
         return m_modal;
     }
-    bool is_resizable() const {
+    bool is_resizable() const
+    {
         return m_resizable;
     }
-    bool is_fullscreen() const {
+    bool is_fullscreen() const
+    {
         return m_fullscreen;
     }
-    bool show_titlebar() const {
+    bool show_titlebar() const
+    {
         return m_show_titlebar;
     }
-    float opacity() const {
+    float opacity() const
+    {
         return m_opacity;
     }
-    Size size_increment() const {
+    Size size_increment() const
+    {
         return m_size_increment;
     }
-    Size base_size() const {
+    Size base_size() const
+    {
         return m_base_size;
     }
-    WSWindowType window_type() const {
+    WSWindowType window_type() const
+    {
         return m_window_type;
     }
-    Color background_color() const {
+    Color background_color() const
+    {
         return m_background_color;
     }
 
@@ -871,7 +955,8 @@ public:
     {
     }
 
-    int window_id() const {
+    int window_id() const
+    {
         return m_window_id;
     }
 
@@ -888,10 +973,12 @@ public:
     {
     }
 
-    int window_id() const {
+    int window_id() const
+    {
         return m_window_id;
     }
-    const Vector<Rect, 32>& rects() const {
+    const Vector<Rect, 32>& rects() const
+    {
         return m_rects;
     }
 
@@ -908,7 +995,8 @@ public:
     {
     }
 
-    int window_id() const {
+    int window_id() const
+    {
         return m_window_id;
     }
 
@@ -925,10 +1013,12 @@ public:
     {
     }
 
-    int window_id() const {
+    int window_id() const
+    {
         return m_window_id;
     }
-    const Vector<Rect, 32>& rects() const {
+    const Vector<Rect, 32>& rects() const
+    {
         return m_rects;
     }
 
@@ -954,25 +1044,32 @@ public:
     {
     }
 
-    int key() const {
+    int key() const
+    {
         return m_key;
     }
-    bool ctrl() const {
+    bool ctrl() const
+    {
         return m_modifiers & Mod_Ctrl;
     }
-    bool alt() const {
+    bool alt() const
+    {
         return m_modifiers & Mod_Alt;
     }
-    bool shift() const {
+    bool shift() const
+    {
         return m_modifiers & Mod_Shift;
     }
-    bool logo() const {
+    bool logo() const
+    {
         return m_modifiers & Mod_Logo;
     }
-    u8 modifiers() const {
+    u8 modifiers() const
+    {
         return m_modifiers;
     }
-    char character() const {
+    char character() const
+    {
         return m_character;
     }
 
@@ -996,29 +1093,37 @@ public:
     {
     }
 
-    Point position() const {
+    Point position() const
+    {
         return m_position;
     }
-    int x() const {
+    int x() const
+    {
         return m_position.x();
     }
-    int y() const {
+    int y() const
+    {
         return m_position.y();
     }
-    MouseButton button() const {
+    MouseButton button() const
+    {
         return m_button;
     }
-    unsigned buttons() const {
+    unsigned buttons() const
+    {
         return m_buttons;
     }
-    unsigned modifiers() const {
+    unsigned modifiers() const
+    {
         return m_modifiers;
     }
-    int wheel_delta() const {
+    int wheel_delta() const
+    {
         return m_wheel_delta;
     }
 
-    WSMouseEvent translated(const Point& delta) const {
+    WSMouseEvent translated(const Point& delta) const
+    {
         return WSMouseEvent((Type)type(), m_position.translated(delta), m_buttons, m_button, m_modifiers, m_wheel_delta);
     }
 
@@ -1039,10 +1144,12 @@ public:
     {
     }
 
-    Rect old_rect() const {
+    Rect old_rect() const
+    {
         return m_old_rect;
     }
-    Rect rect() const {
+    Rect rect() const
+    {
         return m_rect;
     }
 
@@ -1060,10 +1167,12 @@ public:
     {
     }
 
-    int client_id() const {
+    int client_id() const
+    {
         return m_client_id;
     }
-    int window_id() const {
+    int window_id() const
+    {
         return m_window_id;
     }
 
@@ -1092,19 +1201,24 @@ public:
     {
     }
 
-    String title() const {
+    String title() const
+    {
         return m_title;
     }
-    Rect rect() const {
+    Rect rect() const
+    {
         return m_rect;
     }
-    bool is_active() const {
+    bool is_active() const
+    {
         return m_active;
     }
-    WSWindowType window_type() const {
+    WSWindowType window_type() const
+    {
         return m_window_type;
     }
-    bool is_minimized() const {
+    bool is_minimized() const
+    {
         return m_minimized;
     }
 
@@ -1125,10 +1239,12 @@ public:
     {
     }
 
-    int icon_buffer_id() const {
+    int icon_buffer_id() const
+    {
         return m_icon_buffer_id;
     }
-    const Size icon_size() const {
+    const Size icon_size() const
+    {
         return m_icon_size;
     }
 
@@ -1145,7 +1261,8 @@ public:
     {
     }
 
-    Rect rect() const {
+    Rect rect() const
+    {
         return m_rect;
     }
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <AK/String.h>
 #include <AK/HashMap.h>
+#include <AK/String.h>
 
 struct CProcessStatistics {
     // Keep this in sync with /proc/all.

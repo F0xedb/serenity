@@ -12,7 +12,8 @@ class PhysicalPage {
 
     MAKE_SLAB_ALLOCATED(PhysicalPage)
 public:
-    PhysicalAddress paddr() const {
+    PhysicalAddress paddr() const
+    {
         return m_paddr;
     }
 
@@ -34,7 +35,8 @@ public:
 
     static NonnullRefPtr<PhysicalPage> create(PhysicalAddress, bool supervisor, bool may_return_to_freelist = true);
 
-    u16 ref_count() const {
+    u16 ref_count() const
+    {
         return m_retain_count;
     }
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <AK/String.h>
 #include <AK/Badge.h>
 #include <AK/HashMap.h>
+#include <AK/String.h>
 #include <LibCore/CElapsedTimer.h>
 #include <LibCore/CObject.h>
 #include <LibDraw/Color.h>
@@ -47,50 +47,62 @@ class GWidget : public CObject {
 public:
     virtual ~GWidget() override;
 
-    GLayout* layout() {
+    GLayout* layout()
+    {
         return m_layout.ptr();
     }
-    const GLayout* layout() const {
+    const GLayout* layout() const
+    {
         return m_layout.ptr();
     }
     void set_layout(OwnPtr<GLayout>&&);
 
-    SizePolicy horizontal_size_policy() const {
+    SizePolicy horizontal_size_policy() const
+    {
         return m_horizontal_size_policy;
     }
-    SizePolicy vertical_size_policy() const {
+    SizePolicy vertical_size_policy() const
+    {
         return m_vertical_size_policy;
     }
-    SizePolicy size_policy(Orientation orientation) {
+    SizePolicy size_policy(Orientation orientation)
+    {
         return orientation == Orientation::Horizontal ? m_horizontal_size_policy : m_vertical_size_policy;
     }
     void set_size_policy(SizePolicy horizontal_policy, SizePolicy vertical_policy);
     void set_size_policy(Orientation, SizePolicy);
 
-    Size preferred_size() const {
+    Size preferred_size() const
+    {
         return m_preferred_size;
     }
     void set_preferred_size(const Size&);
-    void set_preferred_size(int width, int height) {
+    void set_preferred_size(int width, int height)
+    {
         set_preferred_size({ width, height });
     }
 
-    bool has_tooltip() const {
+    bool has_tooltip() const
+    {
         return !m_tooltip.is_empty();
     }
-    String tooltip() const {
+    String tooltip() const
+    {
         return m_tooltip;
     }
-    void set_tooltip(const StringView& tooltip) {
+    void set_tooltip(const StringView& tooltip)
+    {
         m_tooltip = tooltip;
     }
 
-    bool is_enabled() const {
+    bool is_enabled() const
+    {
         return m_enabled;
     }
     void set_enabled(bool);
 
-    bool updates_enabled() const {
+    bool updates_enabled() const
+    {
         return m_updates_enabled;
     }
     void set_updates_enabled(bool);
@@ -100,53 +112,65 @@ public:
     // This is called after children have been painted.
     virtual void second_paint_event(GPaintEvent&);
 
-    Rect relative_rect() const {
+    Rect relative_rect() const
+    {
         return m_relative_rect;
     }
-    Point relative_position() const {
+    Point relative_position() const
+    {
         return m_relative_rect.location();
     }
 
     Rect window_relative_rect() const;
     Rect screen_relative_rect() const;
 
-    int x() const {
+    int x() const
+    {
         return m_relative_rect.x();
     }
-    int y() const {
+    int y() const
+    {
         return m_relative_rect.y();
     }
-    int width() const {
+    int width() const
+    {
         return m_relative_rect.width();
     }
-    int height() const {
+    int height() const
+    {
         return m_relative_rect.height();
     }
-    int length(Orientation orientation) const {
+    int length(Orientation orientation) const
+    {
         return orientation == Orientation::Vertical ? height() : width();
     }
 
-    Rect rect() const {
+    Rect rect() const
+    {
         return { 0, 0, width(), height() };
     }
-    Size size() const {
+    Size size() const
+    {
         return m_relative_rect.size();
     }
 
     void update();
     void update(const Rect&);
 
-    virtual bool accepts_focus() const {
+    virtual bool accepts_focus() const
+    {
         return false;
     }
-    virtual bool supports_keyboard_activation() const {
+    virtual bool supports_keyboard_activation() const
+    {
         return false;
     }
 
     bool is_focused() const;
     void set_focus(bool);
 
-    enum class ShouldRespectGreediness { No = 0, Yes };
+    enum class ShouldRespectGreediness { No = 0,
+        Yes };
     struct HitTestResult {
         GWidget* widget { nullptr };
         Point local_position;
@@ -155,61 +179,77 @@ public:
     GWidget* child_at(const Point&) const;
 
     void set_relative_rect(const Rect&);
-    void set_relative_rect(int x, int y, int width, int height) {
+    void set_relative_rect(int x, int y, int width, int height)
+    {
         set_relative_rect({ x, y, width, height });
     }
 
-    void set_x(int x) {
+    void set_x(int x)
+    {
         set_relative_rect(x, y(), width(), height());
     }
-    void set_y(int y) {
+    void set_y(int y)
+    {
         set_relative_rect(x(), y, width(), height());
     }
-    void set_width(int width) {
+    void set_width(int width)
+    {
         set_relative_rect(x(), y(), width, height());
     }
-    void set_height(int height) {
+    void set_height(int height)
+    {
         set_relative_rect(x(), y(), width(), height);
     }
 
-    void move_to(const Point& point) {
+    void move_to(const Point& point)
+    {
         set_relative_rect({ point, relative_rect().size() });
     }
-    void move_to(int x, int y) {
+    void move_to(int x, int y)
+    {
         move_to({ x, y });
     }
-    void resize(const Size& size) {
+    void resize(const Size& size)
+    {
         set_relative_rect({ relative_rect().location(), size });
     }
-    void resize(int width, int height) {
+    void resize(int width, int height)
+    {
         resize({ width, height });
     }
 
-    void move_by(int x, int y) {
+    void move_by(int x, int y)
+    {
         move_by({ x, y });
     }
-    void move_by(const Point& delta) {
+    void move_by(const Point& delta)
+    {
         set_relative_rect({ relative_position().translated(delta), size() });
     }
 
-    Color background_color() const {
+    Color background_color() const
+    {
         return m_background_color;
     }
-    Color foreground_color() const {
+    Color foreground_color() const
+    {
         return m_foreground_color;
     }
 
-    void set_background_color(Color color) {
+    void set_background_color(Color color)
+    {
         m_background_color = color;
     }
-    void set_foreground_color(Color color) {
+    void set_foreground_color(Color color)
+    {
         m_foreground_color = color;
     }
 
     void set_backcolor(const StringView&);
     void set_forecolor(const StringView&);
 
-    void set_autofill(bool b) {
+    void set_autofill(bool b)
+    {
         set_fill_with_background_color(b);
     }
 
@@ -232,18 +272,22 @@ public:
     GWidget* parent_widget();
     const GWidget* parent_widget() const;
 
-    void set_fill_with_background_color(bool b) {
+    void set_fill_with_background_color(bool b)
+    {
         m_fill_with_background_color = b;
     }
-    bool fill_with_background_color() const {
+    bool fill_with_background_color() const
+    {
         return m_fill_with_background_color;
     }
 
-    const Font& font() const {
+    const Font& font() const
+    {
         return *m_font;
     }
     void set_font(const Font*);
-    void set_font(const Font& font) {
+    void set_font(const Font& font)
+    {
         set_font(&font);
     }
 
@@ -253,17 +297,20 @@ public:
     void notify_layout_changed(Badge<GLayout>);
     void invalidate_layout();
 
-    bool is_visible() const {
+    bool is_visible() const
+    {
         return m_visible;
     }
     void set_visible(bool);
 
     bool spans_entire_window_horizontally() const;
 
-    bool is_greedy_for_hits() const {
+    bool is_greedy_for_hits() const
+    {
         return m_greedy_for_hits;
     }
-    void set_greedy_for_hits(bool b) {
+    void set_greedy_for_hits(bool b)
+    {
         m_greedy_for_hits = b;
     }
 
@@ -288,10 +335,12 @@ public:
         });
     }
 
-    virtual bool is_radio_button() const {
+    virtual bool is_radio_button() const
+    {
         return false;
     }
-    virtual bool is_abstract_button() const {
+    virtual bool is_abstract_button() const
+    {
         return false;
     }
 

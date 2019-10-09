@@ -1,10 +1,10 @@
+#include "UI_HelloWorld2.h"
 #include <LibGUI/GApplication.h>
 #include <LibGUI/GBoxLayout.h>
 #include <LibGUI/GButton.h>
 #include <LibGUI/GLabel.h>
 #include <LibGUI/GWidget.h>
 #include <LibGUI/GWindow.h>
-#include "UI_HelloWorld2.h"
 
 int main(int argc, char** argv)
 {

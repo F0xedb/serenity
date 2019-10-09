@@ -8,23 +8,29 @@ public:
     BoxModelMetrics();
     ~BoxModelMetrics();
 
-    LengthBox& margin() {
+    LengthBox& margin()
+    {
         return m_margin;
     }
-    LengthBox& padding() {
+    LengthBox& padding()
+    {
         return m_padding;
     }
-    LengthBox& border() {
+    LengthBox& border()
+    {
         return m_border;
     }
 
-    const LengthBox& margin() const {
+    const LengthBox& margin() const
+    {
         return m_margin;
     }
-    const LengthBox& padding() const {
+    const LengthBox& padding() const
+    {
         return m_padding;
     }
-    const LengthBox& border() const {
+    const LengthBox& border() const
+    {
         return m_border;
     }
 

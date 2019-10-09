@@ -13,10 +13,12 @@ public:
     void restart(int interval);
     void stop();
 
-    bool is_active() const {
+    bool is_active() const
+    {
         return m_active;
     }
-    int interval() const {
+    int interval() const
+    {
         return m_interval;
     }
     void set_interval(int interval)
@@ -27,10 +29,12 @@ public:
         m_interval_dirty = true;
     }
 
-    bool is_single_shot() const {
+    bool is_single_shot() const
+    {
         return m_single_shot;
     }
-    void set_single_shot(bool single_shot) {
+    void set_single_shot(bool single_shot)
+    {
         m_single_shot = single_shot;
     }
 

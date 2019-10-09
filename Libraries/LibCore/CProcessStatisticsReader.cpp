@@ -70,4 +70,3 @@ String CProcessStatisticsReader::username_from_uid(uid_t uid)
         return (*it).value;
     return String::number(uid);
 }
-

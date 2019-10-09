@@ -8,25 +8,30 @@ class GlyphMapWidget final : public GFrame {
 public:
     virtual ~GlyphMapWidget() override;
 
-    u8 selected_glyph() const {
+    u8 selected_glyph() const
+    {
         return m_selected_glyph;
     }
     void set_selected_glyph(u8);
 
-    int rows() const {
+    int rows() const
+    {
         return m_rows;
     }
-    int columns() const {
+    int columns() const
+    {
         return 256 / m_rows;
     }
 
     int preferred_width() const;
     int preferred_height() const;
 
-    Font& font() {
+    Font& font()
+    {
         return *m_font;
     }
-    const Font& font() const {
+    const Font& font() const
+    {
         return *m_font;
     }
 

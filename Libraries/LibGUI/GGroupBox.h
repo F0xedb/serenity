@@ -7,7 +7,8 @@ class GGroupBox : public GWidget {
 public:
     virtual ~GGroupBox() override;
 
-    String title() const {
+    String title() const
+    {
         return m_title;
     }
     void set_title(const StringView&);

@@ -178,7 +178,7 @@ VFS* vfs;
 }
 
 extern "C" {
-    multiboot_info_t* multiboot_info_ptr;
+multiboot_info_t* multiboot_info_ptr;
 }
 
 extern "C" [[noreturn]] void init()
@@ -245,11 +245,11 @@ extern "C" [[noreturn]] void init()
 
     PCI::enumerate_all([](const PCI::Address& address, PCI::ID id) {
         kprintf("PCI device: bus=%d slot=%d function=%d id=%w:%w\n",
-                address.bus(),
-                address.slot(),
-                address.function(),
-                id.vendor_id,
-                id.device_id);
+            address.bus(),
+            address.slot(),
+            address.function(),
+            id.vendor_id,
+            id.device_id);
     });
 
     if (multiboot_info_ptr->framebuffer_type == 1) {

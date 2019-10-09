@@ -10,16 +10,19 @@ public:
     explicit LayoutText(const Text&);
     virtual ~LayoutText() override;
 
-    const Text& node() const {
+    const Text& node() const
+    {
         return static_cast<const Text&>(*LayoutNode::node());
     }
 
     const String& text_for_style(const StyleProperties&) const;
 
-    virtual const char* class_name() const override {
+    virtual const char* class_name() const override
+    {
         return "LayoutText";
     }
-    virtual bool is_text() const final {
+    virtual bool is_text() const final
+    {
         return true;
     }
 
@@ -27,7 +30,8 @@ public:
 
     virtual void split_into_lines(LayoutBlock& container) override;
 
-    const StyleProperties& style() const {
+    const StyleProperties& style() const
+    {
         return parent()->style();
     }
 

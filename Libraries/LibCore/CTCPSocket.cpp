@@ -1,6 +1,6 @@
 #include <LibCore/CTCPSocket.h>
-#include <sys/socket.h>
 #include <errno.h>
+#include <sys/socket.h>
 
 CTCPSocket::CTCPSocket(int fd, CObject* parent)
     : CSocket(CSocket::Type::TCP, parent)

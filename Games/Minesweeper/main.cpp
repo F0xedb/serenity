@@ -52,9 +52,7 @@ int main(int argc, char** argv)
         field->reset();
     }));
 
-
     app_menu->add_separator();
-
 
     NonnullRefPtr<GAction> chord_toggler_action = GAction::create("Single-click chording", [&](const GAction&) {
         bool toggled = !field->is_single_chording();

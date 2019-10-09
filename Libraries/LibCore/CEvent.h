@@ -1,7 +1,7 @@
 #pragma once
 
-#include <AK/String.h>
 #include <AK/Function.h>
+#include <AK/String.h>
 #include <AK/Types.h>
 #include <AK/WeakPtr.h>
 
@@ -28,17 +28,21 @@ public:
     }
     virtual ~CEvent() {}
 
-    unsigned type() const {
+    unsigned type() const
+    {
         return m_type;
     }
 
-    bool is_accepted() const {
+    bool is_accepted() const
+    {
         return m_accepted;
     }
-    void accept() {
+    void accept()
+    {
         m_accepted = true;
     }
-    void ignore() {
+    void ignore()
+    {
         m_accepted = false;
     }
 
@@ -70,7 +74,8 @@ public:
     }
     ~CTimerEvent() {}
 
-    int timer_id() const {
+    int timer_id() const
+    {
         return m_timer_id;
     }
 
@@ -87,7 +92,8 @@ public:
     }
     ~CNotifierReadEvent() {}
 
-    int fd() const {
+    int fd() const
+    {
         return m_fd;
     }
 
@@ -104,7 +110,8 @@ public:
     }
     ~CNotifierWriteEvent() {}
 
-    int fd() const {
+    int fd() const
+    {
         return m_fd;
     }
 
@@ -117,10 +124,12 @@ public:
     CChildEvent(Type, CObject& child);
     ~CChildEvent();
 
-    CObject* child() {
+    CObject* child()
+    {
         return m_child.ptr();
     }
-    const CObject* child() const {
+    const CObject* child() const
+    {
         return m_child.ptr();
     }
 
@@ -138,13 +147,16 @@ public:
     }
     ~CCustomEvent() {}
 
-    int custom_type() const {
+    int custom_type() const
+    {
         return m_custom_type;
     }
-    void* data() {
+    void* data()
+    {
         return m_data;
     }
-    const void* data() const {
+    const void* data() const
+    {
         return m_data;
     }
 

@@ -1,7 +1,7 @@
-#include <LibThread/BackgroundAction.h>
-#include <LibThread/Thread.h>
-#include <LibThread/Lock.h>
 #include <AK/Queue.h>
+#include <LibThread/BackgroundAction.h>
+#include <LibThread/Lock.h>
+#include <LibThread/Thread.h>
 
 static LibThread::Lockable<Queue<Function<void()>>>* s_all_actions;
 static LibThread::Thread* s_background_thread;

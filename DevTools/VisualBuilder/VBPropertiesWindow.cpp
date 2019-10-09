@@ -9,10 +9,12 @@
 
 class BoolValuesModel final : public GModel {
 public:
-    virtual int row_count(const GModelIndex&) const override {
+    virtual int row_count(const GModelIndex&) const override
+    {
         return 2;
     }
-    virtual int column_count(const GModelIndex&) const override {
+    virtual int column_count(const GModelIndex&) const override
+    {
         return 1;
     }
     virtual void update() override {}
@@ -46,10 +48,12 @@ public:
         };
         return combo;
     }
-    virtual GVariant value() const override {
+    virtual GVariant value() const override
+    {
         return static_cast<const GComboBox*>(widget())->text() == "true";
     }
-    virtual void set_value(const GVariant& value) override {
+    virtual void set_value(const GVariant& value) override
+    {
         static_cast<GComboBox*>(widget())->set_text(value.to_string());
     }
     virtual void will_begin_editing() override

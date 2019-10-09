@@ -24,29 +24,36 @@ class LayoutNode : public TreeNode<LayoutNode> {
 public:
     virtual ~LayoutNode();
 
-    const Rect& rect() const {
+    const Rect& rect() const
+    {
         return m_rect;
     }
-    Rect& rect() {
+    Rect& rect()
+    {
         return m_rect;
     }
-    void set_rect(const Rect& rect) {
+    void set_rect(const Rect& rect)
+    {
         m_rect = rect;
     }
 
-    BoxModelMetrics& box_model() {
+    BoxModelMetrics& box_model()
+    {
         return m_box_metrics;
     }
-    const BoxModelMetrics& box_model() const {
+    const BoxModelMetrics& box_model() const
+    {
         return m_box_metrics;
     }
 
     virtual HitTestResult hit_test(const Point&) const;
 
-    bool is_anonymous() const {
+    bool is_anonymous() const
+    {
         return !m_node;
     }
-    const Node* node() const {
+    const Node* node() const
+    {
         return m_node;
     }
 
@@ -66,23 +73,29 @@ public:
             callback(*node);
     }
 
-    virtual const char* class_name() const {
+    virtual const char* class_name() const
+    {
         return "LayoutNode";
     }
-    virtual bool is_text() const {
+    virtual bool is_text() const
+    {
         return false;
     }
-    virtual bool is_block() const {
+    virtual bool is_block() const
+    {
         return false;
     }
-    virtual bool is_replaced() const {
+    virtual bool is_replaced() const
+    {
         return false;
     }
 
-    bool is_inline() const {
+    bool is_inline() const
+    {
         return m_inline;
     }
-    void set_inline(bool b) {
+    void set_inline(bool b)
+    {
         m_inline = b;
     }
 
@@ -91,7 +104,8 @@ public:
 
     const LayoutBlock* containing_block() const;
 
-    virtual LayoutNode& inline_wrapper() {
+    virtual LayoutNode& inline_wrapper()
+    {
         return *this;
     }
 
@@ -122,7 +136,8 @@ class LayoutNodeWithStyle : public LayoutNode {
 public:
     virtual ~LayoutNodeWithStyle() override {}
 
-    const StyleProperties& style() const {
+    const StyleProperties& style() const
+    {
         return m_style;
     }
 

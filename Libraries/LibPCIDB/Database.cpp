@@ -154,7 +154,6 @@ int Database::init()
 
     auto lines = m_view.split_view('\n');
 
-
     for (auto& line : lines) {
         if (line.length() < 2 || line[0] == '#')
             continue;
@@ -216,7 +215,6 @@ int Database::init()
     commit_all();
 
     m_ready = true;
-
 
     return 0;
 }

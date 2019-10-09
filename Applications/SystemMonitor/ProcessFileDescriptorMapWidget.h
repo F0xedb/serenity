@@ -6,6 +6,7 @@ class GTableView;
 
 class ProcessFileDescriptorMapWidget final : public GWidget {
     C_OBJECT(ProcessFileDescriptorMapWidget);
+
 public:
     virtual ~ProcessFileDescriptorMapWidget() override;
 

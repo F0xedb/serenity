@@ -1,11 +1,11 @@
 #include <AK/HashTable.h>
 #include <AK/StringBuilder.h>
+#include <Kernel/Heap/kmalloc.h>
 #include <Kernel/Lock.h>
 #include <Kernel/Net/EtherType.h>
 #include <Kernel/Net/EthernetFrameHeader.h>
 #include <Kernel/Net/NetworkAdapter.h>
 #include <Kernel/StdLib.h>
-#include <Kernel/Heap/kmalloc.h>
 
 static Lockable<HashTable<NetworkAdapter*>>& all_adapters()
 {

@@ -31,32 +31,40 @@ public:
         Identifier,
     };
 
-    Type type() const {
+    Type type() const
+    {
         return m_type;
     }
 
-    bool is_inherit() const {
+    bool is_inherit() const
+    {
         return type() == Type::Inherit;
     }
-    bool is_initial() const {
+    bool is_initial() const
+    {
         return type() == Type::Initial;
     }
-    bool is_color() const {
+    bool is_color() const
+    {
         return type() == Type::Color;
     }
-    bool is_identifier() const {
+    bool is_identifier() const
+    {
         return type() == Type::Identifier;
     }
 
     virtual String to_string() const = 0;
-    virtual Length to_length() const {
+    virtual Length to_length() const
+    {
         return {};
     }
-    virtual Color to_color(const Document&) const {
+    virtual Color to_color(const Document&) const
+    {
         return {};
     }
 
-    virtual bool is_auto() const {
+    virtual bool is_auto() const
+    {
         return false;
     }
 
@@ -75,7 +83,8 @@ public:
     }
     virtual ~StringStyleValue() override {}
 
-    String to_string() const override {
+    String to_string() const override
+    {
         return m_string;
     }
 
@@ -97,18 +106,22 @@ public:
     }
     virtual ~LengthStyleValue() override {}
 
-    virtual String to_string() const override {
+    virtual String to_string() const override
+    {
         return m_length.to_string();
     }
-    virtual Length to_length() const override {
+    virtual Length to_length() const override
+    {
         return m_length;
     }
 
-    const Length& length() const {
+    const Length& length() const
+    {
         return m_length;
     }
 
-    virtual bool is_auto() const override {
+    virtual bool is_auto() const override
+    {
         return m_length.is_auto();
     }
 
@@ -124,12 +137,14 @@ private:
 
 class InitialStyleValue final : public StyleValue {
 public:
-    static NonnullRefPtr<InitialStyleValue> create() {
+    static NonnullRefPtr<InitialStyleValue> create()
+    {
         return adopt(*new InitialStyleValue);
     }
     virtual ~InitialStyleValue() override {}
 
-    String to_string() const override {
+    String to_string() const override
+    {
         return "initial";
     }
 
@@ -142,12 +157,14 @@ private:
 
 class InheritStyleValue final : public StyleValue {
 public:
-    static NonnullRefPtr<InheritStyleValue> create() {
+    static NonnullRefPtr<InheritStyleValue> create()
+    {
         return adopt(*new InheritStyleValue);
     }
     virtual ~InheritStyleValue() override {}
 
-    String to_string() const override {
+    String to_string() const override
+    {
         return "inherit";
     }
 
@@ -166,13 +183,16 @@ public:
     }
     virtual ~ColorStyleValue() override {}
 
-    Color color() const {
+    Color color() const
+    {
         return m_color;
     }
-    String to_string() const override {
+    String to_string() const override
+    {
         return m_color.to_string();
     }
-    Color to_color(const Document&) const override {
+    Color to_color(const Document&) const override
+    {
         return m_color;
     }
 
@@ -194,7 +214,8 @@ public:
     }
     virtual ~IdentifierStyleValue() override {}
 
-    CSS::ValueID id() const {
+    CSS::ValueID id() const
+    {
         return m_id;
     }
 

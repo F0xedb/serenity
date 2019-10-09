@@ -22,7 +22,8 @@ public:
 
     virtual ~GFilePicker() override;
 
-    FileSystemPath selected_file() const {
+    FileSystemPath selected_file() const
+    {
         return m_selected_file;
     }
 

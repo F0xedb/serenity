@@ -17,7 +17,8 @@ public:
         Style style;
     };
 
-    const Vector<Span>& spans() const {
+    const Vector<Span>& spans() const
+    {
         return m_spans;
     }
 

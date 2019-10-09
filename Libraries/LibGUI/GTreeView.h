@@ -21,25 +21,32 @@ protected:
 
 private:
     GModelIndex index_at_content_position(const Point&, bool& is_toggle) const;
-    int item_height() const {
+    int item_height() const
+    {
         return 16;
     }
-    int max_item_width() const {
+    int max_item_width() const
+    {
         return frame_inner_rect().width();
     }
-    int indent_width_in_pixels() const {
+    int indent_width_in_pixels() const
+    {
         return 16;
     }
-    int icon_size() const {
+    int icon_size() const
+    {
         return 16;
     }
-    int icon_spacing() const {
+    int icon_spacing() const
+    {
         return 2;
     }
-    int toggle_size() const {
+    int toggle_size() const
+    {
         return 9;
     }
-    int text_padding() const {
+    int text_padding() const
+    {
         return 2;
     }
     void update_content_size();

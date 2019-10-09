@@ -14,7 +14,8 @@ public:
     String get_line(const String& prompt);
 
     void add_to_history(const String&);
-    const Vector<String>& history() const {
+    const Vector<String>& history() const
+    {
         return m_history;
     }
 

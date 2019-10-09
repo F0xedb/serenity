@@ -23,10 +23,12 @@ public:
     Document();
     virtual ~Document() override;
 
-    void set_url(const URL& url) {
+    void set_url(const URL& url)
+    {
         m_url = url;
     }
-    const URL& url() const {
+    const URL& url() const
+    {
         return m_url;
     }
 
@@ -36,24 +38,30 @@ public:
 
     StyleResolver& style_resolver();
 
-    void add_sheet(const StyleSheet& sheet) {
+    void add_sheet(const StyleSheet& sheet)
+    {
         m_sheets.append(sheet);
     }
-    const NonnullRefPtrVector<StyleSheet>& stylesheets() const {
+    const NonnullRefPtrVector<StyleSheet>& stylesheets() const
+    {
         return m_sheets;
     }
 
-    virtual String tag_name() const override {
+    virtual String tag_name() const override
+    {
         return "#document";
     }
 
-    void set_hovered_node(Node* node) {
+    void set_hovered_node(Node* node)
+    {
         m_hovered_node = node;
     }
-    Node* hovered_node() {
+    Node* hovered_node()
+    {
         return m_hovered_node;
     }
-    const Node* hovered_node() const {
+    const Node* hovered_node() const
+    {
         return m_hovered_node;
     }
 
@@ -66,26 +74,31 @@ public:
     void attach_to_frame(Badge<Frame>, Frame&);
     void detach_from_frame(Badge<Frame>, Frame&);
 
-    Frame* frame() {
+    Frame* frame()
+    {
         return m_frame.ptr();
     }
-    const Frame* frame() const {
+    const Frame* frame() const
+    {
         return m_frame.ptr();
     }
 
     Color background_color() const;
 
-    Color link_color() const {
+    Color link_color() const
+    {
         return m_link_color;
     }
     void set_link_color(Color);
 
-    Color active_link_color() const {
+    Color active_link_color() const
+    {
         return m_active_link_color;
     }
     void set_active_link_color(Color);
 
-    Color visited_link_color() const {
+    Color visited_link_color() const
+    {
         return m_visited_link_color;
     }
     void set_visited_link_color(Color);

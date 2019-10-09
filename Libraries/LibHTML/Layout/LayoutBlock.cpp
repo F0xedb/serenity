@@ -98,8 +98,7 @@ void LayoutBlock::compute_width()
 
     int total_px = 0;
     for (auto& value : {
-                margin_left, border_left, padding_left, width, padding_right, border_right, margin_right
-            }) {
+             margin_left, border_left, padding_left, width, padding_right, border_right, margin_right }) {
         total_px += value.to_px();
     }
 

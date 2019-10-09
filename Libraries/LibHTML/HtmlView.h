@@ -11,18 +11,22 @@ class HtmlView : public GScrollableWidget {
 public:
     virtual ~HtmlView() override;
 
-    Document* document() {
+    Document* document()
+    {
         return m_document;
     }
-    const Document* document() const {
+    const Document* document() const
+    {
         return m_document;
     }
     void set_document(Document*);
 
-    Frame& main_frame() {
+    Frame& main_frame()
+    {
         return *m_main_frame;
     }
-    const Frame& main_frame() const {
+    const Frame& main_frame() const
+    {
         return *m_main_frame;
     }
 

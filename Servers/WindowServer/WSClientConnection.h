@@ -25,7 +25,8 @@ public:
     static WSClientConnection* from_client_id(int client_id);
     static void for_each_client(Function<void(WSClientConnection&)>);
 
-    WSMenuBar* app_menubar() {
+    WSMenuBar* app_menubar()
+    {
         return m_app_menubar.ptr();
     }
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <AK/String.h>
 #include <AK/InlineLinkedList.h>
+#include <AK/String.h>
 #include <LibCore/CObject.h>
 #include <LibDraw/DisjointRectSet.h>
 #include <LibDraw/GraphicsBitmap.h>
@@ -25,39 +25,48 @@ public:
     void popup_window_menu(const Point&);
     void request_close();
 
-    unsigned wm_event_mask() const {
+    unsigned wm_event_mask() const
+    {
         return m_wm_event_mask;
     }
-    void set_wm_event_mask(unsigned mask) {
+    void set_wm_event_mask(unsigned mask)
+    {
         m_wm_event_mask = mask;
     }
 
-    Color background_color() const {
+    Color background_color() const
+    {
         return m_background_color;
     }
-    void set_background_color(Color color) {
+    void set_background_color(Color color)
+    {
         m_background_color = color;
     }
 
-    bool is_minimized() const {
+    bool is_minimized() const
+    {
         return m_minimized;
     }
     void set_minimized(bool);
 
-    bool is_maximized() const {
+    bool is_maximized() const
+    {
         return m_maximized;
     }
     void set_maximized(bool);
 
-    bool is_fullscreen() const {
+    bool is_fullscreen() const
+    {
         return m_fullscreen;
     }
     void set_fullscreen(bool);
 
-    bool show_titlebar() const {
+    bool show_titlebar() const
+    {
         return m_show_titlebar;
     }
-    void set_show_titlebar(bool show) {
+    void set_show_titlebar(bool show)
+    {
         m_show_titlebar = show;
     }
 
@@ -66,78 +75,97 @@ public:
         return m_type == WSWindowType::Normal || m_type == WSWindowType::Launcher;
     }
 
-    WSWindowFrame& frame() {
+    WSWindowFrame& frame()
+    {
         return m_frame;
     }
-    const WSWindowFrame& frame() const {
+    const WSWindowFrame& frame() const
+    {
         return m_frame;
     }
 
     bool is_blocked_by_modal_window() const;
 
-    bool listens_to_wm_events() const {
+    bool listens_to_wm_events() const
+    {
         return m_listens_to_wm_events;
     }
 
-    WSClientConnection* client() {
+    WSClientConnection* client()
+    {
         return m_client;
     }
-    const WSClientConnection* client() const {
+    const WSClientConnection* client() const
+    {
         return m_client;
     }
 
-    WSWindowType type() const {
+    WSWindowType type() const
+    {
         return m_type;
     }
-    int window_id() const {
+    int window_id() const
+    {
         return m_window_id;
     }
 
-    String title() const {
+    String title() const
+    {
         return m_title;
     }
     void set_title(const String&);
 
-    float opacity() const {
+    float opacity() const
+    {
         return m_opacity;
     }
-    void set_opacity(float opacity) {
+    void set_opacity(float opacity)
+    {
         m_opacity = opacity;
     }
 
-    int x() const {
+    int x() const
+    {
         return m_rect.x();
     }
-    int y() const {
+    int y() const
+    {
         return m_rect.y();
     }
-    int width() const {
+    int width() const
+    {
         return m_rect.width();
     }
-    int height() const {
+    int height() const
+    {
         return m_rect.height();
     }
 
     bool is_active() const;
 
-    bool is_visible() const {
+    bool is_visible() const
+    {
         return m_visible;
     }
     void set_visible(bool);
 
-    bool is_modal() const {
+    bool is_modal() const
+    {
         return m_modal;
     }
 
-    bool is_resizable() const {
+    bool is_resizable() const
+    {
         return m_resizable && !m_fullscreen;
     }
 
-    Rect rect() const {
+    Rect rect() const
+    {
         return m_rect;
     }
     void set_rect(const Rect&);
-    void set_rect(int x, int y, int width, int height) {
+    void set_rect(int x, int y, int width, int height)
+    {
         set_rect({ x, y, width, height });
     }
     void set_rect_without_repaint(const Rect& rect)
@@ -151,24 +179,30 @@ public:
 
     void set_rect_from_window_manager_resize(const Rect&);
 
-    void move_to(const Point& position) {
+    void move_to(const Point& position)
+    {
         set_rect({ position, size() });
     }
-    void move_to(int x, int y) {
+    void move_to(int x, int y)
+    {
         move_to({ x, y });
     }
 
-    Point position() const {
+    Point position() const
+    {
         return m_rect.location();
     }
-    void set_position(const Point& position) {
+    void set_position(const Point& position)
+    {
         set_rect({ position.x(), position.y(), width(), height() });
     }
-    void set_position_without_repaint(const Point& position) {
+    void set_position_without_repaint(const Point& position)
+    {
         set_rect_without_repaint({ position.x(), position.y(), width(), height() });
     }
 
-    Size size() const {
+    Size size() const
+    {
         return m_rect.size();
     }
 
@@ -176,7 +210,8 @@ public:
 
     virtual void event(CEvent&) override;
 
-    GraphicsBitmap* backing_store() {
+    GraphicsBitmap* backing_store()
+    {
         return m_backing_store.ptr();
     }
     void set_backing_store(RefPtr<GraphicsBitmap>&& backing_store)
@@ -189,57 +224,71 @@ public:
         swap(m_backing_store, m_last_backing_store);
     }
 
-    GraphicsBitmap* last_backing_store() {
+    GraphicsBitmap* last_backing_store()
+    {
         return m_last_backing_store.ptr();
     }
 
     void set_global_cursor_tracking_enabled(bool);
-    void set_automatic_cursor_tracking_enabled(bool enabled) {
+    void set_automatic_cursor_tracking_enabled(bool enabled)
+    {
         m_automatic_cursor_tracking_enabled = enabled;
     }
-    bool global_cursor_tracking() const {
+    bool global_cursor_tracking() const
+    {
         return m_global_cursor_tracking_enabled || m_automatic_cursor_tracking_enabled;
     }
 
-    bool has_alpha_channel() const {
+    bool has_alpha_channel() const
+    {
         return m_has_alpha_channel;
     }
-    void set_has_alpha_channel(bool value) {
+    void set_has_alpha_channel(bool value)
+    {
         m_has_alpha_channel = value;
     }
 
-    Size size_increment() const {
+    Size size_increment() const
+    {
         return m_size_increment;
     }
-    void set_size_increment(const Size& increment) {
+    void set_size_increment(const Size& increment)
+    {
         m_size_increment = increment;
     }
 
-    Size base_size() const {
+    Size base_size() const
+    {
         return m_base_size;
     }
-    void set_base_size(const Size& size) {
+    void set_base_size(const Size& size)
+    {
         m_base_size = size;
     }
 
-    const GraphicsBitmap& icon() const {
+    const GraphicsBitmap& icon() const
+    {
         return *m_icon;
     }
-    void set_icon(NonnullRefPtr<GraphicsBitmap>&& icon) {
+    void set_icon(NonnullRefPtr<GraphicsBitmap>&& icon)
+    {
         m_icon = move(icon);
     }
 
     void set_default_icon();
 
-    const WSCursor* override_cursor() const {
+    const WSCursor* override_cursor() const
+    {
         return m_override_cursor.ptr();
     }
-    void set_override_cursor(RefPtr<WSCursor>&& cursor) {
+    void set_override_cursor(RefPtr<WSCursor>&& cursor)
+    {
         m_override_cursor = move(cursor);
     }
 
     void request_update(const Rect&);
-    DisjointRectSet take_pending_paint_rects() {
+    DisjointRectSet take_pending_paint_rects()
+    {
         return move(m_pending_paint_rects);
     }
 

@@ -11,14 +11,17 @@ public:
     {
     }
 
-    const String& name() const {
+    const String& name() const
+    {
         return m_name;
     }
-    const String& value() const {
+    const String& value() const
+    {
         return m_value;
     }
 
-    void set_value(const String& value) {
+    void set_value(const String& value)
+    {
         m_value = value;
     }
 
@@ -32,7 +35,8 @@ public:
     Element(Document&, const String& tag_name);
     virtual ~Element() override;
 
-    virtual String tag_name() const final {
+    virtual String tag_name() const final
+    {
         return m_tag_name;
     }
 

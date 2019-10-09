@@ -122,7 +122,6 @@ bool Ext2FS::initialize()
     kprintf("ext2fs: desc size = %u\n", EXT2_DESC_SIZE(&super_block));
 #endif
 
-
     set_block_size(EXT2_BLOCK_SIZE(&super_block));
 
     ASSERT(block_size() <= (int)max_block_size);
@@ -141,10 +140,10 @@ bool Ext2FS::initialize()
     for (unsigned i = 1; i <= m_block_group_count; ++i) {
         auto& group = group_descriptor(i);
         kprintf("ext2fs: group[%u] { block_bitmap: %u, inode_bitmap: %u, inode_table: %u }\n",
-                i,
-                group.bg_block_bitmap,
-                group.bg_inode_bitmap,
-                group.bg_inode_table);
+            i,
+            group.bg_block_bitmap,
+            group.bg_inode_bitmap,
+            group.bg_inode_table);
     }
 #endif
 

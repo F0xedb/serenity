@@ -7,7 +7,8 @@ public:
     HTMLAnchorElement(Document&, const String& tag_name);
     virtual ~HTMLAnchorElement() override;
 
-    String href() const {
+    String href() const
+    {
         return attribute("href");
     }
 };

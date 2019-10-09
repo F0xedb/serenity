@@ -7,7 +7,7 @@
 #endif
 
 extern "C" {
-    struct timeval;
+struct timeval;
 }
 
 #define ENUMERATE_SYSCALLS                      \

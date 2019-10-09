@@ -1,7 +1,7 @@
 #pragma once
 
-#include <AK/RefPtr.h>
 #include <AK/RefCounted.h>
+#include <AK/RefPtr.h>
 #include <AK/Types.h>
 #include <AK/kmalloc.h>
 
@@ -29,10 +29,12 @@ public:
 
     ~StringImpl();
 
-    int length() const {
+    int length() const
+    {
         return m_length;
     }
-    const char* characters() const {
+    const char* characters() const
+    {
         return &m_inline_buffer[0];
     }
     char operator[](int i) const

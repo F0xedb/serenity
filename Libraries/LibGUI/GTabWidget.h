@@ -13,25 +13,30 @@ public:
     explicit GTabWidget(GWidget* parent);
     virtual ~GTabWidget() override;
 
-    TabPosition tab_position() const {
+    TabPosition tab_position() const
+    {
         return m_tab_position;
     }
     void set_tab_position(TabPosition);
 
     int active_tab_index() const;
 
-    GWidget* active_widget() {
+    GWidget* active_widget()
+    {
         return m_active_widget.ptr();
     }
-    const GWidget* active_widget() const {
+    const GWidget* active_widget() const
+    {
         return m_active_widget.ptr();
     }
     void set_active_widget(GWidget*);
 
-    int bar_height() const {
+    int bar_height() const
+    {
         return 21;
     }
-    int container_padding() const {
+    int container_padding() const
+    {
         return 2;
     }
 

@@ -1,9 +1,9 @@
 #include "DNSPacket.h"
 #include "DNSRecord.h"
-#include <AK/String.h>
 #include <AK/BufferStream.h>
 #include <AK/ByteBuffer.h>
 #include <AK/HashMap.h>
+#include <AK/String.h>
 #include <AK/StringBuilder.h>
 #include <Kernel/Net/IPv4.h>
 #include <LibCore/CConfigFile.h>
@@ -67,7 +67,6 @@ static void load_etc_hosts()
         builder.append(".in-addr.arpa");
         dns_custom_hostnames.set(builder.to_string(), name);
     }
-
 }
 
 int main(int argc, char** argv)
@@ -79,7 +78,7 @@ int main(int argc, char** argv)
 
     auto config = CConfigFile::get_for_system("LookupServer");
     dbgprintf("LookupServer: Using network config file at %s.\n",
-              config->file_name().characters());
+        config->file_name().characters());
     auto DNS_IP = config->read_entry("DNS", "IPAddress", "127.0.0.53");
 
     load_etc_hosts();
@@ -149,8 +148,8 @@ int main(int argc, char** argv)
         }
         auto hostname = String(client_buffer + 1, nrecv - 1, Chomp);
         dbgprintf("LookupServer: Got request for '%s' (using IP %s)\n",
-                  hostname.characters(),
-                  DNS_IP.characters());
+            hostname.characters(),
+            DNS_IP.characters());
 
         Vector<String> responses;
 
@@ -312,11 +311,11 @@ Vector<String> lookup(const String& hostname, bool& did_timeout, const String& D
     for (u16 i = 0; i < response_header.answer_count(); ++i) {
         auto& record = *(const DNSRecord*)(&((const u8*)response_header.payload())[offset]);
         dbgprintf("LookupServer:     Answer #%u: (question: %s), type=%u, ttl=%u, length=%u, data=",
-                  i,
-                  question.characters(),
-                  record.type(),
-                  record.ttl(),
-                  record.data_length());
+            i,
+            question.characters(),
+            record.type(),
+            record.ttl(),
+            record.data_length());
 
         offset += sizeof(DNSRecord) + record.data_length();
         if (record.type() == T_PTR) {

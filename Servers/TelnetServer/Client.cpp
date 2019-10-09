@@ -142,7 +142,6 @@ void Client::send_data(StringView data)
     m_socket->write(builder.to_string());
 }
 
-
 void Client::send_command(Command command)
 {
     send_commands({ command });

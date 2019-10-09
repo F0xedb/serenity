@@ -1,11 +1,11 @@
 #pragma once
 
-#include <AK/String.h>
 #include <AK/Function.h>
-#include <LibGUI/GAbstractButton.h>
+#include <AK/String.h>
 #include <LibDraw/GraphicsBitmap.h>
 #include <LibDraw/StylePainter.h>
 #include <LibDraw/TextAlignment.h>
+#include <LibGUI/GAbstractButton.h>
 
 class GAction;
 
@@ -15,26 +15,32 @@ public:
     virtual ~GButton() override;
 
     void set_icon(RefPtr<GraphicsBitmap>&&);
-    const GraphicsBitmap* icon() const {
+    const GraphicsBitmap* icon() const
+    {
         return m_icon.ptr();
     }
-    GraphicsBitmap* icon() {
+    GraphicsBitmap* icon()
+    {
         return m_icon.ptr();
     }
 
-    void set_text_alignment(TextAlignment text_alignment) {
+    void set_text_alignment(TextAlignment text_alignment)
+    {
         m_text_alignment = text_alignment;
     }
-    TextAlignment text_alignment() const {
+    TextAlignment text_alignment() const
+    {
         return m_text_alignment;
     }
 
     Function<void(GButton&)> on_click;
 
-    void set_button_style(ButtonStyle style) {
+    void set_button_style(ButtonStyle style)
+    {
         m_button_style = style;
     }
-    ButtonStyle button_style() const {
+    ButtonStyle button_style() const
+    {
         return m_button_style;
     }
 
@@ -42,13 +48,15 @@ public:
 
     void set_action(GAction&);
 
-    virtual bool accepts_focus() const override {
+    virtual bool accepts_focus() const override
+    {
         return m_focusable;
     }
     virtual bool supports_keyboard_activation() const override;
     virtual bool is_uncheckable() const override;
 
-    void set_focusable(bool b) {
+    void set_focusable(bool b)
+    {
         m_focusable = b;
     }
 

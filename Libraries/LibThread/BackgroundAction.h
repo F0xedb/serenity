@@ -29,11 +29,11 @@ template<typename Result>
 class BackgroundAction final : public CObject
     , private BackgroundActionBase {
     C_OBJECT(BackgroundAction);
+
 public:
     static NonnullRefPtr<BackgroundAction<Result>> create(
-                Function<Result()> action,
-                Function<void(Result)> on_complete = nullptr
-            )
+        Function<Result()> action,
+        Function<void(Result)> on_complete = nullptr)
     {
         return adopt(*new BackgroundAction(move(action), move(on_complete)));
     }
@@ -41,7 +41,6 @@ public:
     virtual ~BackgroundAction() {}
 
 private:
-
     BackgroundAction(Function<Result()> action, Function<void(Result)> on_complete)
         : CObject(&background_thread())
         , m_action(move(action))

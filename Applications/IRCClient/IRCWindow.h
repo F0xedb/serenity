@@ -21,14 +21,17 @@ public:
     IRCWindow(IRCClient&, void* owner, Type, const String& name, GWidget* parent);
     virtual ~IRCWindow() override;
 
-    String name() const {
+    String name() const
+    {
         return m_name;
     }
-    void set_name(const String& name) {
+    void set_name(const String& name)
+    {
         m_name = name;
     }
 
-    Type type() const {
+    Type type() const
+    {
         return m_type;
     }
 
@@ -41,17 +44,21 @@ public:
 
     void did_add_message();
 
-    IRCChannel& channel() {
+    IRCChannel& channel()
+    {
         return *(IRCChannel*)m_owner;
     }
-    const IRCChannel& channel() const {
+    const IRCChannel& channel() const
+    {
         return *(const IRCChannel*)m_owner;
     }
 
-    IRCQuery& query() {
+    IRCQuery& query()
+    {
         return *(IRCQuery*)m_owner;
     }
-    const IRCQuery& query() const {
+    const IRCQuery& query() const
+    {
         return *(const IRCQuery*)m_owner;
     }
 

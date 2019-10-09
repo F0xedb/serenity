@@ -16,13 +16,15 @@ public:
         __Count,
     };
 
-    static NonnullRefPtr<ThreadCatalogModel> create() {
+    static NonnullRefPtr<ThreadCatalogModel> create()
+    {
         return adopt(*new ThreadCatalogModel);
     }
     virtual ~ThreadCatalogModel() override;
 
     virtual int row_count(const GModelIndex& = GModelIndex()) const override;
-    virtual int column_count(const GModelIndex& = GModelIndex()) const override {
+    virtual int column_count(const GModelIndex& = GModelIndex()) const override
+    {
         return Column::__Count;
     }
     virtual String column_name(int) const override;
@@ -30,7 +32,8 @@ public:
     virtual GVariant data(const GModelIndex&, Role = Role::Display) const override;
     virtual void update() override;
 
-    const String& board() const {
+    const String& board() const
+    {
         return m_board;
     }
     void set_board(const String&);

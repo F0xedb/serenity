@@ -18,7 +18,8 @@ public:
 
     ~StyleDeclaration();
 
-    const Vector<StyleProperty>& properties() const {
+    const Vector<StyleProperty>& properties() const
+    {
         return m_properties;
     }
 

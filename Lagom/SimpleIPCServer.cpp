@@ -1,13 +1,12 @@
+#include "SimpleEndpoint.h"
 #include <LibCore/CEventLoop.h>
+#include <LibCore/CLocalServer.h>
 #include <LibCore/CTimer.h>
 #include <LibCore/CoreIPCServer.h>
-#include <LibCore/CLocalServer.h>
 #include <stdio.h>
-#include "SimpleEndpoint.h"
 
-class SimpleIPCServer final :
-    public IPC::Server::ConnectionNG<SimpleEndpoint>,
-    public SimpleEndpoint {
+class SimpleIPCServer final : public IPC::Server::ConnectionNG<SimpleEndpoint>
+    , public SimpleEndpoint {
 
     C_OBJECT(SimpleIPCServer)
 public:

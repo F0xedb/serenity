@@ -1,16 +1,16 @@
 #include "Font.h"
+#include "Emoji.h"
+#include "GraphicsBitmap.h"
 #include <AK/BufferStream.h>
 #include <AK/MappedFile.h>
 #include <AK/StdLibExtras.h>
+#include <AK/Utf8View.h>
 #include <AK/kmalloc.h>
 #include <LibC/errno.h>
 #include <LibC/fcntl.h>
 #include <LibC/mman.h>
 #include <LibC/stdio.h>
 #include <LibC/unistd.h>
-#include <AK/Utf8View.h>
-#include "Emoji.h"
-#include "GraphicsBitmap.h"
 
 struct [[gnu::packed]] FontFileHeader
 {

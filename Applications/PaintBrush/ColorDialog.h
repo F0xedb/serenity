@@ -9,7 +9,8 @@ class ColorDialog final : public GDialog {
 public:
     virtual ~ColorDialog() override;
 
-    Color color() const {
+    Color color() const
+    {
         return m_color;
     }
 

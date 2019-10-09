@@ -164,7 +164,7 @@ Vector<Command> Parser::parse()
                 }
                 char next_ch = m_input.characters()[i + 1];
                 if (next_ch == '$' || next_ch == '`'
-                        || next_ch == '"' || next_ch == '\\') {
+                    || next_ch == '"' || next_ch == '\\') {
                     m_token.append(next_ch);
                     ++i;
                     continue;

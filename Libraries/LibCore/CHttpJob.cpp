@@ -24,8 +24,8 @@ void CHttpJob::on_socket_connected()
     bool success = m_socket->send(raw_request);
     if (!success)
         return deferred_invoke([this](auto&) {
-        did_fail(CNetworkJob::Error::TransmissionFailed);
-    });
+            did_fail(CNetworkJob::Error::TransmissionFailed);
+        });
 
     m_socket->on_ready_to_read = [&] {
         if (is_cancelled())
@@ -154,4 +154,3 @@ void CHttpJob::shutdown()
     remove_child(*m_socket);
     m_socket = nullptr;
 }
-

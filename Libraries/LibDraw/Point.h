@@ -1,7 +1,7 @@
 #pragma once
 
-#include <AK/String.h>
 #include <AK/LogStream.h>
+#include <AK/String.h>
 #include <LibDraw/Orientation.h>
 
 class Rect;
@@ -17,17 +17,21 @@ public:
     }
     Point(const WSAPI_Point&);
 
-    int x() const {
+    int x() const
+    {
         return m_x;
     }
-    int y() const {
+    int y() const
+    {
         return m_y;
     }
 
-    void set_x(int x) {
+    void set_x(int x)
+    {
         m_x = x;
     }
-    void set_y(int y) {
+    void set_y(int y)
+    {
         m_y = y;
     }
 
@@ -61,7 +65,7 @@ public:
     bool operator==(const Point& other) const
     {
         return m_x == other.m_x
-               && m_y == other.m_y;
+            && m_y == other.m_y;
     }
 
     bool operator!=(const Point& other) const
@@ -69,11 +73,13 @@ public:
         return !(*this == other);
     }
 
-    Point operator-() const {
+    Point operator-() const
+    {
         return { -m_x, -m_y };
     }
 
-    Point operator-(const Point& other) const {
+    Point operator-(const Point& other) const
+    {
         return { m_x - other.m_x, m_y - other.m_y };
     }
     Point& operator-=(const Point& other)
@@ -89,16 +95,19 @@ public:
         m_y += other.m_y;
         return *this;
     }
-    Point operator+(const Point& other) const {
+    Point operator+(const Point& other) const
+    {
         return { m_x + other.m_x, m_y + other.m_y };
     }
 
     operator WSAPI_Point() const;
-    String to_string() const {
+    String to_string() const
+    {
         return String::format("[%d,%d]", x(), y());
     }
 
-    bool is_null() const {
+    bool is_null() const
+    {
         return !m_x && !m_y;
     }
 

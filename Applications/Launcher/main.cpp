@@ -1,11 +1,11 @@
 #include <LibCore/CConfigFile.h>
 #include <LibCore/CUserInfo.h>
+#include <LibDraw/GraphicsBitmap.h>
 #include <LibGUI/GApplication.h>
 #include <LibGUI/GBoxLayout.h>
 #include <LibGUI/GButton.h>
 #include <LibGUI/GWidget.h>
 #include <LibGUI/GWindow.h>
-#include <LibDraw/GraphicsBitmap.h>
 #include <errno.h>
 #include <signal.h>
 #include <stdio.h>
@@ -85,9 +85,9 @@ RefPtr<GWindow> make_launcher_window()
     for (auto& group : config->groups()) {
         if (group != "Launcher")
             new LauncherButton(config->read_entry(group, "Name", group),
-                               config->read_entry(group, "Icon", ""),
-                               config->read_entry(group, "Path", ""),
-                               widget);
+                config->read_entry(group, "Icon", ""),
+                config->read_entry(group, "Path", ""),
+                widget);
     }
 
     return window;

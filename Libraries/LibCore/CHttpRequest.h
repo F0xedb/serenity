@@ -17,17 +17,21 @@ public:
     CHttpRequest();
     ~CHttpRequest();
 
-    const URL& url() const {
+    const URL& url() const
+    {
         return m_url;
     }
-    void set_url(const URL& url) {
+    void set_url(const URL& url)
+    {
         m_url = url;
     }
 
-    Method method() const {
+    Method method() const
+    {
         return m_method;
     }
-    void set_method(Method method) {
+    void set_method(Method method)
+    {
         m_method = method;
     }
 

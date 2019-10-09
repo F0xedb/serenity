@@ -6,7 +6,8 @@ class GlyphEditorWidget final : public GFrame {
 public:
     virtual ~GlyphEditorWidget() override;
 
-    u8 glyph() const {
+    u8 glyph() const
+    {
         return m_glyph;
     }
     void set_glyph(u8);
@@ -14,10 +15,12 @@ public:
     int preferred_width() const;
     int preferred_height() const;
 
-    Font& font() {
+    Font& font()
+    {
         return *m_font;
     }
-    const Font& font() const {
+    const Font& font() const
+    {
         return *m_font;
     }
 

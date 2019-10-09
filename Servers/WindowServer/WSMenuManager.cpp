@@ -79,12 +79,12 @@ void WSMenuManager::draw()
     time_t now = time(nullptr);
     auto* tm = localtime(&now);
     auto time_text = String::format("%4u-%02u-%02u %02u:%02u:%02u",
-                                    tm->tm_year + 1900,
-                                    tm->tm_mon + 1,
-                                    tm->tm_mday,
-                                    tm->tm_hour,
-                                    tm->tm_min,
-                                    tm->tm_sec);
+        tm->tm_year + 1900,
+        tm->tm_mon + 1,
+        tm->tm_mday,
+        tm->tm_hour,
+        tm->tm_min,
+        tm->tm_sec);
     int time_width = wm.font().width(time_text);
     Rect time_rect {
         username_rect.left() - wm.menubar_menu_margin() / 2 - time_width,
@@ -134,8 +134,8 @@ void WSMenuManager::handle_menu_mouse_event(WSMenu& menu, const WSMouseEvent& ev
 {
     auto& wm = WSWindowManager::the();
     bool is_hover_with_any_menu_open = event.type() == WSMouseEvent::MouseMove
-                                       && !m_open_menu_stack.is_empty()
-                                       && (m_open_menu_stack.first()->menubar() || m_open_menu_stack.first() == wm.system_menu());
+        && !m_open_menu_stack.is_empty()
+        && (m_open_menu_stack.first()->menubar() || m_open_menu_stack.first() == wm.system_menu());
     bool is_mousedown_with_left_button = event.type() == WSMouseEvent::MouseDown && event.button() == MouseButton::Left;
     bool should_open_menu = &menu != wm.current_menu() && (is_hover_with_any_menu_open || is_mousedown_with_left_button);
 

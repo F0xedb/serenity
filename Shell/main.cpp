@@ -270,8 +270,7 @@ static int sh_pushd(int argc, char** argv)
         g.directory_stack.append(g.cwd.characters());
         if (argv[1][0] == '/') {
             path_builder.append(argv[1]);
-        }
-        else {
+        } else {
             path_builder.appendf("%s/%s", g.cwd.characters(), argv[1]);
         }
     } else if (argc == 3) {
@@ -282,8 +281,7 @@ static int sh_pushd(int argc, char** argv)
             if (arg[0] != '-') {
                 if (arg[0] == '/') {
                     path_builder.append(arg);
-                }
-                else
+                } else
                     path_builder.appendf("%s/%s", g.cwd.characters(), arg);
             }
 
@@ -423,7 +421,8 @@ static bool handle_builtin(int argc, char** argv, int& retval)
 class FileDescriptionCollector {
 public:
     FileDescriptionCollector() {}
-    ~FileDescriptionCollector() {
+    ~FileDescriptionCollector()
+    {
         collect();
     }
 
@@ -433,7 +432,8 @@ public:
             close(fd);
         m_fds.clear();
     }
-    void add(int fd) {
+    void add(int fd)
+    {
         m_fds.append(fd);
     }
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <AK/String.h>
 #include <AK/LogStream.h>
+#include <AK/String.h>
 #include <LibDraw/Orientation.h>
 #include <LibDraw/Point.h>
 #include <LibDraw/Size.h>
@@ -138,34 +138,42 @@ public:
     bool contains(const Rect& other) const
     {
         return left() <= other.left()
-               && right() >= other.right()
-               && top() <= other.top()
-               && bottom() >= other.bottom();
+            && right() >= other.right()
+            && top() <= other.top()
+            && bottom() >= other.bottom();
     }
 
-    int primary_offset_for_orientation(Orientation orientation) const {
+    int primary_offset_for_orientation(Orientation orientation) const
+    {
         return m_location.primary_offset_for_orientation(orientation);
     }
-    void set_primary_offset_for_orientation(Orientation orientation, int value) {
+    void set_primary_offset_for_orientation(Orientation orientation, int value)
+    {
         m_location.set_primary_offset_for_orientation(orientation, value);
     }
-    int secondary_offset_for_orientation(Orientation orientation) const {
+    int secondary_offset_for_orientation(Orientation orientation) const
+    {
         return m_location.secondary_offset_for_orientation(orientation);
     }
-    void set_secondary_offset_for_orientation(Orientation orientation, int value) {
+    void set_secondary_offset_for_orientation(Orientation orientation, int value)
+    {
         m_location.set_secondary_offset_for_orientation(orientation, value);
     }
 
-    int primary_size_for_orientation(Orientation orientation) const {
+    int primary_size_for_orientation(Orientation orientation) const
+    {
         return m_size.primary_size_for_orientation(orientation);
     }
-    int secondary_size_for_orientation(Orientation orientation) const {
+    int secondary_size_for_orientation(Orientation orientation) const
+    {
         return m_size.secondary_size_for_orientation(orientation);
     }
-    void set_primary_size_for_orientation(Orientation orientation, int value) {
+    void set_primary_size_for_orientation(Orientation orientation, int value)
+    {
         m_size.set_primary_size_for_orientation(orientation, value);
     }
-    void set_secondary_size_for_orientation(Orientation orientation, int value) {
+    void set_secondary_size_for_orientation(Orientation orientation, int value)
+    {
         m_size.set_secondary_size_for_orientation(orientation, value);
     }
 
@@ -183,16 +191,20 @@ public:
         return right();
     }
 
-    int left() const {
+    int left() const
+    {
         return x();
     }
-    int right() const {
+    int right() const
+    {
         return x() + width() - 1;
     }
-    int top() const {
+    int top() const
+    {
         return y();
     }
-    int bottom() const {
+    int bottom() const
+    {
         return y() + height() - 1;
     }
 
@@ -231,41 +243,51 @@ public:
     bool intersects(const Rect& other) const
     {
         return left() <= other.right()
-               && other.left() <= right()
-               && top() <= other.bottom()
-               && other.top() <= bottom();
+            && other.left() <= right()
+            && top() <= other.bottom()
+            && other.top() <= bottom();
     }
 
-    int x() const {
+    int x() const
+    {
         return location().x();
     }
-    int y() const {
+    int y() const
+    {
         return location().y();
     }
-    int width() const {
+    int width() const
+    {
         return m_size.width();
     }
-    int height() const {
+    int height() const
+    {
         return m_size.height();
     }
 
-    void set_x(int x) {
+    void set_x(int x)
+    {
         m_location.set_x(x);
     }
-    void set_y(int y) {
+    void set_y(int y)
+    {
         m_location.set_y(y);
     }
-    void set_width(int width) {
+    void set_width(int width)
+    {
         m_size.set_width(width);
     }
-    void set_height(int height) {
+    void set_height(int height)
+    {
         m_size.set_height(height);
     }
 
-    Point location() const {
+    Point location() const
+    {
         return m_location;
     }
-    Size size() const {
+    Size size() const
+    {
         return m_size;
     }
 
@@ -276,7 +298,7 @@ public:
     bool operator==(const Rect& other) const
     {
         return m_location == other.m_location
-               && m_size == other.m_size;
+            && m_size == other.m_size;
     }
 
     void intersect(const Rect&);
@@ -295,16 +317,20 @@ public:
 
     Rect united(const Rect&) const;
 
-    Point top_left() const {
+    Point top_left() const
+    {
         return { left(), top() };
     }
-    Point top_right() const {
+    Point top_right() const
+    {
         return { right(), top() };
     }
-    Point bottom_left() const {
+    Point bottom_left() const
+    {
         return { left(), bottom() };
     }
-    Point bottom_right() const {
+    Point bottom_right() const
+    {
         return { right(), bottom() };
     }
 
@@ -326,7 +352,8 @@ public:
         set_y(other.center().y() - height() / 2);
     }
 
-    String to_string() const {
+    String to_string() const
+    {
         return String::format("[%d,%d %dx%d]", x(), y(), width(), height());
     }
 

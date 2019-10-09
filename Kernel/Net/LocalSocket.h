@@ -6,8 +6,10 @@
 
 class FileDescription;
 
-class LocalSocket final : public Socket, public InlineLinkedListNode<LocalSocket> {
+class LocalSocket final : public Socket
+    , public InlineLinkedListNode<LocalSocket> {
     friend class InlineLinkedListNode<LocalSocket>;
+
 public:
     static NonnullRefPtr<LocalSocket> create(int type);
     virtual ~LocalSocket() override;
@@ -32,10 +34,12 @@ public:
 
 private:
     explicit LocalSocket(int type);
-    virtual const char* class_name() const override {
+    virtual const char* class_name() const override
+    {
         return "LocalSocket";
     }
-    virtual bool is_local() const override {
+    virtual bool is_local() const override
+    {
         return true;
     }
     bool has_attached_peer(const FileDescription&) const;

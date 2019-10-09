@@ -1,9 +1,9 @@
 #pragma once
 
-#include <AK/String.h>
 #include <AK/ELF/exec_elf.h>
 #include <AK/HashMap.h>
 #include <AK/OwnPtr.h>
+#include <AK/String.h>
 #include <Kernel/VM/VirtualAddress.h>
 
 class ELFImage {
@@ -11,7 +11,8 @@ public:
     explicit ELFImage(const u8*);
     ~ELFImage();
     void dump() const;
-    bool is_valid() const {
+    bool is_valid() const
+    {
         return m_valid;
     }
     bool parse();
@@ -32,25 +33,32 @@ public:
 
         ~Symbol() {}
 
-        const char* name() const {
+        const char* name() const
+        {
             return m_image.table_string(m_sym.st_name);
         }
-        unsigned section_index() const {
+        unsigned section_index() const
+        {
             return m_sym.st_shndx;
         }
-        unsigned value() const {
+        unsigned value() const
+        {
             return m_sym.st_value;
         }
-        unsigned size() const {
+        unsigned size() const
+        {
             return m_sym.st_size;
         }
-        unsigned index() const {
+        unsigned index() const
+        {
             return m_index;
         }
-        unsigned type() const {
+        unsigned type() const
+        {
             return ELF32_ST_TYPE(m_sym.st_info);
         }
-        const Section section() const {
+        const Section section() const
+        {
             return m_image.section(section_index());
         }
 
@@ -70,40 +78,52 @@ public:
         }
         ~ProgramHeader() {}
 
-        unsigned index() const {
+        unsigned index() const
+        {
             return m_program_header_index;
         }
-        u32 type() const {
+        u32 type() const
+        {
             return m_program_header.p_type;
         }
-        u32 flags() const {
+        u32 flags() const
+        {
             return m_program_header.p_flags;
         }
-        u32 offset() const {
+        u32 offset() const
+        {
             return m_program_header.p_offset;
         }
-        VirtualAddress vaddr() const {
+        VirtualAddress vaddr() const
+        {
             return VirtualAddress(m_program_header.p_vaddr);
         }
-        u32 size_in_memory() const {
+        u32 size_in_memory() const
+        {
             return m_program_header.p_memsz;
         }
-        u32 size_in_image() const {
+        u32 size_in_image() const
+        {
             return m_program_header.p_filesz;
         }
-        u32 alignment() const {
+        u32 alignment() const
+        {
             return m_program_header.p_align;
         }
-        bool is_readable() const {
+        bool is_readable() const
+        {
             return flags() & PF_R;
         }
-        bool is_writable() const {
+        bool is_writable() const
+        {
             return flags() & PF_W;
         }
-        bool is_executable() const {
+        bool is_executable() const
+        {
             return flags() & PF_X;
         }
-        const char* raw_data() const {
+        const char* raw_data() const
+        {
             return m_image.raw_data(m_program_header.p_offset);
         }
 
@@ -123,40 +143,52 @@ public:
         }
         ~Section() {}
 
-        const char* name() const {
+        const char* name() const
+        {
             return m_image.section_header_table_string(m_section_header.sh_name);
         }
-        unsigned type() const {
+        unsigned type() const
+        {
             return m_section_header.sh_type;
         }
-        unsigned offset() const {
+        unsigned offset() const
+        {
             return m_section_header.sh_offset;
         }
-        unsigned size() const {
+        unsigned size() const
+        {
             return m_section_header.sh_size;
         }
-        unsigned entry_size() const {
+        unsigned entry_size() const
+        {
             return m_section_header.sh_entsize;
         }
-        unsigned entry_count() const {
+        unsigned entry_count() const
+        {
             return !entry_size() ? 0 : size() / entry_size();
         }
-        u32 address() const {
+        u32 address() const
+        {
             return m_section_header.sh_addr;
         }
-        const char* raw_data() const {
+        const char* raw_data() const
+        {
             return m_image.raw_data(m_section_header.sh_offset);
         }
-        bool is_undefined() const {
+        bool is_undefined() const
+        {
             return m_section_index == SHN_UNDEF;
         }
-        u32 flags() const {
+        u32 flags() const
+        {
             return m_section_header.sh_flags;
         }
-        bool is_writable() const {
+        bool is_writable() const
+        {
             return flags() & SHF_WRITE;
         }
-        bool is_executable() const {
+        bool is_executable() const
+        {
             return flags() & PF_X;
         }
 
@@ -184,14 +216,17 @@ public:
     template<typename F>
     void for_each_program_header(F) const;
 
-    bool is_executable() const {
+    bool is_executable() const
+    {
         return header().e_type == ET_EXEC;
     }
-    bool is_relocatable() const {
+    bool is_relocatable() const
+    {
         return header().e_type == ET_REL;
     }
 
-    VirtualAddress entry() const {
+    VirtualAddress entry() const
+    {
         return VirtualAddress(header().e_entry);
     }
 

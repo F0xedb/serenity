@@ -70,7 +70,8 @@ struct PNGLoadingContext {
     u8 interlace_method { 0 };
     u8 bytes_per_pixel { 0 };
     bool has_seen_zlib_header { false };
-    bool has_alpha() const {
+    bool has_alpha() const
+    {
         return color_type & 4 || palette_transparency_data.size() > 0;
     }
     Vector<Scanline> scanlines;
@@ -123,7 +124,8 @@ public:
         return true;
     }
 
-    bool at_end() const {
+    bool at_end() const
+    {
         return !m_size_remaining;
     }
 
@@ -326,8 +328,8 @@ template<bool has_alpha, u8 filter_type>
                     auto& pixel = (Pixel&)context.bitmap->scanline(y)[i];
                     auto& color = context.palette_data.at((int)palette_index[i]);
                     auto transparency = context.palette_transparency_data.size() >= palette_index[i] + 1
-                                        ? (int)context.palette_transparency_data.data()[palette_index[i]]
-                                        : 0xFF;
+                        ? (int)context.palette_transparency_data.data()[palette_index[i]]
+                        : 0xFF;
                     pixel.r = color.r;
                     pixel.g = color.g;
                     pixel.b = color.b;

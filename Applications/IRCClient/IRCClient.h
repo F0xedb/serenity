@@ -27,14 +27,17 @@ public:
 
     bool connect();
 
-    String hostname() const {
+    String hostname() const
+    {
         return m_hostname;
     }
-    int port() const {
+    int port() const
+    {
         return m_port;
     }
 
-    String nickname() const {
+    String nickname() const
+    {
         return m_nickname;
     }
 
@@ -44,10 +47,12 @@ public:
 
     bool is_nick_prefix(char) const;
 
-    IRCWindow* current_window() {
+    IRCWindow* current_window()
+    {
         return aid_get_active_window();
     }
-    const IRCWindow* current_window() const {
+    const IRCWindow* current_window() const
+    {
         return aid_get_active_window();
     }
 
@@ -63,20 +68,25 @@ public:
     void register_subwindow(IRCWindow&);
     void unregister_subwindow(IRCWindow&);
 
-    IRCWindowListModel* client_window_list_model() {
+    IRCWindowListModel* client_window_list_model()
+    {
         return m_client_window_list_model.ptr();
     }
-    const IRCWindowListModel* client_window_list_model() const {
+    const IRCWindowListModel* client_window_list_model() const
+    {
         return m_client_window_list_model.ptr();
     }
 
-    int window_count() const {
+    int window_count() const
+    {
         return m_windows.size();
     }
-    const IRCWindow& window_at(int index) const {
+    const IRCWindow& window_at(int index) const
+    {
         return *m_windows.at(index);
     }
-    IRCWindow& window_at(int index) {
+    IRCWindow& window_at(int index)
+    {
         return *m_windows.at(index);
     }
 

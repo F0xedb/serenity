@@ -1,8 +1,8 @@
-#include <LibGUI/GPainter.h>
-#include <LibGUI/GScrollBar.h>
 #include <LibDraw/CharacterBitmap.h>
 #include <LibDraw/GraphicsBitmap.h>
 #include <LibDraw/StylePainter.h>
+#include <LibGUI/GPainter.h>
+#include <LibGUI/GScrollBar.h>
 
 static const char* s_up_arrow_bitmap_data = {
     "         "

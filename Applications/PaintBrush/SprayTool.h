@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Tool.h"
-#include <LibGUI/GPainter.h>
 #include <LibCore/CTimer.h>
+#include <LibGUI/GPainter.h>
 
 class GMenu;
 
@@ -17,7 +17,8 @@ public:
     virtual void on_contextmenu(GContextMenuEvent&) override;
 
 private:
-    virtual const char* class_name() const override {
+    virtual const char* class_name() const override
+    {
         return "SprayTool";
     }
     void paint_it();

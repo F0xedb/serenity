@@ -32,7 +32,9 @@ void ColorDialog::build()
     right_vertical_container->set_layout(make<GBoxLayout>(Orientation::Vertical));
 
     enum RGBComponent {
-        Red, Green, Blue
+        Red,
+        Green,
+        Blue
     };
 
     m_preview_widget = GFrame::construct(right_vertical_container);

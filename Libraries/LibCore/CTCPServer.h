@@ -11,7 +11,8 @@ class CTCPServer : public CObject {
 public:
     virtual ~CTCPServer() override;
 
-    bool is_listening() const {
+    bool is_listening() const
+    {
         return m_listening;
     }
     bool listen(const IPv4Address& address, u16 port);

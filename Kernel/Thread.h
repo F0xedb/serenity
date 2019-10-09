@@ -1,10 +1,10 @@
 #pragma once
 
-#include <AK/String.h>
 #include <AK/Function.h>
 #include <AK/IntrusiveList.h>
 #include <AK/OwnPtr.h>
 #include <AK/RefPtr.h>
+#include <AK/String.h>
 #include <AK/Vector.h>
 #include <Kernel/Arch/i386/CPU.h>
 #include <Kernel/KResult.h>
@@ -48,15 +48,18 @@ public:
     static Vector<Thread*> all_threads();
     static bool is_thread(void*);
 
-    int tid() const {
+    int tid() const
+    {
         return m_tid;
     }
     int pid() const;
 
-    Process& process() {
+    Process& process()
+    {
         return m_process;
     }
-    const Process& process() const {
+    const Process& process() const
+    {
         return m_process;
     }
 
@@ -81,10 +84,12 @@ public:
         virtual ~Blocker() {}
         virtual bool should_unblock(Thread&, time_t now_s, long us) = 0;
         virtual const char* state_string() const = 0;
-        void set_interrupted_by_signal() {
+        void set_interrupted_by_signal()
+        {
             m_was_interrupted_while_blocked = true;
         }
-        bool was_interrupted_by_signal() const {
+        bool was_interrupted_by_signal() const
+        {
             return m_was_interrupted_while_blocked;
         }
 
@@ -108,7 +113,8 @@ public:
     public:
         explicit AcceptBlocker(const FileDescription&);
         virtual bool should_unblock(Thread&, time_t, long) override;
-        virtual const char* state_string() const override {
+        virtual const char* state_string() const override
+        {
             return "Accepting";
         }
     };
@@ -117,7 +123,8 @@ public:
     public:
         explicit ReceiveBlocker(const FileDescription&);
         virtual bool should_unblock(Thread&, time_t, long) override;
-        virtual const char* state_string() const override {
+        virtual const char* state_string() const override
+        {
             return "Receiving";
         }
     };
@@ -126,7 +133,8 @@ public:
     public:
         explicit ConnectBlocker(const FileDescription&);
         virtual bool should_unblock(Thread&, time_t, long) override;
-        virtual const char* state_string() const override {
+        virtual const char* state_string() const override
+        {
             return "Connecting";
         }
     };
@@ -135,7 +143,8 @@ public:
     public:
         explicit WriteBlocker(const FileDescription&);
         virtual bool should_unblock(Thread&, time_t, long) override;
-        virtual const char* state_string() const override {
+        virtual const char* state_string() const override
+        {
             return "Writing";
         }
     };
@@ -144,7 +153,8 @@ public:
     public:
         explicit ReadBlocker(const FileDescription&);
         virtual bool should_unblock(Thread&, time_t, long) override;
-        virtual const char* state_string() const override {
+        virtual const char* state_string() const override
+        {
             return "Reading";
         }
     };
@@ -153,7 +163,8 @@ public:
     public:
         ConditionBlocker(const char* state_string, Function<bool()>&& condition);
         virtual bool should_unblock(Thread&, time_t, long) override;
-        virtual const char* state_string() const override {
+        virtual const char* state_string() const override
+        {
             return m_state_string;
         }
 
@@ -166,7 +177,8 @@ public:
     public:
         explicit SleepBlocker(u64 wakeup_time);
         virtual bool should_unblock(Thread&, time_t, long) override;
-        virtual const char* state_string() const override {
+        virtual const char* state_string() const override
+        {
             return "Sleeping";
         }
 
@@ -179,7 +191,8 @@ public:
         typedef Vector<int, FD_SETSIZE> FDVector;
         SelectBlocker(const timeval& tv, bool select_has_timeout, const FDVector& read_fds, const FDVector& write_fds, const FDVector& except_fds);
         virtual bool should_unblock(Thread&, time_t, long) override;
-        virtual const char* state_string() const override {
+        virtual const char* state_string() const override
+        {
             return "Selecting";
         }
 
@@ -195,7 +208,8 @@ public:
     public:
         WaitBlocker(int wait_options, pid_t& waitee_pid);
         virtual bool should_unblock(Thread&, time_t, long) override;
-        virtual const char* state_string() const override {
+        virtual const char* state_string() const override
+        {
             return "Waiting";
         }
 
@@ -228,48 +242,61 @@ public:
         Reason m_reason;
     };
 
-    void did_schedule() {
+    void did_schedule()
+    {
         ++m_times_scheduled;
     }
-    u32 times_scheduled() const {
+    u32 times_scheduled() const
+    {
         return m_times_scheduled;
     }
 
-    bool is_stopped() const {
+    bool is_stopped() const
+    {
         return m_state == Stopped;
     }
-    bool is_blocked() const {
+    bool is_blocked() const
+    {
         return m_state == Blocked;
     }
-    bool in_kernel() const {
+    bool in_kernel() const
+    {
         return (m_tss.cs & 0x03) == 0;
     }
 
-    u32 frame_ptr() const {
+    u32 frame_ptr() const
+    {
         return m_tss.ebp;
     }
-    u32 stack_ptr() const {
+    u32 stack_ptr() const
+    {
         return m_tss.esp;
     }
 
-    u16 selector() const {
+    u16 selector() const
+    {
         return m_far_ptr.selector;
     }
-    TSS32& tss() {
+    TSS32& tss()
+    {
         return m_tss;
     }
-    const TSS32& tss() const {
+    const TSS32& tss() const
+    {
         return m_tss;
     }
-    State state() const {
+    State state() const
+    {
         return m_state;
     }
     const char* state_string() const;
-    u32 ticks() const {
+    u32 ticks() const
+    {
         return m_ticks;
     }
 
-    VirtualAddress thread_specific_data() const {
+    VirtualAddress thread_specific_data() const
+    {
         return m_thread_specific_data;
     }
 
@@ -315,26 +342,32 @@ public:
 
     void unblock();
 
-    const FarPtr& far_ptr() const {
+    const FarPtr& far_ptr() const
+    {
         return m_far_ptr;
     }
 
     bool tick();
-    void set_ticks_left(u32 t) {
+    void set_ticks_left(u32 t)
+    {
         m_ticks_left = t;
     }
-    u32 ticks_left() const {
+    u32 ticks_left() const
+    {
         return m_ticks_left;
     }
 
-    u32 kernel_stack_base() const {
+    u32 kernel_stack_base() const
+    {
         return m_kernel_stack_base;
     }
-    u32 kernel_stack_top() const {
+    u32 kernel_stack_top() const
+    {
         return m_kernel_stack_top;
     }
 
-    void set_selector(u16 s) {
+    void set_selector(u16 s)
+    {
         m_far_ptr.selector = s;
     }
     void set_state(State);
@@ -343,7 +376,8 @@ public:
     void send_signal(u8 signal, Process* sender);
     void consider_unblock(time_t now_sec, long now_usec);
 
-    void set_dump_backtrace_on_finalization() {
+    void set_dump_backtrace_on_finalization()
+    {
         m_dump_backtrace_on_finalization = true;
     }
 
@@ -354,13 +388,16 @@ public:
     bool should_ignore_signal(u8 signal) const;
     bool has_signal_handler(u8 signal) const;
 
-    FPUState& fpu_state() {
+    FPUState& fpu_state()
+    {
         return *m_fpu_state;
     }
-    bool has_used_fpu() const {
+    bool has_used_fpu() const
+    {
         return m_has_used_fpu;
     }
-    void set_has_used_fpu(bool b) {
+    void set_has_used_fpu(bool b)
+    {
         m_has_used_fpu = b;
     }
 

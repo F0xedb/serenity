@@ -10,21 +10,26 @@ class GSpinBox : public GWidget {
 public:
     virtual ~GSpinBox() override;
 
-    int value() const {
+    int value() const
+    {
         return m_value;
     }
     void set_value(int);
 
-    int min() const {
+    int min() const
+    {
         return m_min;
     }
-    int max() const {
+    int max() const
+    {
         return m_max;
     }
-    void set_min(int min) {
+    void set_min(int min)
+    {
         set_range(min, max());
     }
-    void set_max(int max) {
+    void set_max(int max)
+    {
         set_range(min(), max);
     }
     void set_range(int min, int max);

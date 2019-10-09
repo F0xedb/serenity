@@ -71,8 +71,8 @@ void TaskbarWindow::wm_event(GWMEvent& event)
 #ifdef EVENT_DEBUG
         auto& removed_event = static_cast<GWMWindowRemovedEvent&>(event);
         dbgprintf("WM_WindowRemoved: client_id=%d, window_id=%d\n",
-                  removed_event.client_id(),
-                  removed_event.window_id());
+            removed_event.client_id(),
+            removed_event.window_id());
 #endif
         WindowList::the().remove_window(identifier);
         update();
@@ -82,9 +82,9 @@ void TaskbarWindow::wm_event(GWMEvent& event)
 #ifdef EVENT_DEBUG
         auto& changed_event = static_cast<GWMWindowRectChangedEvent&>(event);
         dbgprintf("WM_WindowRectChanged: client_id=%d, window_id=%d, rect=%s\n",
-                  changed_event.client_id(),
-                  changed_event.window_id(),
-                  changed_event.rect().to_string().characters());
+            changed_event.client_id(),
+            changed_event.window_id(),
+            changed_event.rect().to_string().characters());
 #endif
         break;
     }
@@ -93,9 +93,9 @@ void TaskbarWindow::wm_event(GWMEvent& event)
         auto& changed_event = static_cast<GWMWindowIconBitmapChangedEvent&>(event);
 #ifdef EVENT_DEBUG
         dbgprintf("WM_WindowIconBitmapChanged: client_id=%d, window_id=%d, icon_buffer_id=%d\n",
-                  changed_event.client_id(),
-                  changed_event.window_id(),
-                  changed_event.icon_buffer_id());
+            changed_event.client_id(),
+            changed_event.window_id(),
+            changed_event.icon_buffer_id());
 #endif
         if (auto* window = WindowList::the().window(identifier)) {
             auto buffer = SharedBuffer::create_from_shared_buffer_id(changed_event.icon_buffer_id());
@@ -109,12 +109,12 @@ void TaskbarWindow::wm_event(GWMEvent& event)
         auto& changed_event = static_cast<GWMWindowStateChangedEvent&>(event);
 #ifdef EVENT_DEBUG
         dbgprintf("WM_WindowStateChanged: client_id=%d, window_id=%d, title=%s, rect=%s, is_active=%u, is_minimized=%u\n",
-                  changed_event.client_id(),
-                  changed_event.window_id(),
-                  changed_event.title().characters(),
-                  changed_event.rect().to_string().characters(),
-                  changed_event.is_active(),
-                  changed_event.is_minimized());
+            changed_event.client_id(),
+            changed_event.window_id(),
+            changed_event.title().characters(),
+            changed_event.rect().to_string().characters(),
+            changed_event.is_active(),
+            changed_event.is_minimized());
 #endif
         if (!should_include_window(changed_event.window_type()))
             break;

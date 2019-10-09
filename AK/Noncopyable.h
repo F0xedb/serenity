@@ -6,6 +6,6 @@ private:                       \
     c& operator=(const c&) = delete;
 
 #define AK_MAKE_NONMOVABLE(c) \
-private:                       \
-    c(c&&) = delete;      \
+private:                      \
+    c(c&&) = delete;          \
     c& operator=(c&&) = delete;

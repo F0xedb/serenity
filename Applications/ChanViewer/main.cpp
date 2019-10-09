@@ -34,7 +34,7 @@ int main(int argc, char** argv)
 
     auto statusbar = GStatusBar::construct(widget);
 
-    board_combo->on_change = [&] (auto&, const GModelIndex& index) {
+    board_combo->on_change = [&](auto&, const GModelIndex& index) {
         auto selected_board = board_combo->model()->data(index, GModel::Role::Custom);
         ASSERT(selected_board.is_string());
         catalog_model.set_board(selected_board.to_string());

@@ -8,15 +8,18 @@ public:
     explicit Text(Document&, const String&);
     virtual ~Text() override;
 
-    const String& data() const {
+    const String& data() const
+    {
         return m_data;
     }
 
-    virtual String tag_name() const override {
+    virtual String tag_name() const override
+    {
         return "#text";
     }
 
-    virtual String text_content() const override {
+    virtual String text_content() const override
+    {
         return m_data;
     }
 

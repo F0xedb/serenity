@@ -1,7 +1,7 @@
 #pragma once
 
-#include <AK/String.h>
 #include <AK/NonnullOwnPtrVector.h>
+#include <AK/String.h>
 #include <AK/WeakPtr.h>
 #include <LibCore/CObject.h>
 #include <LibDraw/Rect.h>
@@ -19,38 +19,48 @@ public:
     WSMenu(WSClientConnection*, int menu_id, const String& name);
     virtual ~WSMenu() override;
 
-    WSClientConnection* client() {
+    WSClientConnection* client()
+    {
         return m_client;
     }
-    const WSClientConnection* client() const {
+    const WSClientConnection* client() const
+    {
         return m_client;
     }
-    int menu_id() const {
+    int menu_id() const
+    {
         return m_menu_id;
     }
 
-    WSMenuBar* menubar() {
+    WSMenuBar* menubar()
+    {
         return m_menubar;
     }
-    const WSMenuBar* menubar() const {
+    const WSMenuBar* menubar() const
+    {
         return m_menubar;
     }
-    void set_menubar(WSMenuBar* menubar) {
+    void set_menubar(WSMenuBar* menubar)
+    {
         m_menubar = menubar;
     }
 
-    bool is_empty() const {
+    bool is_empty() const
+    {
         return m_items.is_empty();
     }
-    int item_count() const {
+    int item_count() const
+    {
         return m_items.size();
     }
 
-    void add_item(NonnullOwnPtr<WSMenuItem>&& item) {
+    void add_item(NonnullOwnPtr<WSMenuItem>&& item)
+    {
         m_items.append(move(item));
     }
 
-    String name() const {
+    String name() const
+    {
         return m_name;
     }
 
@@ -61,21 +71,26 @@ public:
             callback(item);
     }
 
-    Rect text_rect_in_menubar() const {
+    Rect text_rect_in_menubar() const
+    {
         return m_text_rect_in_menubar;
     }
-    void set_text_rect_in_menubar(const Rect& rect) {
+    void set_text_rect_in_menubar(const Rect& rect)
+    {
         m_text_rect_in_menubar = rect;
     }
 
-    Rect rect_in_menubar() const {
+    Rect rect_in_menubar() const
+    {
         return m_rect_in_menubar;
     }
-    void set_rect_in_menubar(const Rect& rect) {
+    void set_rect_in_menubar(const Rect& rect)
+    {
         m_rect_in_menubar = rect;
     }
 
-    WSWindow* menu_window() {
+    WSWindow* menu_window()
+    {
         return m_menu_window.ptr();
     }
     WSWindow& ensure_menu_window();
@@ -83,19 +98,24 @@ public:
     int width() const;
     int height() const;
 
-    int item_height() const {
+    int item_height() const
+    {
         return 20;
     }
-    int frame_thickness() const {
+    int frame_thickness() const
+    {
         return 3;
     }
-    int horizontal_padding() const {
+    int horizontal_padding() const
+    {
         return left_padding() + right_padding();
     }
-    int left_padding() const {
+    int left_padding() const
+    {
         return 14;
     }
-    int right_padding() const {
+    int right_padding() const
+    {
         return 14;
     }
 
@@ -106,7 +126,8 @@ public:
     WSMenuItem* item_at(const Point&);
     void redraw();
 
-    const WSMenuItem* hovered_item() const {
+    const WSMenuItem* hovered_item() const
+    {
         return m_hovered_item;
     }
     void clear_hovered_item();
@@ -120,7 +141,8 @@ public:
 private:
     virtual void event(CEvent&) override;
 
-    int padding_between_text_and_shortcut() const {
+    int padding_between_text_and_shortcut() const
+    {
         return 50;
     }
     void did_activate(WSMenuItem&);

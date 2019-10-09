@@ -1,6 +1,5 @@
 #pragma once
 
-#include <AK/String.h>
 #include <AK/Badge.h>
 #include <AK/Bitmap.h>
 #include <AK/ByteBuffer.h>
@@ -8,6 +7,7 @@
 #include <AK/NonnullRefPtrVector.h>
 #include <AK/RefCounted.h>
 #include <AK/RefPtr.h>
+#include <AK/String.h>
 #include <AK/Types.h>
 #include <AK/Vector.h>
 #include <AK/Weakable.h>
@@ -75,16 +75,20 @@ public:
     OwnPtr<Region> allocate_user_accessible_kernel_region(size_t, const StringView& name);
     void map_region_at_address(PageDirectory&, Region&, VirtualAddress);
 
-    unsigned user_physical_pages() const {
+    unsigned user_physical_pages() const
+    {
         return m_user_physical_pages;
     }
-    unsigned user_physical_pages_used() const {
+    unsigned user_physical_pages_used() const
+    {
         return m_user_physical_pages_used;
     }
-    unsigned super_physical_pages() const {
+    unsigned super_physical_pages() const
+    {
         return m_super_physical_pages;
     }
-    unsigned super_physical_pages_used() const {
+    unsigned super_physical_pages_used() const
+    {
         return m_super_physical_pages_used;
     }
 
@@ -131,7 +135,8 @@ private:
     u8* quickmap_page(PhysicalPage&);
     void unquickmap_page();
 
-    PageDirectory& kernel_page_directory() {
+    PageDirectory& kernel_page_directory()
+    {
         return *m_kernel_page_directory;
     }
 

@@ -8,10 +8,12 @@ class CFile final : public CIODevice {
 public:
     virtual ~CFile() override;
 
-    String filename() const {
+    String filename() const
+    {
         return m_filename;
     }
-    void set_filename(const StringView& filename) {
+    void set_filename(const StringView& filename)
+    {
         m_filename = filename;
     }
 

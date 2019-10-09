@@ -15,10 +15,12 @@ public:
     explicit StyleResolver(Document&);
     ~StyleResolver();
 
-    Document& document() {
+    Document& document()
+    {
         return m_document;
     }
-    const Document& document() const {
+    const Document& document() const
+    {
         return m_document;
     }
 

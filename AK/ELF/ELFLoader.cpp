@@ -3,7 +3,7 @@
 #include <AK/kstdio.h>
 
 #ifdef KERNEL
-#include <Kernel/VM/MemoryManager.h>
+#    include <Kernel/VM/MemoryManager.h>
 #endif
 
 //#define ELFLOADER_DEBUG

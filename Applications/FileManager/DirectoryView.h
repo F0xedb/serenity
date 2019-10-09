@@ -13,16 +13,19 @@ public:
     virtual ~DirectoryView() override;
 
     void open(const StringView& path);
-    String path() const {
+    String path() const
+    {
         return model().path();
     }
     void open_parent_directory();
     void open_previous_directory();
     void open_next_directory();
-    int path_history_size() const {
+    int path_history_size() const
+    {
         return m_path_history.size();
     }
-    int path_history_position() const {
+    int path_history_position() const
+    {
         return m_path_history_position;
     }
 
@@ -40,7 +43,8 @@ public:
         Icon
     };
     void set_view_mode(ViewMode);
-    ViewMode view_mode() const {
+    ViewMode view_mode() const
+    {
         return m_view_mode;
     }
 
@@ -65,10 +69,12 @@ public:
 
 private:
     explicit DirectoryView(GWidget* parent);
-    GDirectoryModel& model() {
+    GDirectoryModel& model()
+    {
         return *m_model;
     }
-    const GDirectoryModel& model() const {
+    const GDirectoryModel& model() const
+    {
         return *m_model;
     }
 

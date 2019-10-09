@@ -13,10 +13,12 @@ public:
     void add_action(GAction&);
     void add_separator();
 
-    bool has_frame() const {
+    bool has_frame() const
+    {
         return m_has_frame;
     }
-    void set_has_frame(bool has_frame) {
+    void set_has_frame(bool has_frame)
+    {
         m_has_frame = has_frame;
     }
 

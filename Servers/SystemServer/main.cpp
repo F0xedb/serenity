@@ -45,7 +45,7 @@ void start_process(const String& program, const Vector<String>& arguments, int p
         char* progv[256];
         progv[0] = const_cast<char*>(program.characters());
         for (int i = 0; i < arguments.size() && i < 254; i++)
-            progv[i+1] = const_cast<char*>(arguments[i].characters());
+            progv[i + 1] = const_cast<char*>(arguments[i].characters());
         progv[arguments.size() + 1] = nullptr;
         ret = execv(progv[0], progv);
         if (ret < 0) {

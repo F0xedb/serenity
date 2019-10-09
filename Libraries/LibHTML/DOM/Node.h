@@ -26,19 +26,24 @@ class Node : public TreeNode<Node> {
 public:
     virtual ~Node();
 
-    NodeType type() const {
+    NodeType type() const
+    {
         return m_type;
     }
-    bool is_element() const {
+    bool is_element() const
+    {
         return type() == NodeType::ELEMENT_NODE;
     }
-    bool is_text() const {
+    bool is_text() const
+    {
         return type() == NodeType::TEXT_NODE;
     }
-    bool is_document() const {
+    bool is_document() const
+    {
         return type() == NodeType::DOCUMENT_NODE;
     }
-    bool is_parent_node() const {
+    bool is_parent_node() const
+    {
         return is_element() || is_document();
     }
 
@@ -49,17 +54,20 @@ public:
 
     virtual String text_content() const;
 
-    Document& document() {
+    Document& document()
+    {
         return m_document;
     }
-    const Document& document() const {
+    const Document& document() const
+    {
         return m_document;
     }
 
     const HTMLAnchorElement* enclosing_link_element() const;
     const HTMLElement* enclosing_html_element() const;
 
-    virtual bool is_html_element() const {
+    virtual bool is_html_element() const
+    {
         return false;
     }
 
@@ -72,14 +80,17 @@ public:
     virtual void inserted_into(Node&) {}
     virtual void removed_from(Node&) {}
 
-    const LayoutNode* layout_node() const {
+    const LayoutNode* layout_node() const
+    {
         return m_layout_node;
     }
-    LayoutNode* layout_node() {
+    LayoutNode* layout_node()
+    {
         return m_layout_node;
     }
 
-    void set_layout_node(Badge<LayoutNode>, LayoutNode* layout_node) const {
+    void set_layout_node(Badge<LayoutNode>, LayoutNode* layout_node) const
+    {
         m_layout_node = layout_node;
     }
 

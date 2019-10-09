@@ -1,8 +1,8 @@
 #include <AK/IPv4Address.h>
 #include <AK/Types.h>
+#include <LibCore/CNotifier.h>
 #include <LibCore/CTCPServer.h>
 #include <LibCore/CTCPSocket.h>
-#include <LibCore/CNotifier.h>
 #include <stdio.h>
 #include <sys/socket.h>
 

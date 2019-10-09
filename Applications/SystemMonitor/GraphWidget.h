@@ -6,15 +6,18 @@ class GraphWidget final : public GFrame {
 public:
     virtual ~GraphWidget() override;
 
-    void set_max(int max) {
+    void set_max(int max)
+    {
         m_max = max;
     }
     void add_value(int);
 
-    void set_graph_color(Color color) {
+    void set_graph_color(Color color)
+    {
         m_graph_color = color;
     }
-    void set_text_color(Color color) {
+    void set_text_color(Color color)
+    {
         m_text_color = color;
     }
 

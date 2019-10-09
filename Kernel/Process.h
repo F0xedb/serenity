@@ -60,76 +60,97 @@ public:
 
     KBuffer backtrace(ProcessInspectionHandle&) const;
 
-    bool is_dead() const {
+    bool is_dead() const
+    {
         return m_dead;
     }
 
-    Thread::State state() const {
+    Thread::State state() const
+    {
         return main_thread().state();
     }
 
-    Thread& main_thread() {
+    Thread& main_thread()
+    {
         return *m_main_thread;
     }
-    const Thread& main_thread() const {
+    const Thread& main_thread() const
+    {
         return *m_main_thread;
     }
 
-    bool is_ring0() const {
+    bool is_ring0() const
+    {
         return m_ring == Ring0;
     }
-    bool is_ring3() const {
+    bool is_ring3() const
+    {
         return m_ring == Ring3;
     }
 
-    PageDirectory& page_directory() {
+    PageDirectory& page_directory()
+    {
         return *m_page_directory;
     }
-    const PageDirectory& page_directory() const {
+    const PageDirectory& page_directory() const
+    {
         return *m_page_directory;
     }
 
     static Process* from_pid(pid_t);
 
-    void set_priority(Priority p) {
+    void set_priority(Priority p)
+    {
         m_priority = p;
     }
-    Priority priority() const {
+    Priority priority() const
+    {
         return m_priority;
     }
 
-    const String& name() const {
+    const String& name() const
+    {
         return m_name;
     }
-    pid_t pid() const {
+    pid_t pid() const
+    {
         return m_pid;
     }
-    pid_t sid() const {
+    pid_t sid() const
+    {
         return m_sid;
     }
-    pid_t pgid() const {
+    pid_t pgid() const
+    {
         return m_pgid;
     }
-    uid_t uid() const {
+    uid_t uid() const
+    {
         return m_uid;
     }
-    gid_t gid() const {
+    gid_t gid() const
+    {
         return m_gid;
     }
-    const HashTable<gid_t>& gids() const {
+    const HashTable<gid_t>& gids() const
+    {
         return m_gids;
     }
-    uid_t euid() const {
+    uid_t euid() const
+    {
         return m_euid;
     }
-    gid_t egid() const {
+    gid_t egid() const
+    {
         return m_egid;
     }
-    pid_t ppid() const {
+    pid_t ppid() const
+    {
         return m_ppid;
     }
 
-    mode_t umask() const {
+    mode_t umask() const
+    {
         return m_umask;
     }
 
@@ -273,22 +294,27 @@ public:
     [[noreturn]] void crash(int signal, u32 eip);
     [[nodiscard]] static int reap(Process&);
 
-    const TTY* tty() const {
+    const TTY* tty() const
+    {
         return m_tty;
     }
-    void set_tty(TTY* tty) {
+    void set_tty(TTY* tty)
+    {
         m_tty = tty;
     }
 
-    size_t region_count() const {
+    size_t region_count() const
+    {
         return m_regions.size();
     }
-    const NonnullOwnPtrVector<Region>& regions() const {
+    const NonnullOwnPtrVector<Region>& regions() const
+    {
         return m_regions;
     }
     void dump_regions();
 
-    ProcessTracer* tracer() {
+    ProcessTracer* tracer()
+    {
         return m_tracer.ptr();
     }
     ProcessTracer& ensure_tracer();
@@ -305,21 +331,25 @@ public:
     bool validate_write(void*, ssize_t) const;
     bool validate_read_str(const char* str);
     template<typename T>
-    bool validate_read_typed(T* value, size_t count = 1) {
+    bool validate_read_typed(T* value, size_t count = 1)
+    {
         return validate_read(value, sizeof(T) * count);
     }
     template<typename T>
-    bool validate_write_typed(T* value, size_t count = 1) {
+    bool validate_write_typed(T* value, size_t count = 1)
+    {
         return validate_write(value, sizeof(T) * count);
     }
 
     Custody& current_directory();
-    Custody* executable() {
+    Custody* executable()
+    {
         return m_executable.ptr();
     }
 
     int number_of_open_file_descriptors() const;
-    int max_open_file_descriptors() const {
+    int max_open_file_descriptors() const
+    {
         return m_max_open_file_descriptors;
     }
 
@@ -330,7 +360,8 @@ public:
     Process* fork(RegisterDump&);
     int exec(String path, Vector<String> arguments, Vector<String> environment);
 
-    bool is_superuser() const {
+    bool is_superuser() const
+    {
         return m_euid == 0;
     }
 
@@ -341,10 +372,12 @@ public:
 
     Region& allocate_split_region(const Region& source_region, const Range&, size_t offset_in_vmo);
 
-    void set_being_inspected(bool b) {
+    void set_being_inspected(bool b)
+    {
         m_being_inspected = b;
     }
-    bool is_being_inspected() const {
+    bool is_being_inspected() const
+    {
         return m_being_inspected;
     }
 
@@ -353,40 +386,51 @@ public:
 
     int thread_count() const;
 
-    Lock& big_lock() {
+    Lock& big_lock()
+    {
         return m_big_lock;
     }
 
-    unsigned syscall_count() const {
+    unsigned syscall_count() const
+    {
         return m_syscall_count;
     }
-    void did_syscall() {
+    void did_syscall()
+    {
         ++m_syscall_count;
     }
-    unsigned inode_faults() const {
+    unsigned inode_faults() const
+    {
         return m_inode_faults;
     }
-    void did_inode_fault() {
+    void did_inode_fault()
+    {
         ++m_inode_faults;
     }
-    unsigned zero_faults() const {
+    unsigned zero_faults() const
+    {
         return m_zero_faults;
     }
-    void did_zero_fault() {
+    void did_zero_fault()
+    {
         ++m_zero_faults;
     }
-    unsigned cow_faults() const {
+    unsigned cow_faults() const
+    {
         return m_cow_faults;
     }
-    void did_cow_fault() {
+    void did_cow_fault()
+    {
         ++m_cow_faults;
     }
 
-    const ELFLoader* elf_loader() const {
+    const ELFLoader* elf_loader() const
+    {
         return m_elf_loader.ptr();
     }
 
-    int icon_id() const {
+    int icon_id() const
+    {
         return m_icon_id;
     }
 
@@ -427,7 +471,8 @@ private:
     static const int m_max_open_file_descriptors { FD_SETSIZE };
 
     struct FileDescriptionAndFlags {
-        operator bool() const {
+        operator bool() const
+        {
             return !!description;
         }
         void clear();
@@ -498,7 +543,8 @@ public:
         m_process.set_being_inspected(false);
     }
 
-    Process& process() {
+    Process& process()
+    {
         return m_process;
     }
 
@@ -511,10 +557,12 @@ public:
         return nullptr;
     }
 
-    Process* operator->() {
+    Process* operator->()
+    {
         return &m_process;
     }
-    Process& operator*() {
+    Process& operator*()
+    {
         return m_process;
     }
 

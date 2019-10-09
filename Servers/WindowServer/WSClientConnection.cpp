@@ -226,19 +226,19 @@ bool WSClientConnection::handle_message(const WSAPI_ClientMessage& message, cons
         }
 
         CEventLoop::current().post_event(*this,
-                                         make<WSAPICreateWindowRequest>(client_id(),
-                                                 message.window.rect,
-                                                 String(message.text, message.text_length),
-                                                 message.window.has_alpha_channel,
-                                                 message.window.modal,
-                                                 message.window.resizable,
-                                                 message.window.fullscreen,
-                                                 message.window.show_titlebar,
-                                                 message.window.opacity,
-                                                 message.window.base_size,
-                                                 message.window.size_increment,
-                                                 ws_window_type,
-                                                 Color::from_rgba(message.window.background_color)));
+            make<WSAPICreateWindowRequest>(client_id(),
+                message.window.rect,
+                String(message.text, message.text_length),
+                message.window.has_alpha_channel,
+                message.window.modal,
+                message.window.resizable,
+                message.window.fullscreen,
+                message.window.show_titlebar,
+                message.window.opacity,
+                message.window.base_size,
+                message.window.size_increment,
+                ws_window_type,
+                Color::from_rgba(message.window.background_color)));
         break;
     }
     case WSAPI_ClientMessage::Type::DestroyWindow:
@@ -863,9 +863,9 @@ void WSClientConnection::handle_request(const WSAPISetWindowBackingStoreRequest&
         if (!shared_buffer)
             return;
         auto backing_store = GraphicsBitmap::create_with_shared_buffer(
-                                 request.has_alpha_channel() ? GraphicsBitmap::Format::RGBA32 : GraphicsBitmap::Format::RGB32,
-                                 *shared_buffer,
-                                 request.size());
+            request.has_alpha_channel() ? GraphicsBitmap::Format::RGBA32 : GraphicsBitmap::Format::RGB32,
+            *shared_buffer,
+            request.size());
         window.set_backing_store(move(backing_store));
     }
 

@@ -8,7 +8,8 @@ public:
     TaskbarWindow();
     virtual ~TaskbarWindow() override;
 
-    int taskbar_height() const {
+    int taskbar_height() const
+    {
         return 28;
     }
 

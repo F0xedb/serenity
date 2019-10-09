@@ -1,7 +1,7 @@
 #include "TerminalWidget.h"
 #include "XtermColors.h"
-#include <AK/String.h>
 #include <AK/StdLibExtras.h>
+#include <AK/String.h>
 #include <AK/StringBuilder.h>
 #include <Kernel/KeyCode.h>
 #include <LibDraw/Font.h>
@@ -40,8 +40,8 @@ TerminalWidget::TerminalWidget(int ptm_fd, RefPtr<CConfigFile> config)
 
     dbgprintf("Terminal: Load config file from %s\n", m_config->file_name().characters());
     m_cursor_blink_timer->set_interval(m_config->read_num_entry("Text",
-                                       "CursorBlinkInterval",
-                                       500));
+        "CursorBlinkInterval",
+        500));
     m_cursor_blink_timer->on_timeout = [this] {
         m_cursor_blink_state = !m_cursor_blink_state;
         update_cursor();
@@ -231,7 +231,6 @@ void TerminalWidget::paint_event(GPaintEvent& event)
         else if (has_only_one_background_color)
             painter.fill_rect(row_rect, lookup_color(line.attributes[0].background_color).with_alpha(m_opacity));
 
-
         // The terminal insists on thinking characters and
         // bytes are the same thing. We want to still draw
         // emojis in *some* way, but it won't be completely
@@ -257,8 +256,7 @@ void TerminalWidget::paint_event(GPaintEvent& event)
             VT::Attribute attribute;
 
             for (u16 column = this_char_column; column < next_char_column; ++column) {
-                should_reverse_fill_for_cursor_or_selection |=
-                    m_cursor_blink_state
+                should_reverse_fill_for_cursor_or_selection |= m_cursor_blink_state
                     && m_in_active_window
                     && row == row_with_cursor
                     && column == m_terminal.cursor_column();

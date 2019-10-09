@@ -7,6 +7,7 @@ class RenderingContext;
 
 class LineBoxFragment {
     friend class LineBox;
+
 public:
     LineBoxFragment(const LayoutNode& layout_node, int start, int length, const Rect& rect)
         : m_layout_node(layout_node)
@@ -16,19 +17,24 @@ public:
     {
     }
 
-    const LayoutNode& layout_node() const {
+    const LayoutNode& layout_node() const
+    {
         return m_layout_node;
     }
-    int start() const {
+    int start() const
+    {
         return m_start;
     }
-    int length() const {
+    int length() const
+    {
         return m_length;
     }
-    const Rect& rect() const {
+    const Rect& rect() const
+    {
         return m_rect;
     }
-    Rect& rect() {
+    Rect& rect()
+    {
         return m_rect;
     }
 

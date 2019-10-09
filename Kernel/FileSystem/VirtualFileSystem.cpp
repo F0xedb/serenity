@@ -100,8 +100,8 @@ bool VFS::mount_root(NonnullRefPtr<FS>&& file_system)
     m_root_inode = move(root_inode);
 
     kprintf("VFS: mounted root on %s{%p}\n",
-            m_root_inode->fs().class_name(),
-            &m_root_inode->fs());
+        m_root_inode->fs().class_name(),
+        &m_root_inode->fs());
 
     m_mounts.append(move(mount));
     return true;
@@ -615,7 +615,6 @@ InodeIdentifier VFS::Mount::host() const
     return m_host_custody->inode().identifier();
 }
 
-
 void VFS::for_each_mount(Function<void(const Mount&)> callback) const
 {
     for (auto& mount : m_mounts) {
@@ -714,11 +713,11 @@ KResultOr<NonnullRefPtr<Custody>> VFS::resolve_path(StringView path, Custody& ba
 
             // FIXME: We should limit the recursion here and return -ELOOP if it goes to deep.
             auto symlink_target = resolve_path(
-                                      StringView(symlink_contents.data(),
-                                                 symlink_contents.size()),
-                                      current_parent,
-                                      parent_custody,
-                                      options);
+                StringView(symlink_contents.data(),
+                    symlink_contents.size()),
+                current_parent,
+                parent_custody,
+                options);
 
             if (symlink_target.is_error())
                 return symlink_target;

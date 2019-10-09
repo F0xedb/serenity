@@ -36,7 +36,8 @@ public:
     static CEventLoop& main();
     static CEventLoop& current();
 
-    bool was_exit_requested() const {
+    bool was_exit_requested() const
+    {
         return m_exit_requested;
     }
 

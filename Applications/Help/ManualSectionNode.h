@@ -18,14 +18,17 @@ public:
         return m_children;
     }
 
-    virtual const ManualNode* parent() const override {
+    virtual const ManualNode* parent() const override
+    {
         return nullptr;
     }
-    virtual String name() const override {
+    virtual String name() const override
+    {
         return m_full_name;
     }
 
-    const String& section_name() const {
+    const String& section_name() const
+    {
         return m_section;
     }
     String path() const;

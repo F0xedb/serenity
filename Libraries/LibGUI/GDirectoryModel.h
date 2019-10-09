@@ -8,7 +8,8 @@
 class GDirectoryModel final : public GModel
     , public Weakable<GDirectoryModel> {
 public:
-    static NonnullRefPtr<GDirectoryModel> create() {
+    static NonnullRefPtr<GDirectoryModel> create()
+    {
         return adopt(*new GDirectoryModel);
     }
     virtual ~GDirectoryModel() override;
@@ -32,11 +33,13 @@ public:
     virtual GVariant data(const GModelIndex&, Role = Role::Display) const override;
     virtual void update() override;
 
-    String path() const {
+    String path() const
+    {
         return m_path;
     }
     void open(const StringView& path);
-    size_t bytes_in_files() const {
+    size_t bytes_in_files() const
+    {
         return m_bytes_in_files;
     }
 
@@ -52,13 +55,16 @@ public:
         ino_t inode { 0 };
         time_t mtime { 0 };
         mutable RefPtr<GraphicsBitmap> thumbnail;
-        bool is_directory() const {
+        bool is_directory() const
+        {
             return S_ISDIR(mode);
         }
-        bool is_executable() const {
+        bool is_executable() const
+        {
             return mode & S_IXUSR;
         }
-        String full_path(const GDirectoryModel& model) const {
+        String full_path(const GDirectoryModel& model) const
+        {
             return String::format("%s/%s", model.path().characters(), name.characters());
         }
     };

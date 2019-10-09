@@ -67,7 +67,8 @@ class Fire : public GWidget {
     C_OBJECT(Fire)
 public:
     virtual ~Fire() override;
-    void set_stat_label(GLabel* l) {
+    void set_stat_label(GLabel* l)
+    {
         stats = l;
     };
 

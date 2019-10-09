@@ -1,10 +1,10 @@
 #pragma once
 
 #include "WindowIdentifier.h"
-#include <AK/String.h>
 #include <AK/HashMap.h>
-#include <LibGUI/GButton.h>
+#include <AK/String.h>
 #include <LibDraw/Rect.h>
+#include <LibGUI/GButton.h>
 
 class Window {
 public:
@@ -19,46 +19,58 @@ public:
             m_button->remove_from_parent();
     }
 
-    WindowIdentifier identifier() const {
+    WindowIdentifier identifier() const
+    {
         return m_identifier;
     }
 
-    String title() const {
+    String title() const
+    {
         return m_title;
     }
-    void set_title(const String& title) {
+    void set_title(const String& title)
+    {
         m_title = title;
     }
 
-    Rect rect() const {
+    Rect rect() const
+    {
         return m_rect;
     }
-    void set_rect(const Rect& rect) {
+    void set_rect(const Rect& rect)
+    {
         m_rect = rect;
     }
 
-    GButton* button() {
+    GButton* button()
+    {
         return m_button;
     }
-    void set_button(GButton* button) {
+    void set_button(GButton* button)
+    {
         m_button = button;
     }
 
-    void set_active(bool active) {
+    void set_active(bool active)
+    {
         m_active = active;
     }
-    bool is_active() const {
+    bool is_active() const
+    {
         return m_active;
     }
 
-    void set_minimized(bool minimized) {
+    void set_minimized(bool minimized)
+    {
         m_minimized = minimized;
     }
-    bool is_minimized() const {
+    bool is_minimized() const
+    {
         return m_minimized;
     }
 
-    const GraphicsBitmap* icon() const {
+    const GraphicsBitmap* icon() const
+    {
         return m_icon.ptr();
     }
 

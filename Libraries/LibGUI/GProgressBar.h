@@ -8,28 +8,35 @@ public:
     virtual ~GProgressBar() override;
 
     void set_range(int min, int max);
-    void set_min(int min) {
+    void set_min(int min)
+    {
         set_range(min, max());
     }
-    void set_max(int max) {
+    void set_max(int max)
+    {
         set_range(min(), max);
     }
     void set_value(int);
 
-    int value() const {
+    int value() const
+    {
         return m_value;
     }
-    int min() const {
+    int min() const
+    {
         return m_min;
     }
-    int max() const {
+    int max() const
+    {
         return m_max;
     }
 
-    String caption() const {
+    String caption() const
+    {
         return m_caption;
     }
-    void set_caption(const StringView& caption) {
+    void set_caption(const StringView& caption)
+    {
         m_caption = caption;
     }
 
@@ -38,10 +45,12 @@ public:
         Percentage,
         ValueSlashMax
     };
-    Format format() const {
+    Format format() const
+    {
         return m_format;
     }
-    void set_format(Format format) {
+    void set_format(Format format)
+    {
         m_format = format;
     }
 

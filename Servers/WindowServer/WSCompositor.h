@@ -30,7 +30,8 @@ public:
     void set_resolution(int desired_width, int desired_height);
 
     bool set_wallpaper(const String& path, Function<void(bool)>&& callback);
-    String wallpaper_path() const {
+    String wallpaper_path() const
+    {
         return m_wallpaper_path;
     }
 

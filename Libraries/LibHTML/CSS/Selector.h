@@ -30,7 +30,8 @@ public:
     explicit Selector(Vector<Component>&&);
     ~Selector();
 
-    const Vector<Component>& components() const {
+    const Vector<Component>& components() const
+    {
         return m_components;
     }
 

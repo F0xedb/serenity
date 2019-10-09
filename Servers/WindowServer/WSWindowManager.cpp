@@ -140,7 +140,7 @@ void WSWindowManager::reload_config(bool set_screen)
 
     if (set_screen)
         set_resolution(m_wm_config->read_num_entry("Screen", "Width", 1920),
-                       m_wm_config->read_num_entry("Screen", "Height", 1080));
+            m_wm_config->read_num_entry("Screen", "Height", 1080));
 
     m_arrow_cursor = get_cursor("Arrow", { 2, 2 });
     m_resize_horizontally_cursor = get_cursor("ResizeH");

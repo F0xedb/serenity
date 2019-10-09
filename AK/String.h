@@ -117,16 +117,20 @@ public:
     Vector<StringView> split_view(char separator, bool keep_empty = false) const;
     StringView substring_view(int start, int length) const;
 
-    bool is_null() const {
+    bool is_null() const
+    {
         return !m_impl;
     }
-    bool is_empty() const {
+    bool is_empty() const
+    {
         return length() == 0;
     }
-    int length() const {
+    int length() const
+    {
         return m_impl ? m_impl->length() : 0;
     }
-    const char* characters() const {
+    const char* characters() const
+    {
         return m_impl ? m_impl->characters() : nullptr;
     }
     char operator[](int i) const
@@ -139,30 +143,36 @@ public:
     bool ends_with(const StringView&) const;
 
     bool operator==(const String&) const;
-    bool operator!=(const String& other) const {
+    bool operator!=(const String& other) const
+    {
         return !(*this == other);
     }
 
     bool operator==(const StringView&) const;
-    bool operator!=(const StringView& other) const {
+    bool operator!=(const StringView& other) const
+    {
         return !(*this == other);
     }
 
     bool operator<(const String&) const;
     bool operator<(const char*) const;
-    bool operator>=(const String& other) const {
+    bool operator>=(const String& other) const
+    {
         return !(*this < other);
     }
-    bool operator>=(const char* other) const {
+    bool operator>=(const char* other) const
+    {
         return !(*this < other);
     }
 
     bool operator>(const String&) const;
     bool operator>(const char*) const;
-    bool operator<=(const String& other) const {
+    bool operator<=(const String& other) const
+    {
         return !(*this > other);
     }
-    bool operator<=(const char* other) const {
+    bool operator<=(const char* other) const
+    {
         return !(*this > other);
     }
 
@@ -184,10 +194,12 @@ public:
 
     static String empty();
 
-    StringImpl* impl() {
+    StringImpl* impl()
+    {
         return m_impl.ptr();
     }
-    const StringImpl* impl() const {
+    const StringImpl* impl() const
+    {
         return m_impl.ptr();
     }
 
@@ -229,7 +241,8 @@ public:
     }
 #endif
 
-    StringView view() const {
+    StringView view() const
+    {
         return { characters(), length() };
     }
 
@@ -253,22 +266,25 @@ inline bool StringView::operator==(const String& string) const
 
 template<>
 struct Traits<String> : public GenericTraits<String> {
-    static unsigned hash(const String& s) {
+    static unsigned hash(const String& s)
+    {
         return s.impl() ? s.impl()->hash() : 0;
     }
-    static void dump(const String& s) {
+    static void dump(const String& s)
+    {
         kprintf("%s", s.characters());
     }
 };
 
 struct CaseInsensitiveStringTraits : public AK::Traits<String> {
-    static unsigned hash(const String& s) {
+    static unsigned hash(const String& s)
+    {
         return s.impl() ? s.to_lowercase().impl()->hash() : 0;
     }
-    static bool equals(const String& a, const String& b) {
+    static bool equals(const String& a, const String& b)
+    {
         return a.to_lowercase() == b.to_lowercase();
     }
-
 };
 
 inline bool operator<(const char* characters, const String& string)
@@ -305,5 +321,5 @@ inline bool operator<=(const char* characters, const String& string)
 
 }
 
-using AK::String;
 using AK::CaseInsensitiveStringTraits;
+using AK::String;
