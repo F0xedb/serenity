@@ -13,18 +13,18 @@ char* basename(char* path);
 ## Description
 
 Given a file path, `basename()` returns that file's name. `basename()` works
-purely lexically, meaning it only manipulates the path as a string, and does
-not check if such a file actually exists.
+purely lexically, meaning it only manipulates the path as a string, and does not
+check if such a file actually exists.
 
 A call to `basename()` may reuse and modify the passed in `path` buffer. Do not
 expect it to have the same value after calling `basename()`.
 
 ## Return value
 
-`basename()` returns the file name as a string. This string may be allocated
-in static memory, or it may point to some part of the original `path` buffer.
-Do not `free()` the returned string, and do not `free()` the original `path`
-buffer while using the returned string.
+`basename()` returns the file name as a string. This string may be allocated in
+static memory, or it may point to some part of the original `path` buffer. Do
+not `free()` the returned string, and do not `free()` the original `path` buffer
+while using the returned string.
 
 ## Examples
 
@@ -50,4 +50,4 @@ int main()
 
 ## See also
 
-* [`dirname`(3)](dirname.md)
+- [`dirname`(3)](dirname.md)

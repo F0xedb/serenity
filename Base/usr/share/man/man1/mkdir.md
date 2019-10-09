@@ -10,7 +10,7 @@ $ mkdir path
 
 ## Description
 
-Create a new empty directory at the given *path*.
+Create a new empty directory at the given _path_.
 
 ## Examples
 
@@ -20,4 +20,4 @@ $ mkdir /tmp/foo
 
 ## See also
 
-* [`mkdir`(2)](../man2/mkdir.md)
+- [`mkdir`(2)](../man2/mkdir.md)

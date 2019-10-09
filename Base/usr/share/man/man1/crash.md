@@ -10,21 +10,20 @@ $ crash [options]
 
 ## Description
 
-This program is used to test how the Serenity kernel handles
-userspace crashes, and can be used to simulate many different
-kinds of crashes.
+This program is used to test how the Serenity kernel handles userspace crashes,
+and can be used to simulate many different kinds of crashes.
 
 ## Options
 
-* `-s`: Perform a segmentation violation by dereferencing an invalid pointer.
-* `-d`: Perform a division by zero.
-* `-i`: Execute an illegal CPU instruction.
-* `-a`: Call `abort()`.
-* `-m`: Read a pointer from uninitialized memory, then read from it.
-* `-f`: Read a pointer from memory freed using `free()`, then read from it.
-* `-M`: Read a pointer from uninitialized memory, then write to it.
-* `-F`: Read a pointer from memory freed using `free()`, then write to it.
-* `-r`: Write to read-only memory.
+- `-s`: Perform a segmentation violation by dereferencing an invalid pointer.
+- `-d`: Perform a division by zero.
+- `-i`: Execute an illegal CPU instruction.
+- `-a`: Call `abort()`.
+- `-m`: Read a pointer from uninitialized memory, then read from it.
+- `-f`: Read a pointer from memory freed using `free()`, then read from it.
+- `-M`: Read a pointer from uninitialized memory, then write to it.
+- `-F`: Read a pointer from memory freed using `free()`, then write to it.
+- `-r`: Write to read-only memory.
 
 ## Examples
 

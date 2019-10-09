@@ -23,9 +23,9 @@ expect it to have the same value after calling `dirname()`.
 ## Return value
 
 `dirname()` returns the directory path as a string. This string may be allocated
-in static memory, or it may point to some part of the original `path` buffer.
-Do not `free()` the returned string, and do not `free()` the original `path`
-buffer while using the returned string.
+in static memory, or it may point to some part of the original `path` buffer. Do
+not `free()` the returned string, and do not `free()` the original `path` buffer
+while using the returned string.
 
 ## Examples
 
@@ -51,4 +51,4 @@ int main()
 
 ## See also
 
-* [`basename`(3)](basename.md)
+- [`basename`(3)](basename.md)

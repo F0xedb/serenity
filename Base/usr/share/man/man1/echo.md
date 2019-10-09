@@ -8,7 +8,7 @@ echo - print the given text
 
 ## Description
 
-Print the given *text*, which is passed as argv, to the standard output,
+Print the given _text_, which is passed as argv, to the standard output,
 separating arguments with a space character.
 
 ## Examples
