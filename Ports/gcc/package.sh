@@ -9,19 +9,19 @@ installopts="DESTDIR=$SERENITY_ROOT/Root install-gcc install-target-libgcc insta
 depends="binutils"
 
 fetch() {
-    read url filename <<< "$(echo "$files")"    
-    run_nocd curl -O "$url" -o "$filename"
-    run_nocd tar xf "$filename"
-    run contrib/download_prerequisites
-    for f in patches/*; do
-        run patch -p1 < "$f"
-    done
+  read url filename <<<"$(echo "$files")"
+  run_nocd curl -O "$url" -o "$filename"
+  run_nocd tar xf "$filename"
+  run contrib/download_prerequisites
+  for f in patches/*; do
+    run patch -p1 <"$f"
+  done
 }
 build() {
-    run make "$makeopts"
-    run find ./host-i686-pc-serenity/gcc/ -maxdepth 1 -type f -executable -exec strip --strip-debug {} \; || echo
+  run make "$makeopts"
+  run find ./host-i686-pc-serenity/gcc/ -maxdepth 1 -type f -executable -exec strip --strip-debug {} \; || echo
 }
 
 install() {
-    run make "$installopts"
+  run make "$installopts"
 }

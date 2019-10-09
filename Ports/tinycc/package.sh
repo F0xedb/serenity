@@ -8,7 +8,7 @@ useconfigure=true
 makeopts=tcc
 
 configure() {
-    run ./configure --cross-prefix=i686-pc-serenity- --cpu=i686 --triplet=i686-pc-serenity --crtprefix=/usr/lib
+  run ./configure --cross-prefix=i686-pc-serenity- --cpu=i686 --triplet=i686-pc-serenity --crtprefix=/usr/lib
 }
 
 export CONFIG_ldl=no

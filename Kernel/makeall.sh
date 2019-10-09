@@ -8,7 +8,7 @@ export build_group="$(id -g)"
 sudo id
 
 if [ -z "$MAKEJOBS" ]; then
-    MAKEJOBS=$(nproc)
+  MAKEJOBS=$(nproc)
 fi
 
 make_cmd="make -j $MAKEJOBS"
@@ -90,18 +90,18 @@ build_targets="$build_targets ." # the kernel
 (cd ../AK/Tests && "$make_cmd" clean)
 
 for targ in "$build_targets"; do
-    #(cd "$targ" && find . -name "*.c" -o -name "*.cpp" -o -name "*.h" -exec clang-format -i {} \;)
+  #(cd "$targ" && find . -name "*.c" -o -name "*.cpp" -o -name "*.h" -exec clang-format -i {} \;)
 
-    if [ -f "$targ/Makefile" ]; then
-        echo "Building $targ"
-        "$make_cmd" -C "$targ" clean
-        "$make_cmd" -C "$targ"
-    fi
+  if [ -f "$targ/Makefile" ]; then
+    echo "Building $targ"
+    "$make_cmd" -C "$targ" clean
+    "$make_cmd" -C "$targ"
+  fi
 
-    if [ -f "$targ/install.sh" ]; then
-        echo "Installing $targ"
-        (cd "$targ" && ./install.sh)
-    fi
+  if [ -f "$targ/install.sh" ]; then
+    echo "Installing $targ"
+    (cd "$targ" && ./install.sh)
+  fi
 done
 
 sudo -E ./build-image-qemu.sh

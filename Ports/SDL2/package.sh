@@ -8,5 +8,5 @@ files="https://github.com/SerenityOS/SDL/archive/master-serenity.tar.gz SDL2-git
 configopts="-DCMAKE_TOOLCHAIN_FILE=$SERENITY_ROOT/Toolchain/CMakeToolchain.txt -DPULSEAUDIO=OFF"
 
 configure() {
-    run cmake "$configopts"
+  run cmake "$configopts"
 }

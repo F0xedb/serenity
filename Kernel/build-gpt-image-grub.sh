@@ -3,21 +3,21 @@
 set -e
 
 die() {
-    echo "die: $@"
-    exit 1
+  echo "die: $@"
+  exit 1
 }
 
 if [ "$(id -u)" != 0 ]; then
-    die "this script needs to run as root"
+  die "this script needs to run as root"
 fi
 
 grub=$(which grub-install 2>/dev/null) || true
 if [[ -z "$grub" ]]; then
-    grub=$(which grub2-install 2>/dev/null) || true
+  grub=$(which grub2-install 2>/dev/null) || true
 fi
 if [ -z "$grub" ]; then
-    echo "can't find a grub-install or grub2-install binary, oh no"
-    exit 1
+  echo "can't find a grub-install or grub2-install binary, oh no"
+  exit 1
 fi
 echo "using grub-install at $grub"
 
@@ -29,23 +29,23 @@ echo "done"
 echo -n "creating loopback device... "
 dev=$(losetup --find --partscan --show _disk_image)
 if [ -z "$dev" ]; then
-    die "couldn't mount loopback device"
+  die "couldn't mount loopback device"
 fi
 echo "loopback device is at $dev"
 
 cleanup() {
-    if [ -d mnt ]; then
-        echo -n "unmounting filesystem... "
-        umount mnt || ( sleep 1 && sync && umount mnt )
-        rm -rf mnt
-        echo "done"
-    fi
+  if [ -d mnt ]; then
+    echo -n "unmounting filesystem... "
+    umount mnt || (sleep 1 && sync && umount mnt)
+    rm -rf mnt
+    echo "done"
+  fi
 
-    if [ -e "$dev" ]; then
-        echo -n "cleaning up loopback device... "
-        losetup -d "$dev"
-        echo "done"
-    fi
+  if [ -e "$dev" ]; then
+    echo -n "cleaning up loopback device... "
+    losetup -d "$dev"
+    echo "done"
+  fi
 }
 trap cleanup EXIT
 
@@ -76,9 +76,9 @@ echo "installing grub using $grub..."
 "$grub" --boot-directory=mnt/boot --target=i386-pc --modules="ext2 part_msdos part_gpt" "$dev"
 
 if [ -d mnt/boot/grub2 ]; then
-    cp grub_gpt.cfg mnt/boot/grub2/grub.cfg
+  cp grub_gpt.cfg mnt/boot/grub2/grub.cfg
 else
-    cp grub_gpt.cfg mnt/boot/grub/grub.cfg
+  cp grub_gpt.cfg mnt/boot/grub/grub.cfg
 fi
 echo "done"
 
