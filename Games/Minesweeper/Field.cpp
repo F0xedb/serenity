@@ -46,7 +46,7 @@ public:
     {
         if (event.button() == GMouseButton::Right || event.button() == GMouseButton::Left) {
             if (event.buttons() == (GMouseButton::Right | GMouseButton::Left) ||
-                  m_square.field->is_single_chording()) {
+                    m_square.field->is_single_chording()) {
                 m_chord = true;
                 m_square.field->set_chord_preview(m_square, true);
             }
@@ -124,7 +124,9 @@ Field::Field(GLabel& flag_label, GLabel& time_label, GButton& face_button, GWidg
     set_background_color(Color::WarmGray);
     reset();
 
-    m_face_button.on_click = [this](auto&) { reset(); };
+    m_face_button.on_click = [this](auto&) {
+        reset();
+    };
     set_face(Face::Default);
 
     {

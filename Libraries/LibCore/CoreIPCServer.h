@@ -21,300 +21,314 @@
 namespace IPC {
 namespace Server {
 
-    class Event : public CEvent {
-    public:
-        enum Type {
-            Invalid = 2000,
-            Disconnected,
-        };
-        Event() {}
-        explicit Event(Type type)
-            : CEvent(type)
-        {
-        }
+class Event : public CEvent {
+public:
+    enum Type {
+        Invalid = 2000,
+        Disconnected,
     };
-
-    class DisconnectedEvent : public Event {
-    public:
-        explicit DisconnectedEvent(int client_id)
-            : Event(Disconnected)
-            , m_client_id(client_id)
-        {
-        }
-
-        int client_id() const { return m_client_id; }
-
-    private:
-        int m_client_id { 0 };
-    };
-
-    template<typename T, class... Args>
-    NonnullRefPtr<T> new_connection_for_client(Args&&... args)
+    Event() {}
+    explicit Event(Type type)
+        : CEvent(type)
     {
-        auto conn = T::construct(forward<Args>(args)...);
-        conn->send_greeting();
-        return conn;
+    }
+};
+
+class DisconnectedEvent : public Event {
+public:
+    explicit DisconnectedEvent(int client_id)
+        : Event(Disconnected)
+        , m_client_id(client_id)
+    {
     }
 
-    template<typename T, class... Args>
-    NonnullRefPtr<T> new_connection_ng_for_client(Args&&... args)
-    {
-        return T::construct(forward<Args>(args)...) /* arghs */;
+    int client_id() const {
+        return m_client_id;
     }
 
-    template<typename ServerMessage, typename ClientMessage>
-    class Connection : public CObject {
-    protected:
-        Connection(CLocalSocket& socket, int client_id)
-            : m_socket(socket)
-            , m_client_id(client_id)
-        {
-            add_child(socket);
-            m_socket->on_ready_to_read = [this] { drain_client(); };
+private:
+    int m_client_id { 0 };
+};
+
+template<typename T, class... Args>
+NonnullRefPtr<T> new_connection_for_client(Args&&... args)
+{
+    auto conn = T::construct(forward<Args>(args)...);
+    conn->send_greeting();
+    return conn;
+}
+
+template<typename T, class... Args>
+NonnullRefPtr<T> new_connection_ng_for_client(Args&&... args)
+{
+    return T::construct(forward<Args>(args)...) /* arghs */;
+}
+
+template<typename ServerMessage, typename ClientMessage>
+class Connection : public CObject {
+protected:
+    Connection(CLocalSocket& socket, int client_id)
+        : m_socket(socket)
+        , m_client_id(client_id)
+    {
+        add_child(socket);
+        m_socket->on_ready_to_read = [this] { drain_client(); };
 #if defined(CIPC_DEBUG)
-            dbg() << "S: Created new Connection " << fd << client_id << " and said hello";
+        dbg() << "S: Created new Connection " << fd << client_id << " and said hello";
 #endif
+    }
+
+public:
+    ~Connection()
+    {
+#if defined(CIPC_DEBUG)
+        dbg() << "S: Destroyed Connection " << m_socket->fd() << client_id();
+#endif
+    }
+
+    void post_message(const ServerMessage& message, const ByteBuffer& extra_data = {})
+    {
+#if defined(CIPC_DEBUG)
+        dbg() << "S: -> C " << int(message.type) << " extra " << extra_data.size();
+#endif
+        if (!extra_data.is_empty())
+            const_cast<ServerMessage&>(message).extra_size = extra_data.size();
+
+        struct iovec iov[2];
+        int iov_count = 1;
+
+        iov[0].iov_base = const_cast<ServerMessage*>(&message);
+        iov[0].iov_len = sizeof(message);
+
+        if (!extra_data.is_empty()) {
+            iov[1].iov_base = const_cast<u8*>(extra_data.data());
+            iov[1].iov_len = extra_data.size();
+            ++iov_count;
         }
 
-    public:
-        ~Connection()
-        {
-#if defined(CIPC_DEBUG)
-            dbg() << "S: Destroyed Connection " << m_socket->fd() << client_id();
-#endif
-        }
-
-        void post_message(const ServerMessage& message, const ByteBuffer& extra_data = {})
-        {
-#if defined(CIPC_DEBUG)
-            dbg() << "S: -> C " << int(message.type) << " extra " << extra_data.size();
-#endif
-            if (!extra_data.is_empty())
-                const_cast<ServerMessage&>(message).extra_size = extra_data.size();
-
-            struct iovec iov[2];
-            int iov_count = 1;
-
-            iov[0].iov_base = const_cast<ServerMessage*>(&message);
-            iov[0].iov_len = sizeof(message);
-
-            if (!extra_data.is_empty()) {
-                iov[1].iov_base = const_cast<u8*>(extra_data.data());
-                iov[1].iov_len = extra_data.size();
-                ++iov_count;
-            }
-
-            int nwritten = writev(m_socket->fd(), iov, iov_count);
-            if (nwritten < 0) {
-                switch (errno) {
-                case EPIPE:
-                    dbgprintf("Connection::post_message: Disconnected from peer.\n");
-                    shutdown();
-                    return;
-                case EAGAIN:
-                    dbgprintf("Connection::post_message: Client buffer overflowed.\n");
-                    did_misbehave();
-                    return;
-                default:
-                    perror("Connection::post_message writev");
-                    ASSERT_NOT_REACHED();
-                }
-            }
-
-            ASSERT(nwritten == (int)(sizeof(message) + extra_data.size()));
-        }
-
-        void drain_client()
-        {
-            unsigned messages_received = 0;
-            for (;;) {
-                ClientMessage message;
-                // FIXME: Don't go one message at a time, that's so much context switching, oof.
-                ssize_t nread = recv(m_socket->fd(), &message, sizeof(ClientMessage), MSG_DONTWAIT);
-                if (nread == 0 || (nread == -1 && errno == EAGAIN)) {
-                    if (!messages_received) {
-                        CEventLoop::current().post_event(*this, make<DisconnectedEvent>(client_id()));
-                    }
-                    break;
-                }
-                if (nread < 0) {
-                    perror("recv");
-                    ASSERT_NOT_REACHED();
-                }
-                ByteBuffer extra_data;
-                if (message.extra_size) {
-                    if (message.extra_size >= 32768) {
-                        dbgprintf("message.extra_size is way too large\n");
-                        return did_misbehave();
-                    }
-                    extra_data = ByteBuffer::create_uninitialized(message.extra_size);
-                    // FIXME: We should allow this to time out. Maybe use a socket timeout?
-                    int extra_nread = read(m_socket->fd(), extra_data.data(), extra_data.size());
-                    if (extra_nread != (int)message.extra_size) {
-                        dbgprintf("extra_nread(%d) != extra_size(%d)\n", extra_nread, extra_data.size());
-                        if (extra_nread < 0)
-                            perror("read");
-                        return did_misbehave();
-                    }
-                }
-#if defined(CIPC_DEBUG)
-                dbg() << "S: <- C " << int(message.type) << " extra " << extra_data.size();
-#endif
-                if (!handle_message(message, move(extra_data)))
-                    return;
-                ++messages_received;
+        int nwritten = writev(m_socket->fd(), iov, iov_count);
+        if (nwritten < 0) {
+            switch (errno) {
+            case EPIPE:
+                dbgprintf("Connection::post_message: Disconnected from peer.\n");
+                shutdown();
+                return;
+            case EAGAIN:
+                dbgprintf("Connection::post_message: Client buffer overflowed.\n");
+                did_misbehave();
+                return;
+            default:
+                perror("Connection::post_message writev");
+                ASSERT_NOT_REACHED();
             }
         }
 
-        void did_misbehave()
-        {
-            dbgprintf("Connection{%p} (id=%d, pid=%d) misbehaved, disconnecting.\n", this, client_id(), m_client_pid);
-            shutdown();
-        }
+        ASSERT(nwritten == (int)(sizeof(message) + extra_data.size()));
+    }
 
-        void shutdown()
-        {
-            m_socket->close();
+    void drain_client()
+    {
+        unsigned messages_received = 0;
+        for (;;) {
+            ClientMessage message;
+            // FIXME: Don't go one message at a time, that's so much context switching, oof.
+            ssize_t nread = recv(m_socket->fd(), &message, sizeof(ClientMessage), MSG_DONTWAIT);
+            if (nread == 0 || (nread == -1 && errno == EAGAIN)) {
+                if (!messages_received) {
+                    CEventLoop::current().post_event(*this, make<DisconnectedEvent>(client_id()));
+                }
+                break;
+            }
+            if (nread < 0) {
+                perror("recv");
+                ASSERT_NOT_REACHED();
+            }
+            ByteBuffer extra_data;
+            if (message.extra_size) {
+                if (message.extra_size >= 32768) {
+                    dbgprintf("message.extra_size is way too large\n");
+                    return did_misbehave();
+                }
+                extra_data = ByteBuffer::create_uninitialized(message.extra_size);
+                // FIXME: We should allow this to time out. Maybe use a socket timeout?
+                int extra_nread = read(m_socket->fd(), extra_data.data(), extra_data.size());
+                if (extra_nread != (int)message.extra_size) {
+                    dbgprintf("extra_nread(%d) != extra_size(%d)\n", extra_nread, extra_data.size());
+                    if (extra_nread < 0)
+                        perror("read");
+                    return did_misbehave();
+                }
+            }
+#if defined(CIPC_DEBUG)
+            dbg() << "S: <- C " << int(message.type) << " extra " << extra_data.size();
+#endif
+            if (!handle_message(message, move(extra_data)))
+                return;
+            ++messages_received;
+        }
+    }
+
+    void did_misbehave()
+    {
+        dbgprintf("Connection{%p} (id=%d, pid=%d) misbehaved, disconnecting.\n", this, client_id(), m_client_pid);
+        shutdown();
+    }
+
+    void shutdown()
+    {
+        m_socket->close();
+        die();
+    }
+
+    int client_id() const {
+        return m_client_id;
+    }
+    pid_t client_pid() const {
+        return m_client_pid;
+    }
+    void set_client_pid(pid_t pid) {
+        m_client_pid = pid;
+    }
+
+    // ### having this public is sad
+    virtual void send_greeting() = 0;
+
+    virtual void die() = 0;
+
+protected:
+    void event(CEvent& event)
+    {
+        if (event.type() == Event::Disconnected) {
+            int client_id = static_cast<const DisconnectedEvent&>(event).client_id();
+            dbgprintf("Connection: Client disconnected: %d\n", client_id);
             die();
+            return;
         }
 
-        int client_id() const { return m_client_id; }
-        pid_t client_pid() const { return m_client_pid; }
-        void set_client_pid(pid_t pid) { m_client_pid = pid; }
+        CObject::event(event);
+    }
 
-        // ### having this public is sad
-        virtual void send_greeting() = 0;
+    virtual bool handle_message(const ClientMessage&, const ByteBuffer&& = {}) = 0;
 
-        virtual void die() = 0;
+private:
+    RefPtr<CLocalSocket> m_socket;
+    int m_client_id { -1 };
+    int m_client_pid { -1 };
+};
 
-    protected:
-        void event(CEvent& event)
-        {
-            if (event.type() == Event::Disconnected) {
-                int client_id = static_cast<const DisconnectedEvent&>(event).client_id();
-                dbgprintf("Connection: Client disconnected: %d\n", client_id);
-                die();
+template<typename Endpoint>
+class ConnectionNG : public CObject {
+public:
+    ConnectionNG(Endpoint& endpoint, CLocalSocket& socket, int client_id)
+        : m_endpoint(endpoint)
+        , m_socket(socket)
+        , m_client_id(client_id)
+    {
+        add_child(socket);
+        m_socket->on_ready_to_read = [this] { drain_client(); };
+    }
+
+    virtual ~ConnectionNG() override
+    {
+    }
+
+    void post_message(const IMessage& message)
+    {
+        auto buffer = message.encode();
+
+        int nwritten = write(m_socket->fd(), buffer.data(), (size_t)buffer.size());
+        if (nwritten < 0) {
+            switch (errno) {
+            case EPIPE:
+                dbg() << "Connection::post_message: Disconnected from peer";
+                shutdown();
+                return;
+            case EAGAIN:
+                dbg() << "Connection::post_message: Client buffer overflowed.";
+                did_misbehave();
+                return;
+            default:
+                perror("Connection::post_message write");
+                ASSERT_NOT_REACHED();
+            }
+        }
+
+        ASSERT(nwritten == buffer.size());
+    }
+
+    void drain_client()
+    {
+        unsigned messages_received = 0;
+        for (;;) {
+            u8 buffer[4096];
+            ssize_t nread = recv(m_socket->fd(), buffer, sizeof(buffer), MSG_DONTWAIT);
+            if (nread == 0 || (nread == -1 && errno == EAGAIN)) {
+                if (!messages_received) {
+                    CEventLoop::current().post_event(*this, make<DisconnectedEvent>(client_id()));
+                }
+                break;
+            }
+            if (nread < 0) {
+                perror("recv");
+                ASSERT_NOT_REACHED();
+            }
+            auto message = m_endpoint.decode_message(ByteBuffer::wrap(buffer, nread));
+            if (!message) {
+                dbg() << "drain_client: Endpoint didn't recognize message";
+                did_misbehave();
                 return;
             }
+            ++messages_received;
 
-            CObject::event(event);
+            auto response = m_endpoint.handle(*message);
+            if (response)
+                post_message(*response);
         }
+    }
 
-        virtual bool handle_message(const ClientMessage&, const ByteBuffer&& = {}) = 0;
+    void did_misbehave()
+    {
+        dbg() << "Connection{" << this << "} (id=" << m_client_id << ", pid=" << m_client_pid << ") misbehaved, disconnecting.";
+        shutdown();
+    }
 
-    private:
-        RefPtr<CLocalSocket> m_socket;
-        int m_client_id { -1 };
-        int m_client_pid { -1 };
-    };
+    void shutdown()
+    {
+        m_socket->close();
+        die();
+    }
 
-    template<typename Endpoint>
-    class ConnectionNG : public CObject {
-    public:
-        ConnectionNG(Endpoint& endpoint, CLocalSocket& socket, int client_id)
-            : m_endpoint(endpoint)
-            , m_socket(socket)
-            , m_client_id(client_id)
-        {
-            add_child(socket);
-            m_socket->on_ready_to_read = [this] { drain_client(); };
-        }
+    int client_id() const {
+        return m_client_id;
+    }
+    pid_t client_pid() const {
+        return m_client_pid;
+    }
+    void set_client_pid(pid_t pid) {
+        m_client_pid = pid;
+    }
 
-        virtual ~ConnectionNG() override
-        {
-        }
+    virtual void die() = 0;
 
-        void post_message(const IMessage& message)
-        {
-            auto buffer = message.encode();
-
-            int nwritten = write(m_socket->fd(), buffer.data(), (size_t)buffer.size());
-            if (nwritten < 0) {
-                switch (errno) {
-                case EPIPE:
-                    dbg() << "Connection::post_message: Disconnected from peer";
-                    shutdown();
-                    return;
-                case EAGAIN:
-                    dbg() << "Connection::post_message: Client buffer overflowed.";
-                    did_misbehave();
-                    return;
-                default:
-                    perror("Connection::post_message write");
-                    ASSERT_NOT_REACHED();
-                }
-            }
-
-            ASSERT(nwritten == buffer.size());
-        }
-
-        void drain_client()
-        {
-            unsigned messages_received = 0;
-            for (;;) {
-                u8 buffer[4096];
-                ssize_t nread = recv(m_socket->fd(), buffer, sizeof(buffer), MSG_DONTWAIT);
-                if (nread == 0 || (nread == -1 && errno == EAGAIN)) {
-                    if (!messages_received) {
-                        CEventLoop::current().post_event(*this, make<DisconnectedEvent>(client_id()));
-                    }
-                    break;
-                }
-                if (nread < 0) {
-                    perror("recv");
-                    ASSERT_NOT_REACHED();
-                }
-                auto message = m_endpoint.decode_message(ByteBuffer::wrap(buffer, nread));
-                if (!message) {
-                    dbg() << "drain_client: Endpoint didn't recognize message";
-                    did_misbehave();
-                    return;
-                }
-                ++messages_received;
-
-                auto response = m_endpoint.handle(*message);
-                if (response)
-                    post_message(*response);
-            }
-        }
-
-        void did_misbehave()
-        {
-            dbg() << "Connection{" << this << "} (id=" << m_client_id << ", pid=" << m_client_pid << ") misbehaved, disconnecting.";
-            shutdown();
-        }
-
-        void shutdown()
-        {
-            m_socket->close();
+protected:
+    void event(CEvent& event) override
+    {
+        if (event.type() == Event::Disconnected) {
+            int client_id = static_cast<const DisconnectedEvent&>(event).client_id();
+            dbgprintf("Connection: Client disconnected: %d\n", client_id);
             die();
+            return;
         }
 
-        int client_id() const { return m_client_id; }
-        pid_t client_pid() const { return m_client_pid; }
-        void set_client_pid(pid_t pid) { m_client_pid = pid; }
+        CObject::event(event);
+    }
 
-        virtual void die() = 0;
-
-    protected:
-        void event(CEvent& event) override
-        {
-            if (event.type() == Event::Disconnected) {
-                int client_id = static_cast<const DisconnectedEvent&>(event).client_id();
-                dbgprintf("Connection: Client disconnected: %d\n", client_id);
-                die();
-                return;
-            }
-
-            CObject::event(event);
-        }
-
-    private:
-        Endpoint& m_endpoint;
-        RefPtr<CLocalSocket> m_socket;
-        int m_client_id { -1 };
-        int m_client_pid { -1 };
-    };
+private:
+    Endpoint& m_endpoint;
+    RefPtr<CLocalSocket> m_socket;
+    int m_client_id { -1 };
+    int m_client_pid { -1 };
+};
 
 } // Server
 } // IPC

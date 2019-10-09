@@ -9,7 +9,9 @@ class ColorDialog final : public GDialog {
 public:
     virtual ~ColorDialog() override;
 
-    Color color() const { return m_color; }
+    Color color() const {
+        return m_color;
+    }
 
 private:
     explicit ColorDialog(Color, CObject* parent = nullptr);

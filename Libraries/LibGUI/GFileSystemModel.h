@@ -18,7 +18,9 @@ public:
     }
     virtual ~GFileSystemModel() override;
 
-    String root_path() const { return m_root_path; }
+    String root_path() const {
+        return m_root_path;
+    }
     String path(const GModelIndex&) const;
     GModelIndex index(const StringView& path) const;
 

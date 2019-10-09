@@ -10,8 +10,12 @@ class GClipboard {
 public:
     static GClipboard& the();
 
-    String data() const { return data_and_type().data; }
-    String type() const { return data_and_type().type; }
+    String data() const {
+        return data_and_type().data;
+    }
+    String type() const {
+        return data_and_type().type;
+    }
     void set_data(const StringView&, const String& data_type = "text");
 
     struct DataAndType {

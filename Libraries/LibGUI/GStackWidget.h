@@ -7,8 +7,12 @@ class GStackWidget : public GWidget {
 public:
     virtual ~GStackWidget() override;
 
-    GWidget* active_widget() { return m_active_widget.ptr(); }
-    const GWidget* active_widget() const { return m_active_widget.ptr(); }
+    GWidget* active_widget() {
+        return m_active_widget.ptr();
+    }
+    const GWidget* active_widget() const {
+        return m_active_widget.ptr();
+    }
     void set_active_widget(GWidget*);
 
     Function<void(GWidget*)> on_active_widget_change;

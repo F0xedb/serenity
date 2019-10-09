@@ -10,7 +10,9 @@ public:
     LayoutBlock(const Node*, NonnullRefPtr<StyleProperties>);
     virtual ~LayoutBlock() override;
 
-    virtual const char* class_name() const override { return "LayoutBlock"; }
+    virtual const char* class_name() const override {
+        return "LayoutBlock";
+    }
 
     virtual void layout() override;
     virtual void render(RenderingContext&) override;
@@ -19,13 +21,19 @@ public:
 
     bool children_are_inline() const;
 
-    Vector<LineBox>& line_boxes() { return m_line_boxes; }
-    const Vector<LineBox>& line_boxes() const { return m_line_boxes; }
+    Vector<LineBox>& line_boxes() {
+        return m_line_boxes;
+    }
+    const Vector<LineBox>& line_boxes() const {
+        return m_line_boxes;
+    }
 
     virtual HitTestResult hit_test(const Point&) const override;
 
 private:
-    virtual bool is_block() const override { return true; }
+    virtual bool is_block() const override {
+        return true;
+    }
 
     NonnullRefPtr<StyleProperties> style_for_anonymous_block() const;
 

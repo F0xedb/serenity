@@ -147,14 +147,14 @@ static void dump(const RegisterDump& regs)
     if (current && current->process().validate_read((void*)regs.eip, 8)) {
         u8* codeptr = (u8*)regs.eip;
         kprintf("code: %02x %02x %02x %02x %02x %02x %02x %02x\n",
-            codeptr[0],
-            codeptr[1],
-            codeptr[2],
-            codeptr[3],
-            codeptr[4],
-            codeptr[5],
-            codeptr[6],
-            codeptr[7]);
+                codeptr[0],
+                codeptr[1],
+                codeptr[2],
+                codeptr[3],
+                codeptr[4],
+                codeptr[5],
+                codeptr[6],
+                codeptr[7]);
     }
 }
 
@@ -166,10 +166,10 @@ static void handle_crash(RegisterDump& regs, const char* description, int signal
     }
 
     kprintf("\033[31;1mCRASH: %s %s: %s(%u)\033[0m\n",
-        description,
-        current->process().is_ring0() ? "Kernel" : "Process",
-        current->process().name().characters(),
-        current->pid());
+            description,
+            current->process().is_ring0() ? "Kernel" : "Process",
+            current->process().name().characters(),
+            current->pid());
 
     dump(regs);
 
@@ -246,13 +246,13 @@ void exception_14_handler(RegisterDump& regs)
 
 #ifdef PAGE_FAULT_DEBUG
     dbgprintf("%s(%u): ring%u %s page fault in PD=%x, %s V%08x\n",
-        current->process().name().characters(),
-        current->pid(),
-        regs.cs & 3,
-        regs.exception_code & 1 ? "PV" : "NP",
-        fault_page_directory,
-        regs.exception_code & 2 ? "write" : "read",
-        fault_address);
+              current->process().name().characters(),
+              current->pid(),
+              regs.cs & 3,
+              regs.exception_code & 1 ? "PV" : "NP",
+              fault_page_directory,
+              regs.exception_code & 2 ? "write" : "read",
+              fault_address);
 #endif
 
 #ifdef PAGE_FAULT_DEBUG
@@ -262,17 +262,17 @@ void exception_14_handler(RegisterDump& regs)
     auto response = MM.handle_page_fault(PageFault(regs.exception_code, VirtualAddress(fault_address)));
 
     if (response == PageFaultResponse::ShouldCrash) {
-	    if(current->has_signal_handler(SIGSEGV)){
-	        current->send_urgent_signal_to_self(SIGSEGV);
-	       	return;
-	    }
+        if(current->has_signal_handler(SIGSEGV)) {
+            current->send_urgent_signal_to_self(SIGSEGV);
+            return;
+        }
 
         kprintf("\033[31;1m%s(%u:%u) Unrecoverable page fault, %s address %p\033[0m\n",
-            current->process().name().characters(),
-            current->pid(),
-            current->tid(),
-            regs.exception_code & 2 ? "write to" : "read from",
-            fault_address);
+                current->process().name().characters(),
+                current->pid(),
+                current->tid(),
+                regs.exception_code & 2 ? "write to" : "read from",
+                fault_address);
 
         u32 malloc_scrub_pattern = explode_byte(MALLOC_SCRUB_BYTE);
         u32 free_scrub_pattern = explode_byte(FREE_SCRUB_BYTE);

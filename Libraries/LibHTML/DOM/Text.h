@@ -8,11 +8,17 @@ public:
     explicit Text(Document&, const String&);
     virtual ~Text() override;
 
-    const String& data() const { return m_data; }
+    const String& data() const {
+        return m_data;
+    }
 
-    virtual String tag_name() const override { return "#text"; }
+    virtual String tag_name() const override {
+        return "#text";
+    }
 
-    virtual String text_content() const override { return m_data; }
+    virtual String text_content() const override {
+        return m_data;
+    }
 
 private:
     virtual RefPtr<LayoutNode> create_layout_node(const StyleResolver&, const StyleProperties* parent_style) const override;

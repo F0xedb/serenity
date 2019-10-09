@@ -10,8 +10,12 @@ public:
 
     virtual void parse_attribute(const String& name, const String& value) override;
 
-    String alt() const { return attribute("alt"); }
-    String src() const { return attribute("src"); }
+    String alt() const {
+        return attribute("alt");
+    }
+    String src() const {
+        return attribute("src");
+    }
     int preferred_width() const;
     int preferred_height() const;
 

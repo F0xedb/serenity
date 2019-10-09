@@ -18,20 +18,44 @@ public:
         if (!--m_ref_count)
             delete static_cast<T*>(this);
     }
-    int ref_count() const { return m_ref_count; }
+    int ref_count() const {
+        return m_ref_count;
+    }
 
-    T* parent() { return m_parent; }
-    const T* parent() const { return m_parent; }
+    T* parent() {
+        return m_parent;
+    }
+    const T* parent() const {
+        return m_parent;
+    }
 
-    bool has_children() const { return m_first_child; }
-    T* next_sibling() { return m_next_sibling; }
-    T* previous_sibling() { return m_previous_sibling; }
-    T* first_child() { return m_first_child; }
-    T* last_child() { return m_last_child; }
-    const T* next_sibling() const { return m_next_sibling; }
-    const T* previous_sibling() const { return m_previous_sibling; }
-    const T* first_child() const { return m_first_child; }
-    const T* last_child() const { return m_last_child; }
+    bool has_children() const {
+        return m_first_child;
+    }
+    T* next_sibling() {
+        return m_next_sibling;
+    }
+    T* previous_sibling() {
+        return m_previous_sibling;
+    }
+    T* first_child() {
+        return m_first_child;
+    }
+    T* last_child() {
+        return m_last_child;
+    }
+    const T* next_sibling() const {
+        return m_next_sibling;
+    }
+    const T* previous_sibling() const {
+        return m_previous_sibling;
+    }
+    const T* first_child() const {
+        return m_first_child;
+    }
+    const T* last_child() const {
+        return m_last_child;
+    }
 
     void append_child(NonnullRefPtr<T> node, bool call_inserted_into = true);
     void donate_all_children_to(T& node);

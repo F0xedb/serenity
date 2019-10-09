@@ -9,8 +9,12 @@
 
 class BoolValuesModel final : public GModel {
 public:
-    virtual int row_count(const GModelIndex&) const override { return 2; }
-    virtual int column_count(const GModelIndex&) const override { return 1; }
+    virtual int row_count(const GModelIndex&) const override {
+        return 2;
+    }
+    virtual int column_count(const GModelIndex&) const override {
+        return 1;
+    }
     virtual void update() override {}
     virtual GVariant data(const GModelIndex& index, Role role) const override
     {
@@ -37,11 +41,17 @@ public:
         combo->set_only_allow_values_from_model(true);
         combo->set_model(adopt(*new BoolValuesModel));
         combo->on_return_pressed = [this] { commit(); };
-        combo->on_change = [this](auto&, auto&) { commit(); };
+        combo->on_change = [this](auto&, auto&) {
+            commit();
+        };
         return combo;
     }
-    virtual GVariant value() const override { return static_cast<const GComboBox*>(widget())->text() == "true"; }
-    virtual void set_value(const GVariant& value) override { static_cast<GComboBox*>(widget())->set_text(value.to_string()); }
+    virtual GVariant value() const override {
+        return static_cast<const GComboBox*>(widget())->text() == "true";
+    }
+    virtual void set_value(const GVariant& value) override {
+        static_cast<GComboBox*>(widget())->set_text(value.to_string());
+    }
     virtual void will_begin_editing() override
     {
         auto& combo = *static_cast<GComboBox*>(widget());

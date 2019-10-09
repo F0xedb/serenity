@@ -31,18 +31,34 @@ public:
         Identifier,
     };
 
-    Type type() const { return m_type; }
+    Type type() const {
+        return m_type;
+    }
 
-    bool is_inherit() const { return type() == Type::Inherit; }
-    bool is_initial() const { return type() == Type::Initial; }
-    bool is_color() const { return type() == Type::Color; }
-    bool is_identifier() const { return type() == Type::Identifier; }
+    bool is_inherit() const {
+        return type() == Type::Inherit;
+    }
+    bool is_initial() const {
+        return type() == Type::Initial;
+    }
+    bool is_color() const {
+        return type() == Type::Color;
+    }
+    bool is_identifier() const {
+        return type() == Type::Identifier;
+    }
 
     virtual String to_string() const = 0;
-    virtual Length to_length() const { return {}; }
-    virtual Color to_color(const Document&) const { return {}; }
+    virtual Length to_length() const {
+        return {};
+    }
+    virtual Color to_color(const Document&) const {
+        return {};
+    }
 
-    virtual bool is_auto() const { return false; }
+    virtual bool is_auto() const {
+        return false;
+    }
 
 protected:
     explicit StyleValue(Type);
@@ -59,7 +75,9 @@ public:
     }
     virtual ~StringStyleValue() override {}
 
-    String to_string() const override { return m_string; }
+    String to_string() const override {
+        return m_string;
+    }
 
 private:
     explicit StringStyleValue(const String& string)
@@ -79,12 +97,20 @@ public:
     }
     virtual ~LengthStyleValue() override {}
 
-    virtual String to_string() const override { return m_length.to_string(); }
-    virtual Length to_length() const override { return m_length; }
+    virtual String to_string() const override {
+        return m_length.to_string();
+    }
+    virtual Length to_length() const override {
+        return m_length;
+    }
 
-    const Length& length() const { return m_length; }
+    const Length& length() const {
+        return m_length;
+    }
 
-    virtual bool is_auto() const override { return m_length.is_auto(); }
+    virtual bool is_auto() const override {
+        return m_length.is_auto();
+    }
 
 private:
     explicit LengthStyleValue(const Length& length)
@@ -98,10 +124,14 @@ private:
 
 class InitialStyleValue final : public StyleValue {
 public:
-    static NonnullRefPtr<InitialStyleValue> create() { return adopt(*new InitialStyleValue); }
+    static NonnullRefPtr<InitialStyleValue> create() {
+        return adopt(*new InitialStyleValue);
+    }
     virtual ~InitialStyleValue() override {}
 
-    String to_string() const override { return "initial"; }
+    String to_string() const override {
+        return "initial";
+    }
 
 private:
     InitialStyleValue()
@@ -112,10 +142,14 @@ private:
 
 class InheritStyleValue final : public StyleValue {
 public:
-    static NonnullRefPtr<InheritStyleValue> create() { return adopt(*new InheritStyleValue); }
+    static NonnullRefPtr<InheritStyleValue> create() {
+        return adopt(*new InheritStyleValue);
+    }
     virtual ~InheritStyleValue() override {}
 
-    String to_string() const override { return "inherit"; }
+    String to_string() const override {
+        return "inherit";
+    }
 
 private:
     InheritStyleValue()
@@ -132,9 +166,15 @@ public:
     }
     virtual ~ColorStyleValue() override {}
 
-    Color color() const { return m_color; }
-    String to_string() const override { return m_color.to_string(); }
-    Color to_color(const Document&) const override { return m_color; }
+    Color color() const {
+        return m_color;
+    }
+    String to_string() const override {
+        return m_color.to_string();
+    }
+    Color to_color(const Document&) const override {
+        return m_color;
+    }
 
 private:
     explicit ColorStyleValue(Color color)
@@ -154,7 +194,9 @@ public:
     }
     virtual ~IdentifierStyleValue() override {}
 
-    CSS::ValueID id() const { return m_id; }
+    CSS::ValueID id() const {
+        return m_id;
+    }
 
     virtual String to_string() const override;
     virtual Color to_color(const Document&) const override;

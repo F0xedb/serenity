@@ -18,8 +18,12 @@ public:
         m_widget = create_widget();
     }
 
-    GWidget* widget() { return m_widget; }
-    const GWidget* widget() const { return m_widget; }
+    GWidget* widget() {
+        return m_widget;
+    }
+    const GWidget* widget() const {
+        return m_widget;
+    }
 
     Function<void()> on_commit;
 
@@ -55,6 +59,10 @@ public:
         };
         return textbox;
     }
-    virtual GVariant value() const override { return static_cast<const GTextBox*>(widget())->text(); }
-    virtual void set_value(const GVariant& value) override { static_cast<GTextBox*>(widget())->set_text(value.to_string()); }
+    virtual GVariant value() const override {
+        return static_cast<const GTextBox*>(widget())->text();
+    }
+    virtual void set_value(const GVariant& value) override {
+        static_cast<GTextBox*>(widget())->set_text(value.to_string());
+    }
 };

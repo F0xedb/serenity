@@ -97,9 +97,13 @@ int main(int argc, char** argv)
             consume_whitespace();
             if (peek() == ')')
                 break;
-            parameter.type = extract_while([](char ch) { return !isspace(ch); });
+            parameter.type = extract_while([](char ch) {
+                return !isspace(ch);
+            });
             consume_whitespace();
-            parameter.name = extract_while([](char ch) { return !isspace(ch) && ch != ',' && ch != ')'; });
+            parameter.name = extract_while([](char ch) {
+                return !isspace(ch) && ch != ',' && ch != ')';
+            });
             consume_whitespace();
             storage.append(move(parameter));
             if (peek() == ',') {
@@ -175,7 +179,9 @@ int main(int argc, char** argv)
         consume_whitespace();
         consume_string("endpoint");
         consume_whitespace();
-        endpoints.last().name = extract_while([](char ch) { return !isspace(ch); });
+        endpoints.last().name = extract_while([](char ch) {
+            return !isspace(ch);
+        });
         consume_whitespace();
         consume_specific('{');
         parse_messages();

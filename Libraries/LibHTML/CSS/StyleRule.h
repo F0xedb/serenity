@@ -13,8 +13,12 @@ public:
 
     ~StyleRule();
 
-    const Vector<Selector>& selectors() const { return m_selectors; }
-    const StyleDeclaration& declaration() const { return m_declaration; }
+    const Vector<Selector>& selectors() const {
+        return m_selectors;
+    }
+    const StyleDeclaration& declaration() const {
+        return m_declaration;
+    }
 
 private:
     StyleRule(Vector<Selector>&&, NonnullRefPtr<StyleDeclaration>&&);

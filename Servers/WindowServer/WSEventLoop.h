@@ -13,7 +13,9 @@ public:
     WSEventLoop();
     virtual ~WSEventLoop();
 
-    int exec() { return m_event_loop.exec(); }
+    int exec() {
+        return m_event_loop.exec();
+    }
 
 private:
     void drain_mouse();

@@ -17,7 +17,9 @@ public:
     explicit ASBufferQueue(ASClientConnection&);
     ~ASBufferQueue() {}
 
-    bool is_full() const { return m_queue.size() >= 3; }
+    bool is_full() const {
+        return m_queue.size() >= 3;
+    }
     void enqueue(NonnullRefPtr<ABuffer>&&);
 
     bool get_next_sample(ASample& sample)
@@ -34,7 +36,9 @@ public:
         return true;
     }
 
-    ASClientConnection* client() { return m_client.ptr(); }
+    ASClientConnection* client() {
+        return m_client.ptr();
+    }
     void clear()
     {
         m_queue.clear();
@@ -57,8 +61,12 @@ public:
 
     NonnullRefPtr<ASBufferQueue> create_queue(ASClientConnection&);
 
-    int main_volume() const { return m_main_volume; }
-    void set_main_volume(int volume) { m_main_volume = volume; }
+    int main_volume() const {
+        return m_main_volume;
+    }
+    void set_main_volume(int volume) {
+        m_main_volume = volume;
+    }
 
 private:
     Vector<NonnullRefPtr<ASBufferQueue>> m_pending_mixing;

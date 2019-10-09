@@ -13,8 +13,12 @@ public:
     void restart(int interval);
     void stop();
 
-    bool is_active() const { return m_active; }
-    int interval() const { return m_interval; }
+    bool is_active() const {
+        return m_active;
+    }
+    int interval() const {
+        return m_interval;
+    }
     void set_interval(int interval)
     {
         if (m_interval == interval)
@@ -23,8 +27,12 @@ public:
         m_interval_dirty = true;
     }
 
-    bool is_single_shot() const { return m_single_shot; }
-    void set_single_shot(bool single_shot) { m_single_shot = single_shot; }
+    bool is_single_shot() const {
+        return m_single_shot;
+    }
+    void set_single_shot(bool single_shot) {
+        m_single_shot = single_shot;
+    }
 
     Function<void()> on_timeout;
 

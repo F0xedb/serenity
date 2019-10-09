@@ -29,8 +29,12 @@ public:
 
     ~StringImpl();
 
-    int length() const { return m_length; }
-    const char* characters() const { return &m_inline_buffer[0]; }
+    int length() const {
+        return m_length;
+    }
+    const char* characters() const {
+        return &m_inline_buffer[0];
+    }
     char operator[](int i) const
     {
         ASSERT(i >= 0 && i < m_length);

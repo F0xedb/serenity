@@ -13,14 +13,22 @@ public:
 
     static VBForm* current();
 
-    String name() const { return m_name; }
-    void set_name(const String& name) { m_name = name; }
+    String name() const {
+        return m_name;
+    }
+    void set_name(const String& name) {
+        m_name = name;
+    }
 
     bool is_selected(const VBWidget&) const;
     VBWidget* widget_at(const Point&);
 
-    void set_should_snap_to_grip(bool snap) { m_should_snap_to_grid = snap; }
-    bool should_snap_to_grid() const { return m_should_snap_to_grid; }
+    void set_should_snap_to_grip(bool snap) {
+        m_should_snap_to_grid = snap;
+    }
+    bool should_snap_to_grid() const {
+        return m_should_snap_to_grid;
+    }
 
     void insert_widget(VBWidgetType);
 

@@ -18,7 +18,9 @@ private:
     using GAbstractButton::auto_repeat_interval;
     using GAbstractButton::set_auto_repeat_interval;
 
-    virtual bool is_radio_button() const final { return true; }
+    virtual bool is_radio_button() const final {
+        return true;
+    }
 
     template<typename Callback>
     void for_each_in_group(Callback);

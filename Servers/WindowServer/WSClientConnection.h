@@ -25,7 +25,9 @@ public:
     static WSClientConnection* from_client_id(int client_id);
     static void for_each_client(Function<void(WSClientConnection&)>);
 
-    WSMenuBar* app_menubar() { return m_app_menubar.ptr(); }
+    WSMenuBar* app_menubar() {
+        return m_app_menubar.ptr();
+    }
 
     bool is_showing_modal_window() const;
 

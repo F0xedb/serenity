@@ -57,10 +57,10 @@ NetworkStatisticsWidget::NetworkStatisticsWidget(GWidget* parent)
         m_socket_table_view->set_model(GJsonArrayModel::create("/proc/net/tcp", move(net_tcp_fields)));
 
         m_update_timer = CTimer::construct(
-            1000, [this] {
-                update_models();
-            },
-            this);
+        1000, [this] {
+            update_models();
+        },
+        this);
 
         update_models();
     };

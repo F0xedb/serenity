@@ -41,8 +41,8 @@ Vector<Range, 2> Range::carve(const Range& taken)
         parts.append({ taken.end(), end().get() - taken.end().get() });
 #ifdef VRA_DEBUG
     dbgprintf("VRA: carve: take %x-%x from %x-%x\n",
-        taken.base().get(), taken.end().get() - 1,
-        base().get(), end().get() - 1);
+              taken.base().get(), taken.end().get() - 1,
+              base().get(), end().get() - 1);
     for (int i = 0; i < parts.size(); ++i)
         dbgprintf("        %x-%x\n", parts[i].base().get(), parts[i].end().get() - 1);
 #endif

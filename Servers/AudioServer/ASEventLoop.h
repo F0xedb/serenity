@@ -8,7 +8,9 @@
 class ASEventLoop {
 public:
     ASEventLoop();
-    int exec() { return m_event_loop.exec(); }
+    int exec() {
+        return m_event_loop.exec();
+    }
 
 private:
     CEventLoop m_event_loop;

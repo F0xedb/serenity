@@ -16,11 +16,21 @@ public:
     {
     }
 
-    const LayoutNode& layout_node() const { return m_layout_node; }
-    int start() const { return m_start; }
-    int length() const { return m_length; }
-    const Rect& rect() const { return m_rect; }
-    Rect& rect() { return m_rect; }
+    const LayoutNode& layout_node() const {
+        return m_layout_node;
+    }
+    int start() const {
+        return m_start;
+    }
+    int length() const {
+        return m_length;
+    }
+    const Rect& rect() const {
+        return m_rect;
+    }
+    Rect& rect() {
+        return m_rect;
+    }
 
     void render(RenderingContext&);
 

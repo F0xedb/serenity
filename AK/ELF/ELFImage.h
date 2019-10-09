@@ -11,7 +11,9 @@ public:
     explicit ELFImage(const u8*);
     ~ELFImage();
     void dump() const;
-    bool is_valid() const { return m_valid; }
+    bool is_valid() const {
+        return m_valid;
+    }
     bool parse();
 
     class Section;
@@ -30,13 +32,27 @@ public:
 
         ~Symbol() {}
 
-        const char* name() const { return m_image.table_string(m_sym.st_name); }
-        unsigned section_index() const { return m_sym.st_shndx; }
-        unsigned value() const { return m_sym.st_value; }
-        unsigned size() const { return m_sym.st_size; }
-        unsigned index() const { return m_index; }
-        unsigned type() const { return ELF32_ST_TYPE(m_sym.st_info); }
-        const Section section() const { return m_image.section(section_index()); }
+        const char* name() const {
+            return m_image.table_string(m_sym.st_name);
+        }
+        unsigned section_index() const {
+            return m_sym.st_shndx;
+        }
+        unsigned value() const {
+            return m_sym.st_value;
+        }
+        unsigned size() const {
+            return m_sym.st_size;
+        }
+        unsigned index() const {
+            return m_index;
+        }
+        unsigned type() const {
+            return ELF32_ST_TYPE(m_sym.st_info);
+        }
+        const Section section() const {
+            return m_image.section(section_index());
+        }
 
     private:
         const ELFImage& m_image;
@@ -54,18 +70,42 @@ public:
         }
         ~ProgramHeader() {}
 
-        unsigned index() const { return m_program_header_index; }
-        u32 type() const { return m_program_header.p_type; }
-        u32 flags() const { return m_program_header.p_flags; }
-        u32 offset() const { return m_program_header.p_offset; }
-        VirtualAddress vaddr() const { return VirtualAddress(m_program_header.p_vaddr); }
-        u32 size_in_memory() const { return m_program_header.p_memsz; }
-        u32 size_in_image() const { return m_program_header.p_filesz; }
-        u32 alignment() const { return m_program_header.p_align; }
-        bool is_readable() const { return flags() & PF_R; }
-        bool is_writable() const { return flags() & PF_W; }
-        bool is_executable() const { return flags() & PF_X; }
-        const char* raw_data() const { return m_image.raw_data(m_program_header.p_offset); }
+        unsigned index() const {
+            return m_program_header_index;
+        }
+        u32 type() const {
+            return m_program_header.p_type;
+        }
+        u32 flags() const {
+            return m_program_header.p_flags;
+        }
+        u32 offset() const {
+            return m_program_header.p_offset;
+        }
+        VirtualAddress vaddr() const {
+            return VirtualAddress(m_program_header.p_vaddr);
+        }
+        u32 size_in_memory() const {
+            return m_program_header.p_memsz;
+        }
+        u32 size_in_image() const {
+            return m_program_header.p_filesz;
+        }
+        u32 alignment() const {
+            return m_program_header.p_align;
+        }
+        bool is_readable() const {
+            return flags() & PF_R;
+        }
+        bool is_writable() const {
+            return flags() & PF_W;
+        }
+        bool is_executable() const {
+            return flags() & PF_X;
+        }
+        const char* raw_data() const {
+            return m_image.raw_data(m_program_header.p_offset);
+        }
 
     private:
         const ELFImage& m_image;
@@ -83,18 +123,42 @@ public:
         }
         ~Section() {}
 
-        const char* name() const { return m_image.section_header_table_string(m_section_header.sh_name); }
-        unsigned type() const { return m_section_header.sh_type; }
-        unsigned offset() const { return m_section_header.sh_offset; }
-        unsigned size() const { return m_section_header.sh_size; }
-        unsigned entry_size() const { return m_section_header.sh_entsize; }
-        unsigned entry_count() const { return !entry_size() ? 0 : size() / entry_size(); }
-        u32 address() const { return m_section_header.sh_addr; }
-        const char* raw_data() const { return m_image.raw_data(m_section_header.sh_offset); }
-        bool is_undefined() const { return m_section_index == SHN_UNDEF; }
-        u32 flags() const { return m_section_header.sh_flags; }
-        bool is_writable() const { return flags() & SHF_WRITE; }
-        bool is_executable() const { return flags() & PF_X; }
+        const char* name() const {
+            return m_image.section_header_table_string(m_section_header.sh_name);
+        }
+        unsigned type() const {
+            return m_section_header.sh_type;
+        }
+        unsigned offset() const {
+            return m_section_header.sh_offset;
+        }
+        unsigned size() const {
+            return m_section_header.sh_size;
+        }
+        unsigned entry_size() const {
+            return m_section_header.sh_entsize;
+        }
+        unsigned entry_count() const {
+            return !entry_size() ? 0 : size() / entry_size();
+        }
+        u32 address() const {
+            return m_section_header.sh_addr;
+        }
+        const char* raw_data() const {
+            return m_image.raw_data(m_section_header.sh_offset);
+        }
+        bool is_undefined() const {
+            return m_section_index == SHN_UNDEF;
+        }
+        u32 flags() const {
+            return m_section_header.sh_flags;
+        }
+        bool is_writable() const {
+            return flags() & SHF_WRITE;
+        }
+        bool is_executable() const {
+            return flags() & PF_X;
+        }
 
     protected:
         friend class RelocationSection;
@@ -120,10 +184,16 @@ public:
     template<typename F>
     void for_each_program_header(F) const;
 
-    bool is_executable() const { return header().e_type == ET_EXEC; }
-    bool is_relocatable() const { return header().e_type == ET_REL; }
+    bool is_executable() const {
+        return header().e_type == ET_EXEC;
+    }
+    bool is_relocatable() const {
+        return header().e_type == ET_REL;
+    }
 
-    VirtualAddress entry() const { return VirtualAddress(header().e_entry); }
+    VirtualAddress entry() const {
+        return VirtualAddress(header().e_entry);
+    }
 
 private:
     bool parse_header();

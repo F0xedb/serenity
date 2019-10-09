@@ -17,7 +17,9 @@ public:
     virtual void on_contextmenu(GContextMenuEvent&) override;
 
 private:
-    virtual const char* class_name() const override { return "SprayTool"; }
+    virtual const char* class_name() const override {
+        return "SprayTool";
+    }
     void paint_it();
     RefPtr<CTimer> m_timer;
     Point m_last_pos;

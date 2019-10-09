@@ -19,7 +19,9 @@ public:
     void appendf(const char*, ...);
     void appendvf(const char*, va_list);
 
-    String build() { return to_string(); }
+    String build() {
+        return to_string();
+    }
 
     String to_string();
     ByteBuffer to_byte_buffer();
@@ -27,8 +29,12 @@ public:
     StringView string_view() const;
     void clear();
 
-    int length() const { return m_length; }
-    void trim(int count) { m_length -= count; }
+    int length() const {
+        return m_length;
+    }
+    void trim(int count) {
+        m_length -= count;
+    }
 
 private:
     void will_append(int);

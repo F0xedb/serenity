@@ -15,12 +15,20 @@ public:
 
     MappedFile& operator=(MappedFile&&);
 
-    bool is_valid() const { return m_map != (void*)-1; }
+    bool is_valid() const {
+        return m_map != (void*)-1;
+    }
     void unmap();
 
-    void* data() { return m_map; }
-    const void* data() const { return m_map; }
-    size_t size() const { return m_size; }
+    void* data() {
+        return m_map;
+    }
+    const void* data() const {
+        return m_map;
+    }
+    size_t size() const {
+        return m_size;
+    }
 
 private:
     size_t m_size { 0 };

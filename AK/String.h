@@ -117,10 +117,18 @@ public:
     Vector<StringView> split_view(char separator, bool keep_empty = false) const;
     StringView substring_view(int start, int length) const;
 
-    bool is_null() const { return !m_impl; }
-    bool is_empty() const { return length() == 0; }
-    int length() const { return m_impl ? m_impl->length() : 0; }
-    const char* characters() const { return m_impl ? m_impl->characters() : nullptr; }
+    bool is_null() const {
+        return !m_impl;
+    }
+    bool is_empty() const {
+        return length() == 0;
+    }
+    int length() const {
+        return m_impl ? m_impl->length() : 0;
+    }
+    const char* characters() const {
+        return m_impl ? m_impl->characters() : nullptr;
+    }
     char operator[](int i) const
     {
         ASSERT(m_impl);
@@ -131,20 +139,32 @@ public:
     bool ends_with(const StringView&) const;
 
     bool operator==(const String&) const;
-    bool operator!=(const String& other) const { return !(*this == other); }
+    bool operator!=(const String& other) const {
+        return !(*this == other);
+    }
 
     bool operator==(const StringView&) const;
-    bool operator!=(const StringView& other) const { return !(*this == other); }
+    bool operator!=(const StringView& other) const {
+        return !(*this == other);
+    }
 
     bool operator<(const String&) const;
     bool operator<(const char*) const;
-    bool operator>=(const String& other) const { return !(*this < other); }
-    bool operator>=(const char* other) const { return !(*this < other); }
+    bool operator>=(const String& other) const {
+        return !(*this < other);
+    }
+    bool operator>=(const char* other) const {
+        return !(*this < other);
+    }
 
     bool operator>(const String&) const;
     bool operator>(const char*) const;
-    bool operator<=(const String& other) const { return !(*this > other); }
-    bool operator<=(const char* other) const { return !(*this > other); }
+    bool operator<=(const String& other) const {
+        return !(*this > other);
+    }
+    bool operator<=(const char* other) const {
+        return !(*this > other);
+    }
 
     bool operator==(const char* cstring) const
     {
@@ -164,8 +184,12 @@ public:
 
     static String empty();
 
-    StringImpl* impl() { return m_impl.ptr(); }
-    const StringImpl* impl() const { return m_impl.ptr(); }
+    StringImpl* impl() {
+        return m_impl.ptr();
+    }
+    const StringImpl* impl() const {
+        return m_impl.ptr();
+    }
 
     String& operator=(String&& other)
     {
@@ -205,7 +229,9 @@ public:
     }
 #endif
 
-    StringView view() const { return { characters(), length() }; }
+    StringView view() const {
+        return { characters(), length() };
+    }
 
 private:
     bool match_helper(const StringView& mask) const;
@@ -227,13 +253,21 @@ inline bool StringView::operator==(const String& string) const
 
 template<>
 struct Traits<String> : public GenericTraits<String> {
-    static unsigned hash(const String& s) { return s.impl() ? s.impl()->hash() : 0; }
-    static void dump(const String& s) { kprintf("%s", s.characters()); }
+    static unsigned hash(const String& s) {
+        return s.impl() ? s.impl()->hash() : 0;
+    }
+    static void dump(const String& s) {
+        kprintf("%s", s.characters());
+    }
 };
 
 struct CaseInsensitiveStringTraits : public AK::Traits<String> {
-    static unsigned hash(const String& s) { return s.impl() ? s.to_lowercase().impl()->hash() : 0; }
-    static bool equals(const String& a, const String& b) { return a.to_lowercase() == b.to_lowercase(); }
+    static unsigned hash(const String& s) {
+        return s.impl() ? s.to_lowercase().impl()->hash() : 0;
+    }
+    static bool equals(const String& a, const String& b) {
+        return a.to_lowercase() == b.to_lowercase();
+    }
 
 };
 

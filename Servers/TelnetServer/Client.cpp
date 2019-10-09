@@ -18,9 +18,15 @@ Client::Client(int id, RefPtr<CTCPSocket> socket, int ptm_fd)
 {
     m_socket->on_ready_to_read = [this] { drain_socket(); };
     m_ptm_notifier->on_ready_to_read = [this] { drain_pty(); };
-    m_parser.on_command = [this](const Command& command) { handle_command(command); };
-    m_parser.on_data = [this](const StringView& data) { handle_data(data); };
-    m_parser.on_error = [this]() { handle_error(); };
+    m_parser.on_command = [this](const Command& command) {
+        handle_command(command);
+    };
+    m_parser.on_data = [this](const StringView& data) {
+        handle_data(data);
+    };
+    m_parser.on_error = [this]() {
+        handle_error();
+    };
     send_commands({
         { CMD_WILL, SUB_SUPPRESS_GO_AHEAD },
         { CMD_WILL, SUB_ECHO },

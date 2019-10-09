@@ -104,7 +104,7 @@ void Terminal::escape$h_l(bool should_set, bool question_param, const ParamVecto
     }
     if (!question_param) {
         switch (mode) {
-            // FIXME: implement *something* for this
+        // FIXME: implement *something* for this
         default:
             unimplemented_escape();
             break;

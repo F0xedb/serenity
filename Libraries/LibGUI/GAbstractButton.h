@@ -14,27 +14,51 @@ public:
     Function<void(bool)> on_checked;
 
     void set_text(const StringView&);
-    const String& text() const { return m_text; }
+    const String& text() const {
+        return m_text;
+    }
 
-    bool is_exclusive() const { return m_exclusive; }
-    void set_exclusive(bool b) { m_exclusive = b; }
+    bool is_exclusive() const {
+        return m_exclusive;
+    }
+    void set_exclusive(bool b) {
+        m_exclusive = b;
+    }
 
-    bool is_checked() const { return m_checked; }
+    bool is_checked() const {
+        return m_checked;
+    }
     void set_checked(bool);
 
-    bool is_checkable() const { return m_checkable; }
+    bool is_checkable() const {
+        return m_checkable;
+    }
     void set_checkable(bool);
 
-    bool is_hovered() const { return m_hovered; }
-    bool is_being_pressed() const { return m_being_pressed; }
+    bool is_hovered() const {
+        return m_hovered;
+    }
+    bool is_being_pressed() const {
+        return m_being_pressed;
+    }
 
     virtual void click() = 0;
-    virtual bool accepts_focus() const override { return true; }
-    virtual bool supports_keyboard_activation() const override { return true; }
-    virtual bool is_uncheckable() const { return true; }
+    virtual bool accepts_focus() const override {
+        return true;
+    }
+    virtual bool supports_keyboard_activation() const override {
+        return true;
+    }
+    virtual bool is_uncheckable() const {
+        return true;
+    }
 
-    int auto_repeat_interval() const { return m_auto_repeat_interval; }
-    void set_auto_repeat_interval(int interval) { m_auto_repeat_interval = interval; }
+    int auto_repeat_interval() const {
+        return m_auto_repeat_interval;
+    }
+    void set_auto_repeat_interval(int interval) {
+        m_auto_repeat_interval = interval;
+    }
 
 protected:
     explicit GAbstractButton(GWidget* parent);
@@ -51,7 +75,9 @@ protected:
     void paint_text(GPainter&, const Rect&, const Font&, TextAlignment);
 
 private:
-    virtual bool is_abstract_button() const final { return true; }
+    virtual bool is_abstract_button() const final {
+        return true;
+    }
 
     String m_text;
     bool m_checked { false };

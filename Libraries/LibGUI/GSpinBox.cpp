@@ -18,12 +18,16 @@ GSpinBox::GSpinBox(GWidget* parent)
     m_increment_button = GButton::construct(this);
     m_increment_button->set_focusable(false);
     m_increment_button->set_text("\xc3\xb6");
-    m_increment_button->on_click = [this](GButton&) { set_value(m_value + 1); };
+    m_increment_button->on_click = [this](GButton&) {
+        set_value(m_value + 1);
+    };
     m_increment_button->set_auto_repeat_interval(150);
     m_decrement_button = GButton::construct(this);
     m_decrement_button->set_focusable(false);
     m_decrement_button->set_text("\xc3\xb7");
-    m_decrement_button->on_click = [this](GButton&) { set_value(m_value - 1); };
+    m_decrement_button->on_click = [this](GButton&) {
+        set_value(m_value - 1);
+    };
     m_decrement_button->set_auto_repeat_interval(150);
 }
 

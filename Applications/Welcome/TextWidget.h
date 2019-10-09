@@ -12,17 +12,31 @@ public:
     TextWidget(const StringView& text, GWidget* parent = nullptr);
     virtual ~TextWidget() override;
 
-    String text() const { return m_text; }
+    String text() const {
+        return m_text;
+    }
     void set_text(const StringView&);
 
-    TextAlignment text_alignment() const { return m_text_alignment; }
-    void set_text_alignment(TextAlignment text_alignment) { m_text_alignment = text_alignment; }
+    TextAlignment text_alignment() const {
+        return m_text_alignment;
+    }
+    void set_text_alignment(TextAlignment text_alignment) {
+        m_text_alignment = text_alignment;
+    }
 
-    bool should_wrap() const { return m_should_wrap; }
-    void set_should_wrap(bool should_wrap) { m_should_wrap = should_wrap; }
+    bool should_wrap() const {
+        return m_should_wrap;
+    }
+    void set_should_wrap(bool should_wrap) {
+        m_should_wrap = should_wrap;
+    }
 
-    int line_height() const { return m_line_height; }
-    void set_line_height(int line_height) { m_line_height = line_height; }
+    int line_height() const {
+        return m_line_height;
+    }
+    void set_line_height(int line_height) {
+        m_line_height = line_height;
+    }
 
     void wrap_and_set_height();
 

@@ -42,11 +42,19 @@ public:
     virtual const char* class_name() const = 0;
     virtual void event(CEvent&);
 
-    const String& name() const { return m_name; }
-    void set_name(const StringView& name) { m_name = name; }
+    const String& name() const {
+        return m_name;
+    }
+    void set_name(const StringView& name) {
+        m_name = name;
+    }
 
-    NonnullRefPtrVector<CObject>& children() { return m_children; }
-    const NonnullRefPtrVector<CObject>& children() const { return m_children; }
+    NonnullRefPtrVector<CObject>& children() {
+        return m_children;
+    }
+    const NonnullRefPtrVector<CObject>& children() const {
+        return m_children;
+    }
 
     template<typename Callback>
     void for_each_child(Callback callback)
@@ -62,12 +70,18 @@ public:
 
     bool is_ancestor_of(const CObject&) const;
 
-    CObject* parent() { return m_parent; }
-    const CObject* parent() const { return m_parent; }
+    CObject* parent() {
+        return m_parent;
+    }
+    const CObject* parent() const {
+        return m_parent;
+    }
 
     void start_timer(int ms);
     void stop_timer();
-    bool has_timer() const { return m_timer_id; }
+    bool has_timer() const {
+        return m_timer_id;
+    }
 
     void add_child(CObject&);
     void remove_child(CObject&);
@@ -76,8 +90,12 @@ public:
 
     void deferred_invoke(Function<void(CObject&)>);
 
-    bool is_widget() const { return m_widget; }
-    virtual bool is_window() const { return false; }
+    bool is_widget() const {
+        return m_widget;
+    }
+    virtual bool is_window() const {
+        return false;
+    }
 
     virtual void save_to(AK::JsonObject&);
 
@@ -109,10 +127,14 @@ private:
 };
 
 template<typename T>
-inline bool is(const CObject&) { return false; }
+inline bool is(const CObject&) {
+    return false;
+}
 
 template<>
-inline bool is<CObject>(const CObject&) { return true; }
+inline bool is<CObject>(const CObject&) {
+    return true;
+}
 
 template<typename T>
 inline T& to(CObject& object)

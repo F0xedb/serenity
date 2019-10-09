@@ -29,8 +29,12 @@ public:
     void send_settings_to_window_server(int tabIndex);
     void create_frame();
 
-    const GWidget* root_widget() const { return m_root_widget; }
-    GWidget* root_widget() { return m_root_widget; }
+    const GWidget* root_widget() const {
+        return m_root_widget;
+    }
+    GWidget* root_widget() {
+        return m_root_widget;
+    }
 
 private:
     void create_wallpaper_list();

@@ -39,11 +39,21 @@ public:
     Field(GLabel& flag_label, GLabel& time_label, GButton& face_button, GWidget* parent, Function<void(Size)> on_size_changed);
     virtual ~Field() override;
 
-    int rows() const { return m_rows; }
-    int columns() const { return m_columns; }
-    int mine_count() const { return m_mine_count; }
-    int square_size() const { return 15; }
-    bool is_single_chording() const { return m_single_chording; }
+    int rows() const {
+        return m_rows;
+    }
+    int columns() const {
+        return m_columns;
+    }
+    int mine_count() const {
+        return m_mine_count;
+    }
+    int square_size() const {
+        return 15;
+    }
+    bool is_single_chording() const {
+        return m_single_chording;
+    }
 
     void set_field_size(int rows, int columns, int mine_count);
     void set_single_chording(bool new_val);
@@ -63,8 +73,12 @@ private:
     void set_chord_preview(Square&, bool);
     void set_flag(Square&, bool);
 
-    Square& square(int row, int column) { return *m_squares[row * columns() + column]; }
-    const Square& square(int row, int column) const { return *m_squares[row * columns() + column]; }
+    Square& square(int row, int column) {
+        return *m_squares[row * columns() + column];
+    }
+    const Square& square(int row, int column) const {
+        return *m_squares[row * columns() + column];
+    }
 
     void flood_fill(Square&);
     void on_square_clicked_impl(Square&, bool);

@@ -16,7 +16,9 @@ public:
 
     int exec();
 
-    int result() const { return m_result; }
+    int result() const {
+        return m_result;
+    }
     void done(int result);
 
     virtual void close() override;

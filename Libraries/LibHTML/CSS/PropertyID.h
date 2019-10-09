@@ -57,6 +57,8 @@ enum class PropertyID {
 namespace AK {
 template<>
 struct Traits<CSS::PropertyID> : public GenericTraits<CSS::PropertyID> {
-    static unsigned hash(CSS::PropertyID property_id) { return int_hash((unsigned)property_id); }
+    static unsigned hash(CSS::PropertyID property_id) {
+        return int_hash((unsigned)property_id);
+    }
 };
 }

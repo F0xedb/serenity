@@ -22,7 +22,9 @@ public:
 
     virtual ~GFilePicker() override;
 
-    FileSystemPath selected_file() const { return m_selected_file; }
+    FileSystemPath selected_file() const {
+        return m_selected_file;
+    }
 
 private:
     void set_preview(const FileSystemPath&);

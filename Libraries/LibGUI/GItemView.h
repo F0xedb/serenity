@@ -14,13 +14,21 @@ public:
     virtual ~GItemView() override;
 
     int content_width() const;
-    int horizontal_padding() const { return m_horizontal_padding; }
+    int horizontal_padding() const {
+        return m_horizontal_padding;
+    }
 
     void scroll_into_view(const GModelIndex&, Orientation);
-    Size effective_item_size() const { return m_effective_item_size; }
+    Size effective_item_size() const {
+        return m_effective_item_size;
+    }
 
-    int model_column() const { return m_model_column; }
-    void set_model_column(int column) { m_model_column = column; }
+    int model_column() const {
+        return m_model_column;
+    }
+    void set_model_column(int column) {
+        m_model_column = column;
+    }
 
 private:
     explicit GItemView(GWidget* parent);

@@ -24,17 +24,31 @@ class LayoutNode : public TreeNode<LayoutNode> {
 public:
     virtual ~LayoutNode();
 
-    const Rect& rect() const { return m_rect; }
-    Rect& rect() { return m_rect; }
-    void set_rect(const Rect& rect) { m_rect = rect; }
+    const Rect& rect() const {
+        return m_rect;
+    }
+    Rect& rect() {
+        return m_rect;
+    }
+    void set_rect(const Rect& rect) {
+        m_rect = rect;
+    }
 
-    BoxModelMetrics& box_model() { return m_box_metrics; }
-    const BoxModelMetrics& box_model() const { return m_box_metrics; }
+    BoxModelMetrics& box_model() {
+        return m_box_metrics;
+    }
+    const BoxModelMetrics& box_model() const {
+        return m_box_metrics;
+    }
 
     virtual HitTestResult hit_test(const Point&) const;
 
-    bool is_anonymous() const { return !m_node; }
-    const Node* node() const { return m_node; }
+    bool is_anonymous() const {
+        return !m_node;
+    }
+    const Node* node() const {
+        return m_node;
+    }
 
     const Document& document() const;
 
@@ -52,20 +66,34 @@ public:
             callback(*node);
     }
 
-    virtual const char* class_name() const { return "LayoutNode"; }
-    virtual bool is_text() const { return false; }
-    virtual bool is_block() const { return false; }
-    virtual bool is_replaced() const { return false; }
+    virtual const char* class_name() const {
+        return "LayoutNode";
+    }
+    virtual bool is_text() const {
+        return false;
+    }
+    virtual bool is_block() const {
+        return false;
+    }
+    virtual bool is_replaced() const {
+        return false;
+    }
 
-    bool is_inline() const { return m_inline; }
-    void set_inline(bool b) { m_inline = b; }
+    bool is_inline() const {
+        return m_inline;
+    }
+    void set_inline(bool b) {
+        m_inline = b;
+    }
 
     virtual void layout();
     virtual void render(RenderingContext&);
 
     const LayoutBlock* containing_block() const;
 
-    virtual LayoutNode& inline_wrapper() { return *this; }
+    virtual LayoutNode& inline_wrapper() {
+        return *this;
+    }
 
     const StyleProperties& style() const;
 
@@ -94,7 +122,9 @@ class LayoutNodeWithStyle : public LayoutNode {
 public:
     virtual ~LayoutNodeWithStyle() override {}
 
-    const StyleProperties& style() const { return m_style; }
+    const StyleProperties& style() const {
+        return m_style;
+    }
 
 protected:
     explicit LayoutNodeWithStyle(const Node* node, NonnullRefPtr<StyleProperties> style)

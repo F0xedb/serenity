@@ -16,7 +16,9 @@ public:
     };
     virtual ~CSocket() override;
 
-    Type type() const { return m_type; }
+    Type type() const {
+        return m_type;
+    }
 
     bool connect(const String& hostname, int port);
     bool connect(const CSocketAddress&, int port);
@@ -25,14 +27,24 @@ public:
     ByteBuffer receive(int max_size);
     bool send(const ByteBuffer&);
 
-    bool is_connected() const { return m_connected; }
+    bool is_connected() const {
+        return m_connected;
+    }
     void set_blocking(bool blocking);
 
-    CSocketAddress source_address() const { return m_source_address; }
-    int source_port() const { return m_source_port; }
+    CSocketAddress source_address() const {
+        return m_source_address;
+    }
+    int source_port() const {
+        return m_source_port;
+    }
 
-    CSocketAddress destination_address() const { return m_source_address; }
-    int destination_port() const { return m_destination_port; }
+    CSocketAddress destination_address() const {
+        return m_source_address;
+    }
+    int destination_port() const {
+        return m_destination_port;
+    }
 
     Function<void()> on_connected;
     Function<void()> on_ready_to_read;
@@ -49,7 +61,9 @@ protected:
     virtual void did_update_fd(int) override;
 
 private:
-    virtual bool open(CIODevice::OpenMode) override { ASSERT_NOT_REACHED(); }
+    virtual bool open(CIODevice::OpenMode) override {
+        ASSERT_NOT_REACHED();
+    }
     bool common_connect(const struct sockaddr*, socklen_t);
     void ensure_read_notifier();
 

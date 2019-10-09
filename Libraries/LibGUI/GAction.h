@@ -61,23 +61,41 @@ public:
         return adopt(*new GAction(text, shortcut, move(icon), move(callback), widget));
     }
     ~GAction();
-    GWidget* widget() { return m_widget.ptr(); }
-    const GWidget* widget() const { return m_widget.ptr(); }
+    GWidget* widget() {
+        return m_widget.ptr();
+    }
+    const GWidget* widget() const {
+        return m_widget.ptr();
+    }
 
-    String text() const { return m_text; }
-    GShortcut shortcut() const { return m_shortcut; }
-    const GraphicsBitmap* icon() const { return m_icon.ptr(); }
-    void set_icon(const GraphicsBitmap* icon) { m_icon = icon; }
+    String text() const {
+        return m_text;
+    }
+    GShortcut shortcut() const {
+        return m_shortcut;
+    }
+    const GraphicsBitmap* icon() const {
+        return m_icon.ptr();
+    }
+    void set_icon(const GraphicsBitmap* icon) {
+        m_icon = icon;
+    }
 
     Function<void(GAction&)> on_activation;
 
     void activate();
 
-    bool is_enabled() const { return m_enabled; }
+    bool is_enabled() const {
+        return m_enabled;
+    }
     void set_enabled(bool);
 
-    bool is_checkable() const { return m_checkable; }
-    void set_checkable(bool checkable) { m_checkable = checkable; }
+    bool is_checkable() const {
+        return m_checkable;
+    }
+    void set_checkable(bool checkable) {
+        m_checkable = checkable;
+    }
 
     bool is_checked() const
     {
@@ -91,7 +109,9 @@ public:
     void register_menu_item(Badge<GMenuItem>, GMenuItem&);
     void unregister_menu_item(Badge<GMenuItem>, GMenuItem&);
 
-    const GActionGroup* group() const { return m_action_group.ptr(); }
+    const GActionGroup* group() const {
+        return m_action_group.ptr();
+    }
     void set_group(Badge<GActionGroup>, GActionGroup*);
 
 private:

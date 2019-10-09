@@ -130,7 +130,9 @@ VBWidget* VBForm::widget_at(const Point& position)
 void VBForm::grabber_mousedown_event(GMouseEvent& event, Direction grabber)
 {
     m_transform_event_origin = event.position();
-    for_each_selected_widget([](auto& widget) { widget.capture_transform_origin_rect(); });
+    for_each_selected_widget([](auto& widget) {
+        widget.capture_transform_origin_rect();
+    });
     m_resize_direction = grabber;
 }
 
@@ -256,7 +258,9 @@ void VBForm::mousedown_event(GMouseEvent& event)
             add_to_selection(*widget);
         else if (!m_selected_widgets.contains(widget))
             set_single_selected_widget(widget);
-        for_each_selected_widget([](auto& widget) { widget.capture_transform_origin_rect(); });
+        for_each_selected_widget([](auto& widget) {
+            widget.capture_transform_origin_rect();
+        });
         on_widget_selected(single_selected_widget());
     }
 }
@@ -449,7 +453,9 @@ void VBForm::delete_selected_widgets()
     if (to_delete.is_empty())
         return;
     for (auto& widget : to_delete)
-        m_widgets.remove_first_matching([&widget](auto& entry) { return entry == widget; });
+        m_widgets.remove_first_matching([&widget](auto& entry) {
+        return entry == widget;
+    });
     on_widget_selected(single_selected_widget());
     update();
 }

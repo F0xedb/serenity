@@ -8,7 +8,9 @@ public:
     TaskbarWindow();
     virtual ~TaskbarWindow() override;
 
-    int taskbar_height() const { return 28; }
+    int taskbar_height() const {
+        return 28;
+    }
 
 private:
     void on_screen_rect_change(const Rect&);

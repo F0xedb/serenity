@@ -11,8 +11,12 @@ public:
     void go_back();
     void go_forward();
 
-    bool can_go_back() { return m_current_history_item > 0; }
-    bool can_go_forward() { return m_current_history_item + 1 < m_items.size(); }
+    bool can_go_back() {
+        return m_current_history_item > 0;
+    }
+    bool can_go_forward() {
+        return m_current_history_item + 1 < m_items.size();
+    }
 
     void clear();
 

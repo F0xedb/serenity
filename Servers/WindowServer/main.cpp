@@ -22,7 +22,7 @@ int main(int, char**)
 
     auto wm_config = CConfigFile::get_for_app("WindowManager");
     WSScreen screen(wm_config->read_num_entry("Screen", "Width", 1024),
-        wm_config->read_num_entry("Screen", "Height", 768));
+                    wm_config->read_num_entry("Screen", "Height", 768));
     WSCompositor::the();
     auto wm = WSWindowManager::construct();
 

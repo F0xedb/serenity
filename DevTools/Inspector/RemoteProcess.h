@@ -15,11 +15,19 @@ public:
     explicit RemoteProcess(pid_t);
     void update();
 
-    pid_t pid() const { return m_pid; }
-    const String& process_name() const { return m_process_name; }
+    pid_t pid() const {
+        return m_pid;
+    }
+    const String& process_name() const {
+        return m_process_name;
+    }
 
-    RemoteObjectGraphModel& object_graph_model() { return *m_object_graph_model; }
-    const NonnullOwnPtrVector<RemoteObject>& roots() const { return m_roots; }
+    RemoteObjectGraphModel& object_graph_model() {
+        return *m_object_graph_model;
+    }
+    const NonnullOwnPtrVector<RemoteObject>& roots() const {
+        return m_roots;
+    }
 
     Function<void()> on_update;
 

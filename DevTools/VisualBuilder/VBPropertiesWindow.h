@@ -11,8 +11,12 @@ public:
     VBPropertiesWindow();
     virtual ~VBPropertiesWindow() override;
 
-    GTableView& table_view() { return *m_table_view; }
-    const GTableView& table_view() const { return *m_table_view; }
+    GTableView& table_view() {
+        return *m_table_view;
+    }
+    const GTableView& table_view() const {
+        return *m_table_view;
+    }
 
 private:
     RefPtr<GTableView> m_table_view;

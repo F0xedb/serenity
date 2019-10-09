@@ -43,10 +43,18 @@ void GTextEditor::create_actions()
     m_redo_action = GCommonActions::make_redo_action([&](auto&) {
         // FIXME: Undo
     });
-    m_cut_action = GCommonActions::make_cut_action([&](auto&) { cut(); }, this);
-    m_copy_action = GCommonActions::make_copy_action([&](auto&) { copy(); }, this);
-    m_paste_action = GCommonActions::make_paste_action([&](auto&) { paste(); }, this);
-    m_delete_action = GCommonActions::make_delete_action([&](auto&) { do_delete(); }, this);
+    m_cut_action = GCommonActions::make_cut_action([&](auto&) {
+        cut();
+    }, this);
+    m_copy_action = GCommonActions::make_copy_action([&](auto&) {
+        copy();
+    }, this);
+    m_paste_action = GCommonActions::make_paste_action([&](auto&) {
+        paste();
+    }, this);
+    m_delete_action = GCommonActions::make_delete_action([&](auto&) {
+        do_delete();
+    }, this);
 }
 
 void GTextEditor::set_text(const StringView& text)
@@ -369,18 +377,18 @@ void GTextEditor::paint_event(GPaintEvent& event)
             if (physical_line_has_selection) {
 
                 bool current_visual_line_has_selection = (line_index != selection.start().line() && line_index != selection.end().line())
-                    || (visual_line_index >= first_visual_line_with_selection && visual_line_index <= last_visual_line_with_selection);
+                        || (visual_line_index >= first_visual_line_with_selection && visual_line_index <= last_visual_line_with_selection);
                 if (current_visual_line_has_selection) {
                     bool selection_begins_on_current_visual_line = visual_line_index == first_visual_line_with_selection;
                     bool selection_ends_on_current_visual_line = visual_line_index == last_visual_line_with_selection;
 
                     int selection_left = selection_begins_on_current_visual_line
-                        ? content_x_for_position({ line_index, selection_start_column_within_line })
-                        : m_horizontal_content_padding;
+                                         ? content_x_for_position({ line_index, selection_start_column_within_line })
+                                         : m_horizontal_content_padding;
 
                     int selection_right = selection_ends_on_current_visual_line
-                        ? content_x_for_position({ line_index, selection_end_column_within_line })
-                        : visual_line_rect.right() + 1;
+                                          ? content_x_for_position({ line_index, selection_end_column_within_line })
+                                          : visual_line_rect.right() + 1;
 
                     Rect selection_rect {
                         selection_left,
@@ -856,8 +864,8 @@ void GTextEditor::set_cursor(const GTextPosition& position)
     if (m_cursor != position) {
         // NOTE: If the old cursor is no longer valid, repaint everything just in case.
         auto old_cursor_line_rect = m_cursor.line() < m_lines.size()
-            ? line_widget_rect(m_cursor.line())
-            : rect();
+                                    ? line_widget_rect(m_cursor.line())
+                                    : rect();
         m_cursor = position;
         m_cursor_state = true;
         scroll_cursor_into_view();

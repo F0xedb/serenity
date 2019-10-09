@@ -21,25 +21,43 @@ class GTableView : public GAbstractView {
 public:
     virtual ~GTableView() override;
 
-    int header_height() const { return m_headers_visible ? 16 : 0; }
-    int item_height() const { return 16; }
+    int header_height() const {
+        return m_headers_visible ? 16 : 0;
+    }
+    int item_height() const {
+        return 16;
+    }
 
-    bool headers_visible() const { return m_headers_visible; }
-    void set_headers_visible(bool headers_visible) { m_headers_visible = headers_visible; }
+    bool headers_visible() const {
+        return m_headers_visible;
+    }
+    void set_headers_visible(bool headers_visible) {
+        m_headers_visible = headers_visible;
+    }
 
-    bool alternating_row_colors() const { return m_alternating_row_colors; }
-    void set_alternating_row_colors(bool b) { m_alternating_row_colors = b; }
+    bool alternating_row_colors() const {
+        return m_alternating_row_colors;
+    }
+    void set_alternating_row_colors(bool b) {
+        m_alternating_row_colors = b;
+    }
 
     int content_width() const;
-    int horizontal_padding() const { return m_horizontal_padding; }
+    int horizontal_padding() const {
+        return m_horizontal_padding;
+    }
 
     void scroll_into_view(const GModelIndex&, Orientation);
 
     bool is_column_hidden(int) const;
     void set_column_hidden(int, bool);
 
-    void set_size_columns_to_fit_content(bool b) { m_size_columns_to_fit_content = b; }
-    bool size_columns_to_fit_content() const { return m_size_columns_to_fit_content; }
+    void set_size_columns_to_fit_content(bool b) {
+        m_size_columns_to_fit_content = b;
+    }
+    bool size_columns_to_fit_content() const {
+        return m_size_columns_to_fit_content;
+    }
 
     Point adjusted_position(const Point&) const;
 

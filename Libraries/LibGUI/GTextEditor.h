@@ -24,17 +24,33 @@ public:
     {
     }
 
-    bool is_valid() const { return m_line >= 0 && m_column >= 0; }
+    bool is_valid() const {
+        return m_line >= 0 && m_column >= 0;
+    }
 
-    int line() const { return m_line; }
-    int column() const { return m_column; }
+    int line() const {
+        return m_line;
+    }
+    int column() const {
+        return m_column;
+    }
 
-    void set_line(int line) { m_line = line; }
-    void set_column(int column) { m_column = column; }
+    void set_line(int line) {
+        m_line = line;
+    }
+    void set_column(int column) {
+        m_column = column;
+    }
 
-    bool operator==(const GTextPosition& other) const { return m_line == other.m_line && m_column == other.m_column; }
-    bool operator!=(const GTextPosition& other) const { return m_line != other.m_line || m_column != other.m_column; }
-    bool operator<(const GTextPosition& other) const { return m_line < other.m_line || (m_line == other.m_line && m_column < other.m_column); }
+    bool operator==(const GTextPosition& other) const {
+        return m_line == other.m_line && m_column == other.m_column;
+    }
+    bool operator!=(const GTextPosition& other) const {
+        return m_line != other.m_line || m_column != other.m_column;
+    }
+    bool operator<(const GTextPosition& other) const {
+        return m_line < other.m_line || (m_line == other.m_line && m_column < other.m_column);
+    }
 
 private:
     int m_line { -1 };
@@ -50,22 +66,38 @@ public:
     {
     }
 
-    bool is_valid() const { return m_start.is_valid() && m_end.is_valid(); }
+    bool is_valid() const {
+        return m_start.is_valid() && m_end.is_valid();
+    }
     void clear()
     {
         m_start = {};
         m_end = {};
     }
 
-    GTextPosition& start() { return m_start; }
-    GTextPosition& end() { return m_end; }
-    const GTextPosition& start() const { return m_start; }
-    const GTextPosition& end() const { return m_end; }
+    GTextPosition& start() {
+        return m_start;
+    }
+    GTextPosition& end() {
+        return m_end;
+    }
+    const GTextPosition& start() const {
+        return m_start;
+    }
+    const GTextPosition& end() const {
+        return m_end;
+    }
 
-    GTextRange normalized() const { return GTextRange(normalized_start(), normalized_end()); }
+    GTextRange normalized() const {
+        return GTextRange(normalized_start(), normalized_end());
+    }
 
-    void set_start(const GTextPosition& position) { m_start = position; }
-    void set_end(const GTextPosition& position) { m_end = position; }
+    void set_start(const GTextPosition& position) {
+        m_start = position;
+    }
+    void set_end(const GTextPosition& position) {
+        m_end = position;
+    }
 
     void set(const GTextPosition& start, const GTextPosition& end)
     {
@@ -79,8 +111,12 @@ public:
     }
 
 private:
-    GTextPosition normalized_start() const { return m_start < m_end ? m_start : m_end; }
-    GTextPosition normalized_end() const { return m_start < m_end ? m_end : m_start; }
+    GTextPosition normalized_start() const {
+        return m_start < m_end ? m_start : m_end;
+    }
+    GTextPosition normalized_end() const {
+        return m_start < m_end ? m_end : m_start;
+    }
 
     GTextPosition m_start;
     GTextPosition m_end;
@@ -95,24 +131,44 @@ public:
     };
     virtual ~GTextEditor() override;
 
-    bool is_readonly() const { return m_readonly; }
+    bool is_readonly() const {
+        return m_readonly;
+    }
     void set_readonly(bool);
 
-    bool is_automatic_indentation_enabled() const { return m_automatic_indentation_enabled; }
-    void set_automatic_indentation_enabled(bool enabled) { m_automatic_indentation_enabled = enabled; }
+    bool is_automatic_indentation_enabled() const {
+        return m_automatic_indentation_enabled;
+    }
+    void set_automatic_indentation_enabled(bool enabled) {
+        m_automatic_indentation_enabled = enabled;
+    }
 
-    bool is_line_wrapping_enabled() const { return m_line_wrapping_enabled; }
+    bool is_line_wrapping_enabled() const {
+        return m_line_wrapping_enabled;
+    }
     void set_line_wrapping_enabled(bool);
 
-    TextAlignment text_alignment() const { return m_text_alignment; }
+    TextAlignment text_alignment() const {
+        return m_text_alignment;
+    }
     void set_text_alignment(TextAlignment);
 
-    Type type() const { return m_type; }
-    bool is_single_line() const { return m_type == SingleLine; }
-    bool is_multi_line() const { return m_type == MultiLine; }
+    Type type() const {
+        return m_type;
+    }
+    bool is_single_line() const {
+        return m_type == SingleLine;
+    }
+    bool is_multi_line() const {
+        return m_type == MultiLine;
+    }
 
-    bool is_ruler_visible() const { return m_ruler_visible; }
-    void set_ruler_visible(bool b) { m_ruler_visible = b; }
+    bool is_ruler_visible() const {
+        return m_ruler_visible;
+    }
+    void set_ruler_visible(bool b) {
+        m_ruler_visible = b;
+    }
 
     Function<void()> on_cursor_change;
     Function<void()> on_selection_change;
@@ -120,13 +176,25 @@ public:
     void set_text(const StringView&);
     void scroll_cursor_into_view();
     void scroll_position_into_view(const GTextPosition&);
-    int line_count() const { return m_lines.size(); }
-    int line_spacing() const { return m_line_spacing; }
-    int line_height() const { return font().glyph_height() + m_line_spacing; }
-    GTextPosition cursor() const { return m_cursor; }
-    GTextRange normalized_selection() const { return m_selection.normalized(); }
+    int line_count() const {
+        return m_lines.size();
+    }
+    int line_spacing() const {
+        return m_line_spacing;
+    }
+    int line_height() const {
+        return font().glyph_height() + m_line_spacing;
+    }
+    GTextPosition cursor() const {
+        return m_cursor;
+    }
+    GTextRange normalized_selection() const {
+        return m_selection.normalized();
+    }
     // FIXME: This should take glyph spacing into account, no?
-    int glyph_width() const { return font().glyph_width('x'); }
+    int glyph_width() const {
+        return font().glyph_width('x');
+    }
 
     bool write_to_file(const StringView& path);
 
@@ -136,7 +204,9 @@ public:
     GTextPosition next_position_after(const GTextPosition&, ShouldWrapAtEndOfDocument = ShouldWrapAtEndOfDocument::Yes);
     GTextPosition prev_position_before(const GTextPosition&, ShouldWrapAtStartOfDocument = ShouldWrapAtStartOfDocument::Yes);
 
-    bool has_selection() const { return m_selection.is_valid(); }
+    bool has_selection() const {
+        return m_selection.is_valid();
+    }
     String selected_text() const;
     void set_selection(const GTextRange&);
 
@@ -155,12 +225,24 @@ public:
     Function<void()> on_return_pressed;
     Function<void()> on_escape_pressed;
 
-    GAction& undo_action() { return *m_undo_action; }
-    GAction& redo_action() { return *m_redo_action; }
-    GAction& cut_action() { return *m_cut_action; }
-    GAction& copy_action() { return *m_copy_action; }
-    GAction& paste_action() { return *m_paste_action; }
-    GAction& delete_action() { return *m_delete_action; }
+    GAction& undo_action() {
+        return *m_undo_action;
+    }
+    GAction& redo_action() {
+        return *m_redo_action;
+    }
+    GAction& cut_action() {
+        return *m_cut_action;
+    }
+    GAction& copy_action() {
+        return *m_copy_action;
+    }
+    GAction& paste_action() {
+        return *m_paste_action;
+    }
+    GAction& delete_action() {
+        return *m_delete_action;
+    }
 
     void add_custom_context_menu_action(GAction&);
 
@@ -177,7 +259,9 @@ protected:
     virtual void focusin_event(CEvent&) override;
     virtual void focusout_event(CEvent&) override;
     virtual void timer_event(CTimerEvent&) override;
-    virtual bool accepts_focus() const override { return true; }
+    virtual bool accepts_focus() const override {
+        return true;
+    }
     virtual void enter_event(CEvent&) override;
     virtual void leave_event(CEvent&) override;
     virtual void context_menu_event(GContextMenuEvent&) override;
@@ -197,9 +281,15 @@ private:
         explicit Line(GTextEditor&);
         Line(GTextEditor&, const StringView&);
 
-        StringView view() const { return { characters(), length() }; }
-        const char* characters() const { return m_text.data(); }
-        int length() const { return m_text.size() - 1; }
+        StringView view() const {
+            return { characters(), length() };
+        }
+        const char* characters() const {
+            return m_text.data();
+        }
+        int length() const {
+            return m_text.size() - 1;
+        }
         void set_text(const StringView&);
         void append(char);
         void prepend(char);
@@ -231,8 +321,12 @@ private:
     void update_cursor();
     void set_cursor(int line, int column);
     void set_cursor(const GTextPosition&);
-    Line& current_line() { return m_lines[m_cursor.line()]; }
-    const Line& current_line() const { return m_lines[m_cursor.line()]; }
+    Line& current_line() {
+        return m_lines[m_cursor.line()];
+    }
+    const Line& current_line() const {
+        return m_lines[m_cursor.line()];
+    }
     GTextPosition text_position_at(const Point&) const;
     void insert_at_cursor(char);
     void insert_at_cursor(const StringView&);

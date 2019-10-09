@@ -36,7 +36,9 @@ public:
     static CEventLoop& main();
     static CEventLoop& current();
 
-    bool was_exit_requested() const { return m_exit_requested; }
+    bool was_exit_requested() const {
+        return m_exit_requested;
+    }
 
     static int register_timer(CObject&, int milliseconds, bool should_reload);
     static bool unregister_timer(int timer_id);

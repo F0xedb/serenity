@@ -53,7 +53,9 @@ public:
         m_data = nullptr;
     }
 
-    int size() const { return m_size; }
+    int size() const {
+        return m_size;
+    }
     bool get(int index) const
     {
         ASSERT(index < m_size);
@@ -68,8 +70,12 @@ public:
             m_data[index / 8] &= static_cast<u8>(~(1u << (index % 8)));
     }
 
-    u8* data() { return m_data; }
-    const u8* data() const { return m_data; }
+    u8* data() {
+        return m_data;
+    }
+    const u8* data() const {
+        return m_data;
+    }
 
     void grow(int size, bool default_value)
     {
@@ -156,7 +162,9 @@ public:
 
 private:
 
-    int size_in_bytes() const { return ceil_div(m_size, 8); }
+    int size_in_bytes() const {
+        return ceil_div(m_size, 8);
+    }
 
     u8* m_data { nullptr };
     int m_size { 0 };

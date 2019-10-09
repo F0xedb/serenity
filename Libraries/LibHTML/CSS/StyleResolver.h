@@ -15,8 +15,12 @@ public:
     explicit StyleResolver(Document&);
     ~StyleResolver();
 
-    Document& document() { return m_document; }
-    const Document& document() const { return m_document; }
+    Document& document() {
+        return m_document;
+    }
+    const Document& document() const {
+        return m_document;
+    }
 
     NonnullRefPtr<StyleProperties> resolve_style(const Element&, const StyleProperties* parent_style) const;
 

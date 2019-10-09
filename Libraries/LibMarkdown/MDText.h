@@ -17,7 +17,9 @@ public:
         Style style;
     };
 
-    const Vector<Span>& spans() const { return m_spans; }
+    const Vector<Span>& spans() const {
+        return m_spans;
+    }
 
     String render_to_html() const;
     String render_for_terminal() const;

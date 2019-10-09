@@ -7,10 +7,14 @@ public:
     HTMLElement(Document&, const String& tag_name);
     virtual ~HTMLElement() override;
 
-    String title() const { return attribute("title"); }
+    String title() const {
+        return attribute("title");
+    }
 
 private:
-    virtual bool is_html_element() const final { return true; }
+    virtual bool is_html_element() const final {
+        return true;
+    }
 };
 
 template<>

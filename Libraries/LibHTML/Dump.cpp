@@ -53,32 +53,32 @@ void dump_tree(const LayoutNode& layout_node)
         tag_name = "???";
 
     dbgprintf("%s {%s} at (%d,%d) size %dx%d",
-        layout_node.class_name(),
-        tag_name.characters(),
-        layout_node.rect().x(),
-        layout_node.rect().y(),
-        layout_node.rect().width(),
-        layout_node.rect().height());
+              layout_node.class_name(),
+              tag_name.characters(),
+              layout_node.rect().x(),
+              layout_node.rect().y(),
+              layout_node.rect().width(),
+              layout_node.rect().height());
 
     // Dump the horizontal box properties
     dbgprintf(" [%d+%d+%d %d %d+%d+%d]",
-        layout_node.box_model().margin().left.to_px(),
-        layout_node.box_model().border().left.to_px(),
-        layout_node.box_model().padding().left.to_px(),
-        layout_node.rect().width(),
-        layout_node.box_model().padding().right.to_px(),
-        layout_node.box_model().border().right.to_px(),
-        layout_node.box_model().margin().right.to_px());
+              layout_node.box_model().margin().left.to_px(),
+              layout_node.box_model().border().left.to_px(),
+              layout_node.box_model().padding().left.to_px(),
+              layout_node.rect().width(),
+              layout_node.box_model().padding().right.to_px(),
+              layout_node.box_model().border().right.to_px(),
+              layout_node.box_model().margin().right.to_px());
 
     // And the vertical box properties
     dbgprintf(" [%d+%d+%d %d %d+%d+%d]",
-        layout_node.box_model().margin().top.to_px(),
-        layout_node.box_model().border().top.to_px(),
-        layout_node.box_model().padding().top.to_px(),
-        layout_node.rect().height(),
-        layout_node.box_model().padding().bottom.to_px(),
-        layout_node.box_model().border().bottom.to_px(),
-        layout_node.box_model().margin().bottom.to_px());
+              layout_node.box_model().margin().top.to_px(),
+              layout_node.box_model().border().top.to_px(),
+              layout_node.box_model().padding().top.to_px(),
+              layout_node.rect().height(),
+              layout_node.box_model().padding().bottom.to_px(),
+              layout_node.box_model().border().bottom.to_px(),
+              layout_node.box_model().margin().bottom.to_px());
 
     dbgprintf("\n");
 
@@ -97,18 +97,18 @@ void dump_tree(const LayoutNode& layout_node)
                 for (int i = 0; i < indent; ++i)
                     dbgprintf("    ");
                 dbgprintf("      [%d] layout_node: %s{%p}, start: %d, length: %d, rect: %s\n",
-                    fragment_index,
-                    fragment.layout_node().class_name(),
-                    &fragment.layout_node(),
-                    fragment.start(),
-                    fragment.length(),
-                    fragment.rect().to_string().characters());
+                          fragment_index,
+                          fragment.layout_node().class_name(),
+                          &fragment.layout_node(),
+                          fragment.start(),
+                          fragment.length(),
+                          fragment.rect().to_string().characters());
                 if (fragment.layout_node().is_text()) {
                     for (int i = 0; i < indent; ++i)
                         dbgprintf("    ");
                     auto& layout_text = static_cast<const LayoutText&>(fragment.layout_node());
                     dbgprintf("        text: \"%s\"\n",
-                        String(Utf8View(layout_text.node().data()).substring_view(fragment.start(), fragment.length()).as_string()).characters());
+                              String(Utf8View(layout_text.node().data()).substring_view(fragment.start(), fragment.length()).as_string()).characters());
                 }
             }
         }

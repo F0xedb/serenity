@@ -88,15 +88,21 @@ class PageDirectoryEntry {
     AK_MAKE_NONCOPYABLE(PageDirectoryEntry);
 
 public:
-    PageTableEntry* page_table_base() { return reinterpret_cast<PageTableEntry*>(m_raw & 0xfffff000u); }
+    PageTableEntry* page_table_base() {
+        return reinterpret_cast<PageTableEntry*>(m_raw & 0xfffff000u);
+    }
     void set_page_table_base(u32 value)
     {
         m_raw &= 0xfff;
         m_raw |= value & 0xfffff000;
     }
 
-    u32 raw() const { return m_raw; }
-    void copy_from(Badge<MemoryManager>, const PageDirectoryEntry& other) { m_raw = other.m_raw; }
+    u32 raw() const {
+        return m_raw;
+    }
+    void copy_from(Badge<MemoryManager>, const PageDirectoryEntry& other) {
+        m_raw = other.m_raw;
+    }
 
     enum Flags {
         Present = 1 << 0,
@@ -106,20 +112,40 @@ public:
         CacheDisabled = 1 << 4,
     };
 
-    bool is_present() const { return raw() & Present; }
-    void set_present(bool b) { set_bit(Present, b); }
+    bool is_present() const {
+        return raw() & Present;
+    }
+    void set_present(bool b) {
+        set_bit(Present, b);
+    }
 
-    bool is_user_allowed() const { return raw() & UserSupervisor; }
-    void set_user_allowed(bool b) { set_bit(UserSupervisor, b); }
+    bool is_user_allowed() const {
+        return raw() & UserSupervisor;
+    }
+    void set_user_allowed(bool b) {
+        set_bit(UserSupervisor, b);
+    }
 
-    bool is_writable() const { return raw() & ReadWrite; }
-    void set_writable(bool b) { set_bit(ReadWrite, b); }
+    bool is_writable() const {
+        return raw() & ReadWrite;
+    }
+    void set_writable(bool b) {
+        set_bit(ReadWrite, b);
+    }
 
-    bool is_write_through() const { return raw() & WriteThrough; }
-    void set_write_through(bool b) { set_bit(WriteThrough, b); }
+    bool is_write_through() const {
+        return raw() & WriteThrough;
+    }
+    void set_write_through(bool b) {
+        set_bit(WriteThrough, b);
+    }
 
-    bool is_cache_disabled() const { return raw() & CacheDisabled; }
-    void set_cache_disabled(bool b) { set_bit(CacheDisabled, b); }
+    bool is_cache_disabled() const {
+        return raw() & CacheDisabled;
+    }
+    void set_cache_disabled(bool b) {
+        set_bit(CacheDisabled, b);
+    }
 
     void set_bit(u8 bit, bool value)
     {
@@ -137,14 +163,18 @@ class PageTableEntry {
     AK_MAKE_NONCOPYABLE(PageTableEntry);
 
 public:
-    void* physical_page_base() { return reinterpret_cast<void*>(m_raw & 0xfffff000u); }
+    void* physical_page_base() {
+        return reinterpret_cast<void*>(m_raw & 0xfffff000u);
+    }
     void set_physical_page_base(u32 value)
     {
         m_raw &= 0xfff;
         m_raw |= value & 0xfffff000;
     }
 
-    u32 raw() const { return m_raw; }
+    u32 raw() const {
+        return m_raw;
+    }
 
     enum Flags {
         Present = 1 << 0,
@@ -154,20 +184,40 @@ public:
         CacheDisabled = 1 << 4,
     };
 
-    bool is_present() const { return raw() & Present; }
-    void set_present(bool b) { set_bit(Present, b); }
+    bool is_present() const {
+        return raw() & Present;
+    }
+    void set_present(bool b) {
+        set_bit(Present, b);
+    }
 
-    bool is_user_allowed() const { return raw() & UserSupervisor; }
-    void set_user_allowed(bool b) { set_bit(UserSupervisor, b); }
+    bool is_user_allowed() const {
+        return raw() & UserSupervisor;
+    }
+    void set_user_allowed(bool b) {
+        set_bit(UserSupervisor, b);
+    }
 
-    bool is_writable() const { return raw() & ReadWrite; }
-    void set_writable(bool b) { set_bit(ReadWrite, b); }
+    bool is_writable() const {
+        return raw() & ReadWrite;
+    }
+    void set_writable(bool b) {
+        set_bit(ReadWrite, b);
+    }
 
-    bool is_write_through() const { return raw() & WriteThrough; }
-    void set_write_through(bool b) { set_bit(WriteThrough, b); }
+    bool is_write_through() const {
+        return raw() & WriteThrough;
+    }
+    void set_write_through(bool b) {
+        set_bit(WriteThrough, b);
+    }
 
-    bool is_cache_disabled() const { return raw() & CacheDisabled; }
-    void set_cache_disabled(bool b) { set_bit(CacheDisabled, b); }
+    bool is_cache_disabled() const {
+        return raw() & CacheDisabled;
+    }
+    void set_cache_disabled(bool b) {
+        set_bit(CacheDisabled, b);
+    }
 
     void set_bit(u8 bit, bool value)
     {
@@ -313,19 +363,41 @@ public:
         Write = PageFaultFlags::Write,
     };
 
-    VirtualAddress vaddr() const { return m_vaddr; }
-    u16 code() const { return m_code; }
+    VirtualAddress vaddr() const {
+        return m_vaddr;
+    }
+    u16 code() const {
+        return m_code;
+    }
 
-    Type type() const { return (Type)(m_code & 1); }
-    Access access() const { return (Access)(m_code & 2); }
+    Type type() const {
+        return (Type)(m_code & 1);
+    }
+    Access access() const {
+        return (Access)(m_code & 2);
+    }
 
-    bool is_not_present() const { return (m_code & 1) == PageFaultFlags::NotPresent; }
-    bool is_protection_violation() const { return (m_code & 1) == PageFaultFlags::ProtectionViolation; }
-    bool is_read() const { return (m_code & 2) == PageFaultFlags::Read; }
-    bool is_write() const { return (m_code & 2) == PageFaultFlags::Write; }
-    bool is_user() const { return (m_code & 4) == PageFaultFlags::UserMode; }
-    bool is_supervisor() const { return (m_code & 4) == PageFaultFlags::SupervisorMode; }
-    bool is_instruction_fetch() const { return (m_code & 8) == PageFaultFlags::InstructionFetch; }
+    bool is_not_present() const {
+        return (m_code & 1) == PageFaultFlags::NotPresent;
+    }
+    bool is_protection_violation() const {
+        return (m_code & 1) == PageFaultFlags::ProtectionViolation;
+    }
+    bool is_read() const {
+        return (m_code & 2) == PageFaultFlags::Read;
+    }
+    bool is_write() const {
+        return (m_code & 2) == PageFaultFlags::Write;
+    }
+    bool is_user() const {
+        return (m_code & 4) == PageFaultFlags::UserMode;
+    }
+    bool is_supervisor() const {
+        return (m_code & 4) == PageFaultFlags::SupervisorMode;
+    }
+    bool is_instruction_fetch() const {
+        return (m_code & 8) == PageFaultFlags::InstructionFetch;
+    }
 
 private:
     u16 m_code;
@@ -370,13 +442,23 @@ inline constexpr u32 page_base_of(u32 address)
 
 class CPUID {
 public:
-    CPUID(u32 function) { asm volatile("cpuid"
-                                         : "=a"(m_eax), "=b"(m_ebx), "=c"(m_ecx), "=d"(m_edx)
-                                         : "a"(function), "c"(0)); }
-    u32 eax() const { return m_eax; }
-    u32 ebx() const { return m_ebx; }
-    u32 ecx() const { return m_ecx; }
-    u32 edx() const { return m_edx; }
+    CPUID(u32 function) {
+        asm volatile("cpuid"
+                     : "=a"(m_eax), "=b"(m_ebx), "=c"(m_ecx), "=d"(m_edx)
+                     : "a"(function), "c"(0));
+    }
+    u32 eax() const {
+        return m_eax;
+    }
+    u32 ebx() const {
+        return m_ebx;
+    }
+    u32 ecx() const {
+        return m_ecx;
+    }
+    u32 edx() const {
+        return m_edx;
+    }
 
 private:
     u32 m_eax { 0xffffffff };

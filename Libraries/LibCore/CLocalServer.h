@@ -10,7 +10,9 @@ class CLocalServer : public CObject {
 public:
     virtual ~CLocalServer() override;
 
-    bool is_listening() const { return m_listening; }
+    bool is_listening() const {
+        return m_listening;
+    }
     bool listen(const String& address);
 
     RefPtr<CLocalSocket> accept();

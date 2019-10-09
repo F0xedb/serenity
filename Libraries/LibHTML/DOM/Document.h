@@ -23,8 +23,12 @@ public:
     Document();
     virtual ~Document() override;
 
-    void set_url(const URL& url) { m_url = url; }
-    const URL& url() const { return m_url; }
+    void set_url(const URL& url) {
+        m_url = url;
+    }
+    const URL& url() const {
+        return m_url;
+    }
 
     URL complete_url(const String&) const;
 
@@ -32,14 +36,26 @@ public:
 
     StyleResolver& style_resolver();
 
-    void add_sheet(const StyleSheet& sheet) { m_sheets.append(sheet); }
-    const NonnullRefPtrVector<StyleSheet>& stylesheets() const { return m_sheets; }
+    void add_sheet(const StyleSheet& sheet) {
+        m_sheets.append(sheet);
+    }
+    const NonnullRefPtrVector<StyleSheet>& stylesheets() const {
+        return m_sheets;
+    }
 
-    virtual String tag_name() const override { return "#document"; }
+    virtual String tag_name() const override {
+        return "#document";
+    }
 
-    void set_hovered_node(Node* node) { m_hovered_node = node; }
-    Node* hovered_node() { return m_hovered_node; }
-    const Node* hovered_node() const { return m_hovered_node; }
+    void set_hovered_node(Node* node) {
+        m_hovered_node = node;
+    }
+    Node* hovered_node() {
+        return m_hovered_node;
+    }
+    const Node* hovered_node() const {
+        return m_hovered_node;
+    }
 
     const HTMLHtmlElement* document_element() const;
     const HTMLHeadElement* head() const;
@@ -50,18 +66,28 @@ public:
     void attach_to_frame(Badge<Frame>, Frame&);
     void detach_from_frame(Badge<Frame>, Frame&);
 
-    Frame* frame() { return m_frame.ptr(); }
-    const Frame* frame() const { return m_frame.ptr(); }
+    Frame* frame() {
+        return m_frame.ptr();
+    }
+    const Frame* frame() const {
+        return m_frame.ptr();
+    }
 
     Color background_color() const;
 
-    Color link_color() const { return m_link_color; }
+    Color link_color() const {
+        return m_link_color;
+    }
     void set_link_color(Color);
 
-    Color active_link_color() const { return m_active_link_color; }
+    Color active_link_color() const {
+        return m_active_link_color;
+    }
     void set_active_link_color(Color);
 
-    Color visited_link_color() const { return m_visited_link_color; }
+    Color visited_link_color() const {
+        return m_visited_link_color;
+    }
     void set_visited_link_color(Color);
 
     void invalidate_layout();

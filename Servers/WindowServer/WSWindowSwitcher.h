@@ -17,11 +17,17 @@ public:
     WSWindowSwitcher();
     virtual ~WSWindowSwitcher() override;
 
-    bool is_visible() const { return m_visible; }
+    bool is_visible() const {
+        return m_visible;
+    }
     void set_visible(bool);
 
-    void show() { set_visible(true); }
-    void hide() { set_visible(false); }
+    void show() {
+        set_visible(true);
+    }
+    void hide() {
+        set_visible(false);
+    }
 
     void on_key_event(const WSKeyEvent&);
     void refresh();
@@ -29,16 +35,28 @@ public:
 
     void draw();
 
-    int thumbnail_width() { return 40; }
-    int thumbnail_height() { return 40; }
+    int thumbnail_width() {
+        return 40;
+    }
+    int thumbnail_height() {
+        return 40;
+    }
 
-    int item_height() { return 10 + thumbnail_height(); }
-    int padding() { return 8; }
-    int item_padding() { return 8; }
+    int item_height() {
+        return 10 + thumbnail_height();
+    }
+    int padding() {
+        return 8;
+    }
+    int item_padding() {
+        return 8;
+    }
 
     WSWindow* selected_window();
 
-    WSWindow* switcher_window() { return m_switcher_window.ptr(); }
+    WSWindow* switcher_window() {
+        return m_switcher_window.ptr();
+    }
 
 private:
     RefPtr<WSWindow> m_switcher_window;

@@ -1,5 +1,5 @@
 #include <AK/TestSuite.h>
- 
+
 #include <math.h>
 
 #define EXPECT_CLOSE(a, b) { EXPECT(fabs(a - b) < 0.000001); }

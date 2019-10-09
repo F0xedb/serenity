@@ -72,9 +72,9 @@ Options parse_options(int argc, char* argv[])
         // Copy our stdin.
         auto c_stdin = CFile::construct();
         bool success = c_stdin->open(
-            STDIN_FILENO,
-            CIODevice::OpenMode::ReadOnly,
-            CFile::ShouldCloseFileDescription::No);
+                           STDIN_FILENO,
+                           CIODevice::OpenMode::ReadOnly,
+                           CFile::ShouldCloseFileDescription::No);
         ASSERT(success);
         auto buffer = c_stdin->read_all();
         dbg() << "Read size " << buffer.size();

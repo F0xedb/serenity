@@ -10,18 +10,32 @@ class GLabel : public GFrame {
 public:
     virtual ~GLabel() override;
 
-    String text() const { return m_text; }
+    String text() const {
+        return m_text;
+    }
     void set_text(const StringView&);
 
     void set_icon(GraphicsBitmap*);
-    const GraphicsBitmap* icon() const { return m_icon.ptr(); }
-    GraphicsBitmap* icon() { return m_icon.ptr(); }
+    const GraphicsBitmap* icon() const {
+        return m_icon.ptr();
+    }
+    GraphicsBitmap* icon() {
+        return m_icon.ptr();
+    }
 
-    TextAlignment text_alignment() const { return m_text_alignment; }
-    void set_text_alignment(TextAlignment text_alignment) { m_text_alignment = text_alignment; }
+    TextAlignment text_alignment() const {
+        return m_text_alignment;
+    }
+    void set_text_alignment(TextAlignment text_alignment) {
+        m_text_alignment = text_alignment;
+    }
 
-    bool should_stretch_icon() const { return m_should_stretch_icon; }
-    void set_should_stretch_icon(bool b) { m_should_stretch_icon = b; }
+    bool should_stretch_icon() const {
+        return m_should_stretch_icon;
+    }
+    void set_should_stretch_icon(bool b) {
+        m_should_stretch_icon = b;
+    }
 
     void size_to_fit();
 

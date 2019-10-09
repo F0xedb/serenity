@@ -22,7 +22,9 @@ public:
         m_num_free = slab_count;
     }
 
-    constexpr size_t slab_size() const { return templated_slab_size; }
+    constexpr size_t slab_size() const {
+        return templated_slab_size;
+    }
 
     void* alloc()
     {
@@ -45,8 +47,12 @@ public:
         --m_num_free;
     }
 
-    size_t num_allocated() const { return m_num_allocated; }
-    size_t num_free() const { return m_num_free; }
+    size_t num_allocated() const {
+        return m_num_allocated;
+    }
+    size_t num_free() const {
+        return m_num_free;
+    }
 
 private:
     struct FreeSlab {

@@ -17,9 +17,15 @@ class Ext2FSInode final : public Inode {
 public:
     virtual ~Ext2FSInode() override;
 
-    size_t size() const { return m_raw_inode.i_size; }
-    bool is_symlink() const { return ::is_symlink(m_raw_inode.i_mode); }
-    bool is_directory() const { return ::is_directory(m_raw_inode.i_mode); }
+    size_t size() const {
+        return m_raw_inode.i_size;
+    }
+    bool is_symlink() const {
+        return ::is_symlink(m_raw_inode.i_mode);
+    }
+    bool is_directory() const {
+        return ::is_directory(m_raw_inode.i_mode);
+    }
 
     // ^Inode (RefCounted magic)
     virtual void one_ref_left() override;

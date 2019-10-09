@@ -8,7 +8,9 @@
 class GDirectoryModel final : public GModel
     , public Weakable<GDirectoryModel> {
 public:
-    static NonnullRefPtr<GDirectoryModel> create() { return adopt(*new GDirectoryModel); }
+    static NonnullRefPtr<GDirectoryModel> create() {
+        return adopt(*new GDirectoryModel);
+    }
     virtual ~GDirectoryModel() override;
 
     enum Column {
@@ -30,9 +32,13 @@ public:
     virtual GVariant data(const GModelIndex&, Role = Role::Display) const override;
     virtual void update() override;
 
-    String path() const { return m_path; }
+    String path() const {
+        return m_path;
+    }
     void open(const StringView& path);
-    size_t bytes_in_files() const { return m_bytes_in_files; }
+    size_t bytes_in_files() const {
+        return m_bytes_in_files;
+    }
 
     Function<void(int done, int total)> on_thumbnail_progress;
     Function<void()> on_path_change;
@@ -46,9 +52,15 @@ public:
         ino_t inode { 0 };
         time_t mtime { 0 };
         mutable RefPtr<GraphicsBitmap> thumbnail;
-        bool is_directory() const { return S_ISDIR(mode); }
-        bool is_executable() const { return mode & S_IXUSR; }
-        String full_path(const GDirectoryModel& model) const { return String::format("%s/%s", model.path().characters(), name.characters()); }
+        bool is_directory() const {
+            return S_ISDIR(mode);
+        }
+        bool is_executable() const {
+            return mode & S_IXUSR;
+        }
+        String full_path(const GDirectoryModel& model) const {
+            return String::format("%s/%s", model.path().characters(), name.characters());
+        }
     };
 
     const Entry& entry(int index) const

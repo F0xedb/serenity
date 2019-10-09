@@ -9,7 +9,9 @@ public:
     {
     }
 
-    GPainter& painter() const { return m_painter; }
+    GPainter& painter() const {
+        return m_painter;
+    }
 
 private:
     GPainter& m_painter;

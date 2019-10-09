@@ -19,8 +19,12 @@ public:
         set_tooltip(name);
     }
 
-    const Tool& tool() const { return *m_tool; }
-    Tool& tool() { return *m_tool; }
+    const Tool& tool() const {
+        return *m_tool;
+    }
+    Tool& tool() {
+        return *m_tool;
+    }
 
     virtual void context_menu_event(GContextMenuEvent& event) override
     {

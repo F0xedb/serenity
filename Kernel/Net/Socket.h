@@ -21,9 +21,15 @@ public:
     static KResultOr<NonnullRefPtr<Socket>> create(int domain, int type, int protocol);
     virtual ~Socket() override;
 
-    int domain() const { return m_domain; }
-    int type() const { return m_type; }
-    int protocol() const { return m_protocol; }
+    int domain() const {
+        return m_domain;
+    }
+    int type() const {
+        return m_type;
+    }
+    int protocol() const {
+        return m_protocol;
+    }
 
     enum class SetupState {
         Unstarted,  // we haven't tried to set the socket up yet
@@ -53,15 +59,25 @@ public:
         }
     }
 
-    SetupState setup_state() const { return m_setup_state; }
+    SetupState setup_state() const {
+        return m_setup_state;
+    }
     void set_setup_state(SetupState setup_state);
 
-    virtual Role role(const FileDescription&) const { return m_role; }
+    virtual Role role(const FileDescription&) const {
+        return m_role;
+    }
 
-    bool is_connected() const { return m_connected; }
-    void set_connected(bool connected) { m_connected = connected; }
+    bool is_connected() const {
+        return m_connected;
+    }
+    void set_connected(bool connected) {
+        m_connected = connected;
+    }
 
-    bool can_accept() const { return !m_pending.is_empty(); }
+    bool can_accept() const {
+        return !m_pending.is_empty();
+    }
     RefPtr<Socket> accept();
 
     virtual KResult bind(const sockaddr*, socklen_t) = 0;
@@ -69,8 +85,12 @@ public:
     virtual KResult listen(int) = 0;
     virtual bool get_local_address(sockaddr*, socklen_t*) = 0;
     virtual bool get_peer_address(sockaddr*, socklen_t*) = 0;
-    virtual bool is_local() const { return false; }
-    virtual bool is_ipv4() const { return false; }
+    virtual bool is_local() const {
+        return false;
+    }
+    virtual bool is_ipv4() const {
+        return false;
+    }
     virtual void attach(FileDescription&) = 0;
     virtual void detach(FileDescription&) = 0;
     virtual ssize_t sendto(FileDescription&, const void*, size_t, int flags, const sockaddr*, socklen_t) = 0;
@@ -79,13 +99,23 @@ public:
     virtual KResult setsockopt(int level, int option, const void*, socklen_t);
     virtual KResult getsockopt(int level, int option, void*, socklen_t*);
 
-    pid_t origin_pid() const { return m_origin_pid; }
-    pid_t acceptor_pid() const { return m_acceptor_pid; }
+    pid_t origin_pid() const {
+        return m_origin_pid;
+    }
+    pid_t acceptor_pid() const {
+        return m_acceptor_pid;
+    }
 
-    timeval receive_deadline() const { return m_receive_deadline; }
-    timeval send_deadline() const { return m_send_deadline; }
+    timeval receive_deadline() const {
+        return m_receive_deadline;
+    }
+    timeval send_deadline() const {
+        return m_send_deadline;
+    }
 
-    Lock& lock() { return m_lock; }
+    Lock& lock() {
+        return m_lock;
+    }
 
     // ^File
     virtual ssize_t read(FileDescription&, u8*, ssize_t) override final;
@@ -100,15 +130,23 @@ protected:
     void load_receive_deadline();
     void load_send_deadline();
 
-    int backlog() const { return m_backlog; }
-    void set_backlog(int backlog) { m_backlog = backlog; }
+    int backlog() const {
+        return m_backlog;
+    }
+    void set_backlog(int backlog) {
+        m_backlog = backlog;
+    }
 
-    virtual const char* class_name() const override { return "Socket"; }
+    virtual const char* class_name() const override {
+        return "Socket";
+    }
 
     Role m_role { Role::None };
 
 private:
-    virtual bool is_socket() const final { return true; }
+    virtual bool is_socket() const final {
+        return true;
+    }
 
     Lock m_lock { "Socket" };
     pid_t m_origin_pid { 0 };
@@ -155,13 +193,23 @@ public:
     SocketHandle(const SocketHandle&) = delete;
     SocketHandle& operator=(const SocketHandle&) = delete;
 
-    operator bool() const { return m_socket; }
+    operator bool() const {
+        return m_socket;
+    }
 
-    SocketType* operator->() { return &socket(); }
-    const SocketType* operator->() const { return &socket(); }
+    SocketType* operator->() {
+        return &socket();
+    }
+    const SocketType* operator->() const {
+        return &socket();
+    }
 
-    SocketType& socket() { return *m_socket; }
-    const SocketType& socket() const { return *m_socket; }
+    SocketType& socket() {
+        return *m_socket;
+    }
+    const SocketType& socket() const {
+        return *m_socket;
+    }
 
 private:
     RefPtr<SocketType> m_socket;

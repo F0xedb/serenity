@@ -30,13 +30,21 @@ public:
     void show_tooltip(const StringView&, const Point& screen_location);
     void hide_tooltip();
 
-    bool quit_when_last_window_deleted() const { return m_quit_when_last_window_deleted; }
-    void set_quit_when_last_window_deleted(bool b) { m_quit_when_last_window_deleted = b; }
+    bool quit_when_last_window_deleted() const {
+        return m_quit_when_last_window_deleted;
+    }
+    void set_quit_when_last_window_deleted(bool b) {
+        m_quit_when_last_window_deleted = b;
+    }
 
     void did_delete_last_window(Badge<GWindow>);
 
-    const String& invoked_as() const { return m_invoked_as; }
-    const Vector<String>& args() const { return m_args; }
+    const String& invoked_as() const {
+        return m_invoked_as;
+    }
+    const Vector<String>& args() const {
+        return m_args;
+    }
 
 private:
     OwnPtr<CEventLoop> m_event_loop;

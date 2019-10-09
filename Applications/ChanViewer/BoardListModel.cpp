@@ -73,8 +73,8 @@ GVariant BoardListModel::data(const GModelIndex& index, Role role) const
         switch (index.column()) {
         case Column::Board:
             return String::format("/%s/ - %s",
-                board.get("board").to_string().characters(),
-                board.get("title").to_string().characters());
+                                  board.get("board").to_string().characters(),
+                                  board.get("title").to_string().characters());
         default:
             ASSERT_NOT_REACHED();
         }

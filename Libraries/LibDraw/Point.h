@@ -17,11 +17,19 @@ public:
     }
     Point(const WSAPI_Point&);
 
-    int x() const { return m_x; }
-    int y() const { return m_y; }
+    int x() const {
+        return m_x;
+    }
+    int y() const {
+        return m_y;
+    }
 
-    void set_x(int x) { m_x = x; }
-    void set_y(int y) { m_y = y; }
+    void set_x(int x) {
+        m_x = x;
+    }
+    void set_y(int y) {
+        m_y = y;
+    }
 
     void move_by(int dx, int dy)
     {
@@ -53,7 +61,7 @@ public:
     bool operator==(const Point& other) const
     {
         return m_x == other.m_x
-            && m_y == other.m_y;
+               && m_y == other.m_y;
     }
 
     bool operator!=(const Point& other) const
@@ -61,9 +69,13 @@ public:
         return !(*this == other);
     }
 
-    Point operator-() const { return { -m_x, -m_y }; }
+    Point operator-() const {
+        return { -m_x, -m_y };
+    }
 
-    Point operator-(const Point& other) const { return { m_x - other.m_x, m_y - other.m_y }; }
+    Point operator-(const Point& other) const {
+        return { m_x - other.m_x, m_y - other.m_y };
+    }
     Point& operator-=(const Point& other)
     {
         m_x -= other.m_x;
@@ -77,12 +89,18 @@ public:
         m_y += other.m_y;
         return *this;
     }
-    Point operator+(const Point& other) const { return { m_x + other.m_x, m_y + other.m_y }; }
+    Point operator+(const Point& other) const {
+        return { m_x + other.m_x, m_y + other.m_y };
+    }
 
     operator WSAPI_Point() const;
-    String to_string() const { return String::format("[%d,%d]", x(), y()); }
+    String to_string() const {
+        return String::format("[%d,%d]", x(), y());
+    }
 
-    bool is_null() const { return !m_x && !m_y; }
+    bool is_null() const {
+        return !m_x && !m_y;
+    }
 
     int primary_offset_for_orientation(Orientation orientation) const
     {

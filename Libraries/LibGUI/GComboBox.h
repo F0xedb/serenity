@@ -18,15 +18,25 @@ public:
     void close();
     void select_all();
 
-    GModel* model() { return m_list_view->model(); }
-    const GModel* model() const { return m_list_view->model(); }
+    GModel* model() {
+        return m_list_view->model();
+    }
+    const GModel* model() const {
+        return m_list_view->model();
+    }
     void set_model(NonnullRefPtr<GModel>);
 
-    bool only_allow_values_from_model() const { return m_only_allow_values_from_model; }
+    bool only_allow_values_from_model() const {
+        return m_only_allow_values_from_model;
+    }
     void set_only_allow_values_from_model(bool);
 
-    int model_column() const { return m_list_view->model_column(); }
-    void set_model_column(int column) { m_list_view->set_model_column(column); }
+    int model_column() const {
+        return m_list_view->model_column();
+    }
+    void set_model_column(int column) {
+        m_list_view->set_model_column(column);
+    }
 
     Function<void(const String&, const GModelIndex&)> on_change;
     Function<void()> on_return_pressed;
